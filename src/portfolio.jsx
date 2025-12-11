@@ -200,21 +200,6 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         ☁️
       </div>
       
-      {/* Sun/Moon */}
-      <div
-        style={{
-          position: 'absolute',
-          right: '10%',
-          top: '10%',
-          fontSize: '50px',
-          animation: 'glow 4s ease-in-out infinite',
-          zIndex: 1,
-        }}
-      >
-        🌅
-      </div>
-      
-      
       {/* Animated water gradient layers */}
       <div style={{
         position: 'absolute',
