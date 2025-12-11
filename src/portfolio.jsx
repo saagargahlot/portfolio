@@ -14,9 +14,9 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
   };
 
   const boats = [
-    { id: 1, baseX: 10, y: 30, speed: 1, size: 40 },
-    { id: 2, baseX: 50, y: 50, speed: 0.8, size: 50 },
-    { id: 3, baseX: 80, y: 40, speed: 1.2, size: 35 },
+    { id: 1, baseX: 10, y: 30, speed: 1, size: 40 }
+    // { id: 2, baseX: 50, y: 50, speed: 0.8, size: 50 },
+    // { id: 3, baseX: 80, y: 40, speed: 1.2, size: 35 },
   ];
 
   return (
@@ -673,7 +673,7 @@ const Portfolio = () => {
             marginBottom: '2rem',
             animation: 'float 3s ease-in-out infinite',
           }}>
-            ✨ Available for opportunities! 
+            Available for opportunities! 
           </div>
           
           <h1 style={{
@@ -686,8 +686,6 @@ const Portfolio = () => {
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
           }}>
-            Full Stack
-            <br />
             Developer
           </h1>
           
@@ -696,6 +694,11 @@ const Portfolio = () => {
             color: '#8892b0',
             marginBottom: '2rem',
             fontWeight: '300',
+            lineHeight: '1.1',
+            background: 'linear-gradient(135deg, #e6f1ff 0%, #64ffda 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
           }}>
             Creating experiences with code and creativity!
           </p>
@@ -836,19 +839,28 @@ const Portfolio = () => {
               </p>
             </div>
             
-            <div style={{
-              aspectRatio: '1',
-              background: 'linear-gradient(135deg, #64ffda 0%, #2dd4bf 100%)',
-              borderRadius: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '8rem',
-              animation: 'float 4s ease-in-out infinite',
-              boxShadow: '0 20px 60px rgba(100, 255, 218, 0.2)',
-            }}>
-              👨‍💻
-            </div>
+              <div style={{
+                width: '100%',         // Takes full container width
+                maxWidth: '450px',     // ← Max size limit
+                aspectRatio: '1',      // Keeps it square
+                borderRadius: '1rem',
+                overflow: 'hidden',
+                animation: 'float 4s ease-in-out infinite',
+                boxShadow: '0 20px 60px rgba(100, 255, 218, 0.2)',
+                border: '3px solid #ffffffff',
+                margin: '0 auto',      // Centers it
+              }}>
+                <img 
+                  src="photo/me.jpg" 
+                  alt="Saagar Gahlot"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    transition: 'transform 0.5s ease',
+                  }}
+                />
+              </div>
           </div>
         </div>
       </section>
