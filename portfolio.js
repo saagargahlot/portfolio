@@ -985,21 +985,21 @@ const Portfolio = () => {
             {[
               {
                 icon: '🚀',
-                title: 'E-Commerce Platform',
-                description: 'A full-featured online shopping platform with real-time inventory management, secure payment processing, and an intuitive admin dashboard.',
-                tags: ['React', 'Node.js', 'MongoDB', 'Stripe'],
+                title: 'TODO',
+                description: 'TODO',
+                tags: ['TODO'],
               },
               {
                 icon: '💡',
-                title: 'Task Management App',
-                description: 'Collaborative project management tool with real-time updates, drag-and-drop functionality, and team communication features.',
-                tags: ['Vue.js', 'Firebase', 'TypeScript', 'WebSocket'],
+                title: 'TODO',
+                description: 'TODO',
+                tags: ['TODO'],
               },
               {
                 icon: '🎨',
-                title: 'Portfolio Generator',
-                description: 'AI-powered tool that helps developers create beautiful portfolio websites in minutes with customizable themes and templates.',
-                tags: ['Python', 'Django', 'PostgreSQL', 'AI'],
+                title: 'TODO',
+                description: 'TODO',
+                tags: ['TODO'],
               },
             ].map((project, index) => (
               <div
