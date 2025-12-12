@@ -1,24 +1,154 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
+  const pathRef = useRef(null);
+  const [boatPosition, setBoatPosition] = useState({ x: 0, y: 0, angle: 0 });
+  const [scrollPercentage, setScrollPercentage] = useState(0);
+  const [isIdle, setIsIdle] = useState(false);
+  const prevAngleRef = useRef(0);
+  const scrollTimeoutRef = useRef(null);
+
+  // Detect when user stops scrolling
+  useEffect(() => {
+    setIsIdle(false);
+
+    // Clear existing timeout
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+
+    // Set new timeout - consider user "idle" after 1.5 seconds of no scrolling
+    scrollTimeoutRef.current = setTimeout(() => {
+      setIsIdle(true);
+    }, 1000);
+
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, [scrollPosition]);
+
+  useEffect(() => {
+    if (pathRef.current) {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const percentage = Math.min(scrollPosition / maxScroll, 1);
+      setScrollPercentage(percentage);
+
+      const pathLength = pathRef.current.getTotalLength();
+      const point = pathRef.current.getPointAtLength(pathLength * percentage);
+
+      // Use a larger lookahead for smoother angle calculation
+      const nextPoint = pathRef.current.getPointAtLength(
+        Math.min(pathLength * percentage + 20, pathLength)
+      );
+
+      let newAngle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
+
+      // Smooth angle transitions to prevent twirling
+      const prevAngle = prevAngleRef.current;
+      let angleDiff = newAngle - prevAngle;
+
+      // Handle angle wrap-around (e.g., 359° to 1°)
+      if (angleDiff > 180) angleDiff -= 360;
+      if (angleDiff < -180) angleDiff += 360;
+
+      // Interpolate angle for smoother rotation
+      const smoothedAngle = prevAngle + angleDiff * 0.15;
+      prevAngleRef.current = smoothedAngle;
+
+      setBoatPosition({ x: point.x, y: point.y, angle: smoothedAngle });
+    }
+  }, [scrollPosition]);
+
+  return (
+    <>
+      <style>{`
+        @keyframes boatFloat {
+          0%, 100% {
+            transform: translate(-50%, -50%) rotate(${boatPosition.angle + 90}deg) translateY(0px) translateX(0px) rotate(-2deg);
+          }
+          25% {
+            transform: translate(-50%, -50%) rotate(${boatPosition.angle + 90}deg) translateY(-8px) translateX(3px) rotate(1deg);
+          }
+          50% {
+            transform: translate(-50%, -50%) rotate(${boatPosition.angle + 90}deg) translateY(-3px) translateX(-2px) rotate(2deg);
+          }
+          75% {
+            transform: translate(-50%, -50%) rotate(${boatPosition.angle + 90}deg) translateY(-10px) translateX(1px) rotate(-1deg);
+          }
+        }
+      `}</style>
+
+      {/* Visible dotted path that curves around content */}
+      <svg
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100vh',
+          pointerEvents: 'none',
+          zIndex: 100,
+        }}
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="pathGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="rgba(100, 255, 218, 0.8)" />
+            <stop offset="100%" stopColor="rgba(100, 255, 218, 0.4)" />
+          </linearGradient>
+        </defs>
+
+        {/* Path curves: left around About image, right between skills, left around projects, right to island */}
+        <path
+          ref={pathRef}
+          d="M 5,8
+             Q 10,12 11,18
+             Q 12,24 18 25
+             Q 55,15 55,34
+             Q 50,40 45,50
+             Q 40,50 34,48
+             Q 34,60 35,70
+             Q 30,85 50,85
+             Q 53,88 67,88
+             Q 65,25 65,18
+             Q 65,15 80,28"
+          fill="none"
+          stroke="url(#pathGradient)"
+          strokeWidth="0.3"
+          strokeDasharray="1,3"
+          opacity="0"
+        />
+      </svg>
+
+      {/* Boat following the path */}
+      <img
+        src="photo/boat.png"
+        alt="Sailing boat"
+        style={{
+          position: 'fixed',
+          left: `${boatPosition.x}%`,
+          top: `${boatPosition.y}%`,
+          width: '70px',
+          height: '70px',
+          transform: `translate(-50%, -50%) rotate(${boatPosition.angle + 90}deg)`,
+          transition: isIdle ? 'none' : 'all 0.15s linear',
+          animation: isIdle ? 'boatFloat 3s ease-in-out infinite' : 'none',
+          filter: 'drop-shadow(0 5px 15px rgba(100, 255, 218, 0.6))',
+          zIndex: 101,
+          pointerEvents: 'none',
+        }}
+      />
+    </>
+
+  );
+};
+
+      
+
 const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => {
-  const getBoatPosition = (basePosition, index) => {
-    // Calculate boat position based on scroll with smoother easing
-    const scrollFactor = scrollPosition * 0.05; // Reduced for smoother movement
-    const direction = scrollDirection === 'down' ? 1 : -1;
-    
-    // Add wave-like motion to the movement
-    const waveOffset = Math.sin(scrollFactor * 0.05 + index) * 5;
-    const offset = (scrollFactor * direction * (index + 1) * 0.3) % 150;
-    
-    return ((basePosition + offset + waveOffset) % 100 + 100) % 100;
-  };
-
-  const boats = [
-    { id: 1, baseX: 10, y: 30, speed: 1, size: 40 }
-    // { id: 2, baseX: 50, y: 50, speed: 0.8, size: 50 },
-    // { id: 3, baseX: 80, y: 40, speed: 1.2, size: 35 },
-  ];
-
   return (
     <div style={{
       position: 'fixed',
@@ -42,51 +172,6 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         backgroundSize: '50px 50px',
         opacity: 0.5,
       }} />
-      
-      {/* Animated Boats that follow waves */}
-      {boats.map((boat, index) => {
-        const xPosition = getBoatPosition(boat.baseX, index);
-        const isMovingRight = scrollDirection === 'down';
-        
-        // Calculate tilt based on movement
-        const tiltAngle = isMovingRight ? 5 : -5;
-        
-        return (
-          <div
-            key={boat.id}
-            style={{
-              position: 'absolute',
-              left: `${xPosition}%`,
-              top: `${boat.y}%`,
-              fontSize: `${boat.size}px`,
-              transition: 'left 0.5s cubic-bezier(0.4, 0, 0.2, 1)', // Smoother easing
-              animation: `waveRide ${3 + index * 0.5}s ease-in-out infinite`,
-              transform: `scaleX(${isMovingRight ? 1 : -1}) rotate(${tiltAngle}deg)`,
-              filter: 'drop-shadow(0 2px 8px rgba(100, 255, 218, 0.3))',
-              zIndex: 2,
-              transformOrigin: 'center center',
-            }}
-          >
-            ⛵
-          </div>
-        );
-      })}
-      
-      {/* Additional decorative elements */}
-      {/* Animated swimming fish with realistic movement */}
-      <div
-        style={{
-          position: 'absolute',
-          left: '20%',
-          top: '70%',
-          fontSize: '30px',
-          animation: 'swim1 25s ease-in-out infinite, verticalSwim 8s ease-in-out infinite',
-          filter: 'drop-shadow(0 2px 8px rgba(45, 212, 191, 0.3))',
-          zIndex: 1,
-        }}
-      >
-        🐟
-      </div>
       
       <div
         style={{
@@ -128,76 +213,6 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         }}
       >
         🐟
-      </div>
-      
-      {/* Birds in the sky */}
-      <div
-        style={{
-          position: 'absolute',
-          left: '30%',
-          top: '15%',
-          fontSize: '20px',
-          animation: 'flyAcross 30s linear infinite',
-          zIndex: 3,
-        }}
-      >
-        🦅
-      </div>
-      
-      <div
-        style={{
-          position: 'absolute',
-          left: '60%',
-          top: '10%',
-          fontSize: '18px',
-          animation: 'flyAcross 35s linear infinite 5s',
-          zIndex: 3,
-        }}
-      >
-        🕊️
-      </div>
-      
-      {/* Clouds */}
-      <div
-        style={{
-          position: 'absolute',
-          left: '10%',
-          top: '8%',
-          fontSize: '40px',
-          animation: 'cloudDrift 40s linear infinite',
-          opacity: 0.3,
-          zIndex: 1,
-        }}
-      >
-        ☁️
-      </div>
-      
-      <div
-        style={{
-          position: 'absolute',
-          left: '70%',
-          top: '12%',
-          fontSize: '35px',
-          animation: 'cloudDrift 50s linear infinite reverse',
-          opacity: 0.25,
-          zIndex: 1,
-        }}
-      >
-        ☁️
-      </div>
-      
-      <div
-        style={{
-          position: 'absolute',
-          left: '45%',
-          top: '5%',
-          fontSize: '30px',
-          animation: 'cloudDrift 45s linear infinite 10s',
-          opacity: 0.2,
-          zIndex: 1,
-        }}
-      >
-        ☁️
       </div>
       
       {/* Animated water gradient layers */}
@@ -499,6 +514,7 @@ const Portfolio = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [scrollDirection, setScrollDirection] = useState('down');
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [islandVisible, setIslandVisible] = useState(false);
   const rippleIdRef = useRef(0);
   const lastScrollRef = useRef(0);
 
@@ -524,17 +540,22 @@ const Portfolio = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
-      
+
       // Determine scroll direction
       if (currentScroll > lastScrollRef.current) {
         setScrollDirection('down');
       } else if (currentScroll < lastScrollRef.current) {
         setScrollDirection('up');
       }
-      
+
       lastScrollRef.current = currentScroll;
       setScrollPosition(currentScroll);
-      
+
+      // Check if user is near the bottom (within 500px of the bottom)
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const nearBottom = currentScroll >= maxScroll - 500;
+      setIslandVisible(nearBottom);
+
       // Update active section
       const sections = ['home', 'about', 'skills', 'projects', 'contact'];
       const scrollPosition = window.scrollY + 100;
@@ -567,6 +588,7 @@ const Portfolio = () => {
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", color: '#e6f1ff', position: 'relative' }}>
       <WaterRippleBackground ripples={ripples} scrollDirection={scrollDirection} scrollPosition={scrollPosition} />
+      <ScrollingBoat scrollPosition={scrollPosition} scrollDirection={scrollDirection} />
       
       {/* Navigation */}
       <nav style={{
@@ -597,6 +619,20 @@ const Portfolio = () => {
           @keyframes glow {
             0%, 100% { box-shadow: 0 0 20px rgba(100, 255, 218, 0.3); }
             50% { box-shadow: 0 0 40px rgba(100, 255, 218, 0.6); }
+          }
+          @keyframes floatIsland {
+            0%, 100% { transform: translateY(0px) rotate(-2deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+          }
+          @keyframes islandAppear {
+            from {
+              opacity: 0;
+              transform: translateY(50px) scale(0.8);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
           }
         `}</style>
         <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -810,9 +846,9 @@ const Portfolio = () => {
                 lineHeight: '1.8',
                 marginBottom: '1.5rem',
               }}>
-                Fast-forward to today, I have also recently graduated from Carleton University with a Major Degree in Computer Science
+                Fast-forward to today, I am graduate from Carleton University with a Major Degree in Computer Science
                 and have had the privilege of working on diverse projects ranging from responsive websites to complex applications. 
-                I focus on building accessible, performant digital experiences. 
+                My focus is on building accessible, performant digital experiences. 
               </p>
               <p style={{
                 color: '#8892b0',
@@ -1136,6 +1172,24 @@ const Portfolio = () => {
         position: 'relative',
         zIndex: 1,
       }}>
+
+        <div
+          style={{
+            position: 'absolute',
+            right: '15%',
+            top: '24%',
+            fontSize: '80px',
+            filter: 'drop-shadow(0 5px 15px rgba(100, 255, 218, 0.4))',
+            zIndex: 10,
+            opacity: islandVisible ? 1 : 0,
+            transform: islandVisible ? 'translateY(0) scale(1)' : 'translateY(50px) scale(0.8)',
+            transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
+            //animation: islandVisible ? 'floatIsland 3s ease-in-out infinite' : 'none',
+          }}
+        >
+          🏝️
+        </div>
+
         <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
           <span style={{
             fontSize: '0.9rem',
@@ -1214,7 +1268,7 @@ const Portfolio = () => {
                   {contact.value}
                 </p>
               </a>
-            ))}==
+            ))}
           </div>
         </div>
       </section>
@@ -1229,7 +1283,7 @@ const Portfolio = () => {
         zIndex: 1,
       }}>
         <p style={{ fontSize: '0.95rem' }}>
-          © 2024 Saagar Gahlot. Built with React and pure passion 💙
+          © 2025 Saagar Gahlot. Built with React and Pure Passion 💙 
         </p>
       </footer>
     </div>
