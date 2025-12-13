@@ -174,14 +174,14 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
           position: 'absolute',
           left: '70%',
           top: '65%',
-          animation: 'swim2 55s ease-in-out infinite 5s',
+          animation: 'swim2 55s ease-in-out infinite',
           zIndex: 1,
         }}
       >
         <div
           style={{
             fontSize: '25px',
-            animation: 'flipAndBob2 55s ease-in-out infinite 5s',
+            animation: 'flipAndBob2 55s ease-in-out infinite',
             filter: 'drop-shadow(0 2px 8px rgba(45, 212, 191, 0.3))',
           }}
         >
@@ -194,14 +194,14 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
           position: 'absolute',
           left: '40%',
           top: '75%',
-          animation: 'swim3 20s ease-in-out infinite 10s',
+          animation: 'swim3 20s ease-in-out infinite',
           zIndex: 1,
         }}
       >
         <div
           style={{
             fontSize: '28px',
-            animation: 'flipAndBob3 20s ease-in-out infinite 10s',
+            animation: 'flipAndBob3 20s ease-in-out infinite',
             filter: 'drop-shadow(0 2px 8px rgba(56, 189, 248, 0.3))',
           }}
         >
@@ -214,14 +214,14 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
           position: 'absolute',
           left: '85%',
           top: '68%',
-          animation: 'swim2 50s ease-in-out infinite 15s',
+          animation: 'swim2 50s ease-in-out infinite',
           zIndex: 1,
         }}
       >
         <div
           style={{
             fontSize: '22px',
-            animation: 'flipAndBob2 50s ease-in-out infinite 15s',
+            animation: 'flipAndBob2 50s ease-in-out infinite',
             filter: 'drop-shadow(0 2px 8px rgba(45, 212, 191, 0.3))',
           }}
         >
@@ -233,7 +233,7 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
       <div
         style={{
           position: 'absolute',
-          left: '25%',
+          left: '5%',
           top: '40%',
           fontSize: '35px',
           animation: 'jellyfishFloat 8s ease-in-out infinite',
@@ -250,8 +250,8 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
       <div
         style={{
           position: 'absolute',
-          left: '65%',
-          top: '35%',
+          left: '92%',
+          top: '70%',
           fontSize: '30px',
           animation: 'jellyfishFloat 10s ease-in-out infinite 2s',
           filter: 'drop-shadow(0 4px 12px rgba(147, 51, 234, 0.4))',
@@ -267,8 +267,8 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
       <div
         style={{
           position: 'absolute',
-          left: '80%',
-          top: '50%',
+          left: '15%',
+          top: '55%',
           fontSize: '38px',
           animation: 'jellyfishFloat 9s ease-in-out infinite 4s',
           filter: 'drop-shadow(0 4px 12px rgba(147, 51, 234, 0.4))',
@@ -312,7 +312,7 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
       <div
         style={{
           position: 'absolute',
-          left: '25%',
+          left: '10%',
           bottom: '6%',
           animation: 'crabWalk1 22s ease-in-out infinite',
           opacity: coralVisible ? 1 : 0,
@@ -335,7 +335,7 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
       <div
         style={{
           position: 'absolute',
-          left: '70%',
+          left: '85%',
           bottom: '7%',
           animation: 'crabWalk2 25s ease-in-out infinite 5s',
           opacity: coralVisible ? 1 : 0,
@@ -775,19 +775,19 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
 
         @keyframes crabWalk1 {
           0%, 100% {
-            left: 25%;
+            left: 10%;
           }
           50% {
-            left: 35%;
+            left: 15%;
           }
         }
 
         @keyframes crabWalk2 {
           0%, 100% {
-            left: 70%;
+            left: 85%;
           }
           50% {
-            left: 60%;
+            left: 80%;
           }
         }
 
@@ -1163,7 +1163,7 @@ const Portfolio = () => {
           
           <p style={{
             fontSize: '1.1rem',
-            color: '#8892b0',
+            color: '#c0cae9ff',
             maxWidth: '600px',
             marginBottom: '3rem',
             lineHeight: '1.8',
@@ -1357,17 +1357,17 @@ const Portfolio = () => {
             {[
               {
                 title: 'Frontend',
-                icon: '🎨',
+                icon: '',
                 skills: ['HTML & CSS', 'JavaScript', 'React', 'TypeScript', 'Tailwind CSS']
               },
               {
                 title: 'Backend',
-                icon: '⚙️',
+                icon: '',
                 skills: ['Node.js', 'Python', 'Java', 'C', 'C++']
               },
               {
                 title: 'Database, Tools and More',
-                icon: '🗄️',
+                icon: '',
                 skills: ['MongoDB', 'SQL', 'Git & GitHub', 'Docker', 'AWS', 'AI/ML', 'Reinforcement Learning']
               }
             ].map((category, index) => (
@@ -1406,7 +1406,7 @@ const Portfolio = () => {
                 <ul style={{ listStyle: 'none', padding: 0 }}>
                   {category.skills.map((skill, i) => (
                     <li key={i} style={{
-                      color: '#8892b0',
+                      color: '#c0cae9ff',
                       padding: '0.5rem 0',
                       fontSize: '1rem',
                     }}>
@@ -1530,7 +1530,7 @@ const Portfolio = () => {
                   </h3>
                   
                   <p style={{
-                    color: '#8892b0',
+                    color: '#c0cae9ff',
                     marginBottom: '1.5rem',
                     fontSize: '1rem',
                     lineHeight: '1.7',
@@ -1646,7 +1646,7 @@ const Portfolio = () => {
             Let's Work Together!
           </h2>
           <p style={{
-            color: '#8892b0',
+            color: '#c0cae9ff',
             fontSize: '1.1rem',
             lineHeight: '1.8',
             marginBottom: '3rem',
@@ -1715,7 +1715,7 @@ const Portfolio = () => {
         borderTop: '1px solid rgba(100, 255, 218, 0.1)',
         padding: '3rem 2rem',
         textAlign: 'center',
-        color: '#8892b0',
+        color: '#c0cae9ff',
         position: 'relative',
         zIndex: 1,
       }}>
