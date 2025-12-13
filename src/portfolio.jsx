@@ -149,6 +149,14 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
       
 
 const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => {
+  const maxScroll = typeof document !== 'undefined'
+    ? document.documentElement.scrollHeight - window.innerHeight
+    : 1000;
+  const scrollPercentage = Math.min(scrollPosition / maxScroll, 1);
+  const deepWaterVisible = scrollPercentage > 0.4; // Show after 40% scroll
+  const dolphinVisible = scrollPercentage > 0.4 && scrollPercentage < 0.8; // Show dolphin between 40-80% scroll
+  const coralVisible = scrollPercentage > 0.95; // Show coral after 95% scroll
+
   return (
     <div style={{
       position: 'fixed',
@@ -160,59 +168,270 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
       zIndex: 0,
       background: 'linear-gradient(135deg, #0a192f 0%, #112240 50%, #1a365d 100%)',
     }}>
-      {/* Mesh/Weave Pattern Overlay */}
-      <div style={{
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        backgroundImage: `
-          linear-gradient(0deg, transparent 24%, rgba(100, 255, 218, 0.03) 25%, rgba(100, 255, 218, 0.03) 26%, transparent 27%, transparent 74%, rgba(100, 255, 218, 0.03) 75%, rgba(100, 255, 218, 0.03) 76%, transparent 77%, transparent),
-          linear-gradient(90deg, transparent 24%, rgba(100, 255, 218, 0.03) 25%, rgba(100, 255, 218, 0.03) 26%, transparent 27%, transparent 74%, rgba(100, 255, 218, 0.03) 75%, rgba(100, 255, 218, 0.03) 76%, transparent 77%, transparent)
-        `,
-        backgroundSize: '50px 50px',
-        opacity: 0.5,
-      }} />
-      
+
       <div
         style={{
           position: 'absolute',
           left: '70%',
           top: '65%',
-          fontSize: '25px',
-          animation: 'swim2 30s ease-in-out infinite 5s, verticalSwim 6s ease-in-out infinite 2s',
-          filter: 'drop-shadow(0 2px 8px rgba(45, 212, 191, 0.3))',
+          animation: 'swim2 55s ease-in-out infinite 5s',
           zIndex: 1,
         }}
       >
-        🐠
+        <div
+          style={{
+            fontSize: '25px',
+            animation: 'flipAndBob2 55s ease-in-out infinite 5s',
+            filter: 'drop-shadow(0 2px 8px rgba(45, 212, 191, 0.3))',
+          }}
+        >
+          🐠
+        </div>
       </div>
-      
+
       <div
         style={{
           position: 'absolute',
           left: '40%',
           top: '75%',
-          fontSize: '28px',
-          animation: 'swim3 20s ease-in-out infinite 10s, verticalSwim 7s ease-in-out infinite 4s',
-          filter: 'drop-shadow(0 2px 8px rgba(56, 189, 248, 0.3))',
+          animation: 'swim3 20s ease-in-out infinite 10s',
           zIndex: 1,
         }}
       >
-        🐡
+        <div
+          style={{
+            fontSize: '28px',
+            animation: 'flipAndBob3 20s ease-in-out infinite 10s',
+            filter: 'drop-shadow(0 2px 8px rgba(56, 189, 248, 0.3))',
+          }}
+        >
+          🐡
+        </div>
       </div>
-      
+
       <div
         style={{
           position: 'absolute',
           left: '85%',
           top: '68%',
-          fontSize: '22px',
-          animation: 'swim2 28s ease-in-out infinite 15s, verticalSwim 5.5s ease-in-out infinite 1s',
-          filter: 'drop-shadow(0 2px 8px rgba(45, 212, 191, 0.3))',
+          animation: 'swim2 50s ease-in-out infinite 15s',
           zIndex: 1,
         }}
       >
-        🐟
+        <div
+          style={{
+            fontSize: '22px',
+            animation: 'flipAndBob2 50s ease-in-out infinite 15s',
+            filter: 'drop-shadow(0 2px 8px rgba(45, 212, 191, 0.3))',
+          }}
+        >
+          🐟
+        </div>
+      </div>
+
+      {/* Jellyfish - appears in deeper water */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '25%',
+          top: '40%',
+          fontSize: '35px',
+          animation: 'jellyfishFloat 8s ease-in-out infinite',
+          filter: 'drop-shadow(0 4px 12px rgba(147, 51, 234, 0.4))',
+          opacity: deepWaterVisible ? 1 : 0,
+          transition: deepWaterVisible ? 'opacity 0.7s ease-in-out' : 'opacity 0.3s ease-out',
+          zIndex: 1,
+        }}
+      >
+        🪼
+      </div>
+
+      {/* Jellyfish 2 */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '65%',
+          top: '35%',
+          fontSize: '30px',
+          animation: 'jellyfishFloat 10s ease-in-out infinite 2s',
+          filter: 'drop-shadow(0 4px 12px rgba(147, 51, 234, 0.4))',
+          opacity: deepWaterVisible ? 1 : 0,
+          transition: deepWaterVisible ? 'opacity 0.7s ease-in-out' : 'opacity 0.3s ease-out',
+          zIndex: 1,
+        }}
+      >
+        🪼
+      </div>
+
+      {/* Jellyfish 3 */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '80%',
+          top: '50%',
+          fontSize: '38px',
+          animation: 'jellyfishFloat 9s ease-in-out infinite 4s',
+          filter: 'drop-shadow(0 4px 12px rgba(147, 51, 234, 0.4))',
+          opacity: deepWaterVisible ? 1 : 0,
+          transition: deepWaterVisible ? 'opacity 0.7s ease-in-out' : 'opacity 0.3s ease-out',
+          zIndex: 1,
+        }}
+      >
+        🪼
+      </div>
+
+      {/* Dolphin - appears in deeper water */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '30%',
+          animation: 'dolphinSwim 30s linear infinite',
+          opacity: dolphinVisible ? 1 : 0,
+          transition: dolphinVisible ? 'opacity 0.7s ease-in-out' : 'opacity 0.8s ease-out',
+          zIndex: 1,
+        }}
+      >
+        <div
+          style={{
+            animation: 'dolphinBob 4s ease-in-out infinite',
+          }}
+        >
+          <img
+            src="photo/dolphin.png"
+            alt="Dolphin"
+            style={{
+              width: '80px',
+              height: '80px',
+              filter: 'drop-shadow(0 3px 10px rgba(59, 130, 246, 0.4))',
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Crab 1 - appears near bottom */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '25%',
+          bottom: '6%',
+          animation: 'crabWalk1 22s ease-in-out infinite',
+          opacity: coralVisible ? 1 : 0,
+          transition: coralVisible ? 'opacity 0.7s ease-in-out' : 'opacity 0.3s ease-out',
+          zIndex: 1,
+        }}
+      >
+        <div
+          style={{
+            fontSize: '35px',
+            animation: 'crabFlip1 22s ease-in-out infinite',
+            filter: 'drop-shadow(0 2px 8px rgba(239, 68, 68, 0.3))',
+          }}
+        >
+          🦀
+        </div>
+      </div>
+
+      {/* Crab 2 - appears near bottom */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '70%',
+          bottom: '7%',
+          animation: 'crabWalk2 25s ease-in-out infinite 5s',
+          opacity: coralVisible ? 1 : 0,
+          transition: coralVisible ? 'opacity 0.7s ease-in-out' : 'opacity 0.3s ease-out',
+          zIndex: 1,
+        }}
+      >
+        <div
+          style={{
+            fontSize: '30px',
+            animation: 'crabFlip2 25s ease-in-out infinite 5s',
+            filter: 'drop-shadow(0 2px 8px rgba(239, 68, 68, 0.3))',
+          }}
+        >
+          🦀
+        </div>
+      </div>
+
+      {/* Coral Reefs at bottom - Left side */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '8%',
+          left: '18%',
+          fontSize: '45px',
+          opacity: coralVisible ? 1 : 0,
+          transform: coralVisible ? 'translateY(0)' : 'translateY(50px)',
+          transition: coralVisible ? 'opacity 0.9s ease-out, transform 0.9s ease-out' : 'opacity 0.15s ease-out, transform 0.15s ease-out',
+          filter: 'drop-shadow(0 2px 8px rgba(236, 72, 153, 0.3))',
+          zIndex: 1,
+        }}
+      >
+        🪸
+      </div>
+
+      {/* Coral Reef Image - Left side */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '3%',
+          left: '2%',
+          opacity: coralVisible ? 1 : 0,
+          transform: coralVisible ? 'translateY(0)' : 'translateY(50px)',
+          transition: coralVisible ? 'opacity 1.1s ease-out, transform 1.1s ease-out' : 'opacity 0.15s ease-out, transform 0.15s ease-out',
+          zIndex: 1,
+        }}
+      >
+        <img
+          src="photo/coral-reef.png"
+          alt="Coral Reef"
+          style={{
+            width: '120px',
+            height: 'auto',
+            filter: 'drop-shadow(0 3px 12px rgba(100, 255, 218, 0.4))',
+          }}
+        />
+      </div>
+
+      {/* Coral Reefs at bottom - Right side */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '7%',
+          left: '78%',
+          fontSize: '55px',
+          opacity: coralVisible ? 1 : 0,
+          transform: coralVisible ? 'translateY(0)' : 'translateY(50px)',
+          transition: coralVisible ? 'opacity 1.1s ease-out, transform 1.1s ease-out' : 'opacity 0.15s ease-out, transform 0.15s ease-out',
+          filter: 'drop-shadow(0 2px 8px rgba(168, 85, 247, 0.3))',
+          zIndex: 1,
+        }}
+      >
+        🪸
+      </div>
+
+      {/* Coral Reef Image - Right side */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '2%',
+          right: '2%',
+          opacity: coralVisible ? 1 : 0,
+          transform: coralVisible ? 'translateY(0)' : 'translateY(50px)',
+          transition: coralVisible ? 'opacity 1.4s ease-out, transform 1.4s ease-out' : 'opacity 0.15s ease-out, transform 0.15s ease-out',
+          zIndex: 1,
+        }}
+      >
+        <img
+          src="photo/coral-reef.png"
+          alt="Coral Reef"
+          style={{
+            width: '120px',
+            height: 'auto',
+            filter: 'drop-shadow(0 3px 12px rgba(100, 255, 218, 0.4))',
+          }}
+        />
       </div>
       
       {/* Animated water gradient layers */}
@@ -246,21 +465,21 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
       >
         {/* Wave 1 - Bottom layer */}
         <path
-          fill="rgba(100, 255, 218, 0.03)"
+          fill="rgba(100, 255, 218, 0.08)"
           d="M0,160L48,144C96,128,192,96,288,106.7C384,117,480,171,576,176C672,181,768,139,864,128C960,117,1056,139,1152,149.3C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          style={{ animation: 'wave1 15s ease-in-out infinite' }}
+          style={{ animation: 'wave1 12s ease-in-out infinite' }}
         />
         {/* Wave 2 - Middle layer */}
         <path
-          fill="rgba(45, 212, 191, 0.05)"
+          fill="rgba(45, 212, 191, 0.1)"
           d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,213.3C672,224,768,224,864,208C960,192,1056,160,1152,154.7C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          style={{ animation: 'wave2 12s ease-in-out infinite' }}
+          style={{ animation: 'wave2 10s ease-in-out infinite' }}
         />
         {/* Wave 3 - Top layer */}
         <path
-          fill="rgba(56, 189, 248, 0.04)"
+          fill="rgba(56, 189, 248, 0.07)"
           d="M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,133.3C672,117,768,107,864,117.3C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          style={{ animation: 'wave3 18s ease-in-out infinite' }}
+          style={{ animation: 'wave3 15s ease-in-out infinite' }}
         />
       </svg>
       
@@ -280,9 +499,9 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         preserveAspectRatio="none"
       >
         <path
-          fill="rgba(100, 255, 218, 0.02)"
+          fill="rgba(100, 255, 218, 0.06)"
           d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
-          style={{ animation: 'wave1 20s ease-in-out infinite' }}
+          style={{ animation: 'wave1 18s ease-in-out infinite' }}
         />
       </svg>
       
@@ -365,70 +584,165 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         @keyframes swim1 {
           0% {
             left: -10%;
-            transform: scaleX(1);
-          }
-          48% {
-            transform: scaleX(1);
           }
           50% {
             left: 110%;
-            transform: scaleX(1);
-          }
-          52% {
-            transform: scaleX(-1);
-          }
-          98% {
-            transform: scaleX(-1);
           }
           100% {
             left: -10%;
-            transform: scaleX(-1);
           }
         }
-        
+
         @keyframes swim2 {
           0% {
             left: 110%;
-            transform: scaleX(-1);
-          }
-          48% {
-            transform: scaleX(-1);
           }
           50% {
             left: -10%;
-            transform: scaleX(-1);
-          }
-          52% {
-            transform: scaleX(1);
-          }
-          98% {
-            transform: scaleX(1);
           }
           100% {
             left: 110%;
-            transform: scaleX(1);
           }
         }
-        
+
         @keyframes swim3 {
           0%, 100% {
             left: 40%;
-            transform: scaleX(1) translateX(0);
           }
           25% {
             left: 20%;
-            transform: scaleX(-1) translateX(0);
-          }
-          50% {
-            left: 40%;
-            transform: scaleX(-1) translateX(0);
           }
           75% {
             left: 60%;
-            transform: scaleX(1) translateX(0);
           }
         }
-        
+
+        @keyframes flipAndBob1 {
+          0% {
+            transform: scaleX(-1) translateY(0);
+          }
+          12.5% {
+            transform: scaleX(-1) translateY(-30px);
+          }
+          25% {
+            transform: scaleX(-1) translateY(-10px);
+          }
+          37.5% {
+            transform: scaleX(-1) translateY(-40px);
+          }
+          49% {
+            transform: scaleX(-1) translateY(0);
+          }
+          50% {
+            transform: scaleX(1) translateY(0);
+          }
+          62.5% {
+            transform: scaleX(1) translateY(-30px);
+          }
+          75% {
+            transform: scaleX(1) translateY(-10px);
+          }
+          87.5% {
+            transform: scaleX(1) translateY(-40px);
+          }
+          100% {
+            transform: scaleX(1) translateY(0);
+          }
+        }
+
+        @keyframes flipAndBob2 {
+          0% {
+            transform: scaleX(1) translateY(0);
+          }
+          12.5% {
+            transform: scaleX(1) translateY(-30px);
+          }
+          25% {
+            transform: scaleX(1) translateY(-10px);
+          }
+          37.5% {
+            transform: scaleX(1) translateY(-40px);
+          }
+          49% {
+            transform: scaleX(1) translateY(0);
+          }
+          50% {
+            transform: scaleX(-1) translateY(0);
+          }
+          62.5% {
+            transform: scaleX(-1) translateY(-30px);
+          }
+          75% {
+            transform: scaleX(-1) translateY(-10px);
+          }
+          87.5% {
+            transform: scaleX(-1) translateY(-40px);
+          }
+          100% {
+            transform: scaleX(-1) translateY(0);
+          }
+        }
+
+        @keyframes flipAndBob3 {
+          0% {
+            transform: scaleX(1) translateY(0);
+          }
+          6.25% {
+            transform: scaleX(1) translateY(-30px);
+          }
+          12.5% {
+            transform: scaleX(1) translateY(-10px);
+          }
+          18.75% {
+            transform: scaleX(1) translateY(-40px);
+          }
+          24% {
+            transform: scaleX(1) translateY(0);
+          }
+          25% {
+            transform: scaleX(-1) translateY(0);
+          }
+          31.25% {
+            transform: scaleX(-1) translateY(-30px);
+          }
+          37.5% {
+            transform: scaleX(-1) translateY(-10px);
+          }
+          43.75% {
+            transform: scaleX(-1) translateY(-40px);
+          }
+          50% {
+            transform: scaleX(-1) translateY(0);
+          }
+          56.25% {
+            transform: scaleX(-1) translateY(-30px);
+          }
+          62.5% {
+            transform: scaleX(-1) translateY(-10px);
+          }
+          68.75% {
+            transform: scaleX(-1) translateY(-40px);
+          }
+          74% {
+            transform: scaleX(-1) translateY(0);
+          }
+          75% {
+            transform: scaleX(1) translateY(0);
+          }
+          81.25% {
+            transform: scaleX(1) translateY(-30px);
+          }
+          87.5% {
+            transform: scaleX(1) translateY(-10px);
+          }
+          93.75% {
+            transform: scaleX(1) translateY(-40px);
+          }
+          100% {
+            transform: scaleX(1) translateY(0);
+          }
+        }
+
         @keyframes verticalSwim {
           0%, 100% {
             transform: translateY(0);
@@ -441,6 +755,117 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
           }
           75% {
             transform: translateY(-40px);
+          }
+        }
+
+        @keyframes jellyfishFloat {
+          0%, 100% {
+            transform: translateY(0) rotate(0deg);
+          }
+          25% {
+            transform: translateY(-80px) rotate(-5deg);
+          }
+          50% {
+            transform: translateY(-120px) rotate(0deg);
+          }
+          75% {
+            transform: translateY(-80px) rotate(5deg);
+          }
+        }
+
+        @keyframes crabWalk1 {
+          0%, 100% {
+            left: 25%;
+          }
+          50% {
+            left: 35%;
+          }
+        }
+
+        @keyframes crabWalk2 {
+          0%, 100% {
+            left: 70%;
+          }
+          50% {
+            left: 60%;
+          }
+        }
+
+        @keyframes crabFlip1 {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          12.5% {
+            transform: translateY(-8px);
+          }
+          25% {
+            transform: translateY(-15px);
+          }
+          37.5% {
+            transform: translateY(-8px);
+          }
+          50% {
+            transform: translateY(0);
+          }
+          62.5% {
+            transform: translateY(-8px);
+          }
+          75% {
+            transform: translateY(-15px);
+          }
+          87.5% {
+            transform: translateY(-8px);
+          }
+        }
+
+        @keyframes crabFlip2 {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          12.5% {
+            transform: translateY(-8px);
+          }
+          25% {
+            transform: translateY(-15px);
+          }
+          37.5% {
+            transform: translateY(-8px);
+          }
+          50% {
+            transform: translateY(0);
+          }
+          62.5% {
+            transform: translateY(-8px);
+          }
+          75% {
+            transform: translateY(-15px);
+          }
+          87.5% {
+            transform: translateY(-8px);
+          }
+        }
+
+        @keyframes dolphinSwim {
+          0% {
+            left: -10%;
+          }
+          100% {
+            left: 110%;
+          }
+        }
+
+        @keyframes dolphinBob {
+          0%, 100% {
+            transform: scaleX(1) translateY(0);
+          }
+          25% {
+            transform: scaleX(1) translateY(-35px);
+          }
+          50% {
+            transform: scaleX(1) translateY(-10px);
+          }
+          75% {
+            transform: scaleX(1) translateY(-30px);
           }
         }
         
@@ -482,26 +907,38 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
           0%, 100% {
             d: path("M0,160L48,144C96,128,192,96,288,106.7C384,117,480,171,576,176C672,181,768,139,864,128C960,117,1056,139,1152,149.3C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
           }
-          50% {
+          25% {
             d: path("M0,192L48,176C96,160,192,128,288,128C384,128,480,160,576,176C672,192,768,192,864,181.3C960,171,1056,149,1152,154.7C1248,160,1344,192,1392,208L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
           }
+          50% {
+            d: path("M0,128L48,149.3C96,171,192,213,288,218.7C384,224,480,192,576,165.3C672,139,768,117,864,133.3C960,149,1056,203,1152,213.3C1248,224,1344,192,1392,176L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
+          }
+          75% {
+            d: path("M0,224L48,202.7C96,181,192,139,288,138.7C384,139,480,181,576,202.7C672,224,768,224,864,213.3C960,203,1056,181,1152,170.7C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
+          }
         }
-        
+
         @keyframes wave2 {
           0%, 100% {
             d: path("M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,213.3C672,224,768,224,864,208C960,192,1056,160,1152,154.7C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
           }
-          50% {
+          33% {
             d: path("M0,256L48,234.7C96,213,192,171,288,165.3C384,160,480,192,576,197.3C672,203,768,181,864,186.7C960,192,1056,224,1152,229.3C1248,235,1344,213,1392,202.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
           }
+          66% {
+            d: path("M0,192L48,181.3C96,171,192,149,288,160C384,171,480,213,576,218.7C672,224,768,192,864,165.3C960,139,1056,117,1152,128C1248,139,1344,181,1392,202.7L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
+          }
         }
-        
+
         @keyframes wave3 {
           0%, 100% {
             d: path("M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,133.3C672,117,768,107,864,117.3C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
           }
-          50% {
+          40% {
             d: path("M0,128L48,138.7C96,149,192,171,288,165.3C384,160,480,128,576,122.7C672,117,768,139,864,144C960,149,1056,139,1152,138.7C1248,139,1344,149,1392,154.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
+          }
+          80% {
+            d: path("M0,160L48,154.7C96,149,192,139,288,149.3C384,160,480,192,576,192C672,192,768,160,864,138.7C960,117,1056,107,1152,117.3C1248,128,1344,160,1392,176L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
           }
         }
       `}</style>
