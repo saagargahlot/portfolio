@@ -1268,32 +1268,32 @@ const Portfolio = () => {
           }}>
             <div>
               <p style={{
-                color: '#8892b0',
+                color: '#c0cae9ff',
                 fontSize: '1.1rem',
                 lineHeight: '1.8',
                 marginBottom: '1.5rem',
               }}>
-                Hello! I'm a developer who is very passionate about creating things that live on the internet. 
-                My journey in the code space started from curiosity which led to me building a simple McDonald's Kiosk. 
-                I then wanted to learn more and more in the sense of different languages and their respective purposes. 
+                Hello. I'm a developer who is passionate about creating things that live on the internet. 
+                My journey in the coding space began with curiosity, which led me to build a simple McDonald's kiosk. 
+                I then wanted to learn more and more about different languages and their respective purposes. 
               </p>
               <p style={{
-                color: '#8892b0',
+                color: '#c0cae9ff',
                 fontSize: '1.1rem',
                 lineHeight: '1.8',
                 marginBottom: '1.5rem',
               }}>
-                Fast-forward to today, I am graduate from Carleton University with a Major Degree in Computer Science
-                and have had the privilege of working on diverse projects ranging from responsive websites to complex applications. 
-                My focus is on building accessible, performant digital experiences. 
+                Fast-forward to today, I am a graduate of Carleton University with a Major Degree in Computer Science and 
+                have had the privilege of working on diverse projects ranging from responsive websites to complex applications. 
+                My focus is on building accessible, performant digital experiences.
               </p>
               <p style={{
-                color: '#8892b0',
+                color: '#c0cae9ff',
                 fontSize: '1.1rem',
                 lineHeight: '1.8',
               }}>
-                When I'm not coding, I'm exploring new technologies, contributing to open-source, 
-                or working on personal projects to sharpen my skills. I am always looking to get better and learn more!
+                When I'm not coding, I'm exploring new technologies, contributing to open-source projects, or working on personal projects to sharpen my skills. 
+                I am always looking to get better and learn more.
               </p>
             </div>
             
