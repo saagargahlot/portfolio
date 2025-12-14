@@ -113,7 +113,7 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
              Q 34,60 35,70
              Q 30,85 50,85
              Q 53,88 67,88
-             Q 65,25 65,18
+             Q 65,25 65,8
              Q 65,15 80,28"
           fill="none"
           stroke="url(#pathGradient)"
@@ -1358,7 +1358,7 @@ const Portfolio = () => {
               {
                 title: 'Frontend',
                 icon: '',
-                skills: ['HTML & CSS', 'JavaScript', 'React', 'TypeScript', 'Tailwind CSS']
+                skills: ['HTML & CSS', 'JavaScript', 'React', 'TypeScript', 'Tailwind CSS', 'GUI']
               },
               {
                 title: 'Backend',
@@ -1368,7 +1368,7 @@ const Portfolio = () => {
               {
                 title: 'Database, Tools and More',
                 icon: '',
-                skills: ['MongoDB', 'SQL', 'Git & GitHub', 'Docker', 'AWS', 'AI/ML', 'Reinforcement Learning']
+                skills: ['MongoDB', 'SQL', 'Git & GitHub', 'Docker', 'AWS', 'AI/ML', 'Reinforcement Learning', 'CLI']
               }
             ].map((category, index) => (
               <div
@@ -1454,16 +1454,18 @@ const Portfolio = () => {
           }}>
             {[
               {
-                icon: '🚀',
-                title: 'TODO',
-                description: 'TODO',
-                tags: ['TODO'],
+                icon: '🎮',
+                title: '2048 Game',
+                description: 'Classic 2048 puzzle game implementation with smooth animations and responsive design. Built to practice game logic and state management.',
+                tags: ['JavaScript', 'HTML', 'CSS', 'Typescript', 'Zustand', 'Game Development'],
+                link: 'https://github.com/saagargahlot/2048-game'
               },
               {
-                icon: '💡',
-                title: 'TODO',
-                description: 'TODO',
-                tags: ['TODO'],
+                icon: '🎬',
+                title: 'Moviezilla',
+                description: 'A comprehensive movie discovery platform that allows users to browse, search, and explore movies with detailed information and ratings.',
+                tags: ['Node.js', 'API Integration', 'JavaScript', 'MongoDB', 'Pug template system', 'Mongoose'],
+                link: 'https://github.com/saagargahlot/proj-moviezilla'
               },
               {
                 icon: '🎨',
@@ -1559,42 +1561,27 @@ const Portfolio = () => {
                   </div>
                   
                   <div style={{ display: 'flex', gap: '1.5rem' }}>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleButtonClick(e);
-                      }}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        color: '#64ffda',
-                        cursor: 'pointer',
-                        fontSize: '0.95rem',
-                        transition: 'opacity 0.3s ease',
-                      }}
-                      onMouseEnter={(e) => e.target.style.opacity = '0.7'}
-                      onMouseLeave={(e) => e.target.style.opacity = '1'}
-                    >
-                      → View Live
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleButtonClick(e);
-                      }}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        color: '#64ffda',
-                        cursor: 'pointer',
-                        fontSize: '0.95rem',
-                        transition: 'opacity 0.3s ease',
-                      }}
-                      onMouseEnter={(e) => e.target.style.opacity = '0.7'}
-                      onMouseLeave={(e) => e.target.style.opacity = '1'}
-                    >
-                      → View Code
-                    </button>
+                    {project.link && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleButtonClick(e);
+                          window.open(project.link, '_blank');
+                        }}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#64ffda',
+                          cursor: 'pointer',
+                          fontSize: '0.95rem',
+                          transition: 'opacity 0.3s ease',
+                        }}
+                        onMouseEnter={(e) => e.target.style.opacity = '0.7'}
+                        onMouseLeave={(e) => e.target.style.opacity = '1'}
+                      >
+                        → View Code
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
