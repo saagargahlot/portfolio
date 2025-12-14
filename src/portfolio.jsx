@@ -104,17 +104,14 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
         {/* Path curves: left around About image, right between skills, left around projects, right to island */}
         <path
           ref={pathRef}
-          d="M 5,8
-             Q 10,12 11,18
-             Q 12,24 18 25
-             Q 55,15 55,34
-             Q 50,40 45,50
-             Q 40,50 34,48
-             Q 34,60 35,70
-             Q 30,85 50,85
-             Q 53,88 67,88
-             Q 65,25 65,8
-             Q 65,15 80,28"
+          d="M 0,8
+             Q 12,24 18 35
+             Q 30,15 55,34
+             Q 50,40 50,50
+             Q 0,25 15,50
+             Q 13,88 10,88
+             Q 10,25 10,8
+             Q 10,15 11,28"
           fill="none"
           stroke="url(#pathGradient)"
           strokeWidth="0.3"
@@ -137,7 +134,7 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
           transition: isIdle ? 'none' : 'all 0.15s linear',
           animation: isIdle ? 'boatFloat 3s ease-in-out infinite' : 'none',
           filter: 'drop-shadow(0 5px 15px rgba(100, 255, 218, 0.6))',
-          zIndex: 101,
+          zIndex: 0,
           pointerEvents: 'none',
         }}
       />
@@ -263,50 +260,6 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         🪼
       </div>
 
-      {/* Jellyfish 3 */}
-      <div
-        style={{
-          position: 'absolute',
-          left: '15%',
-          top: '55%',
-          fontSize: '38px',
-          animation: 'jellyfishFloat 9s ease-in-out infinite 4s',
-          filter: 'drop-shadow(0 4px 12px rgba(147, 51, 234, 0.4))',
-          opacity: deepWaterVisible ? 1 : 0,
-          transition: deepWaterVisible ? 'opacity 0.7s ease-in-out' : 'opacity 0.3s ease-out',
-          zIndex: 1,
-        }}
-      >
-        🪼
-      </div>
-
-      {/* Dolphin - appears in deeper water */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '30%',
-          animation: 'dolphinSwim 30s linear infinite',
-          opacity: dolphinVisible ? 1 : 0,
-          transition: dolphinVisible ? 'opacity 0.7s ease-in-out' : 'opacity 0.8s ease-out',
-          zIndex: 1,
-        }}
-      >
-        <div
-          style={{
-            animation: 'dolphinBob 4s ease-in-out infinite',
-          }}
-        >
-          <img
-            src="photo/dolphin.png"
-            alt="Dolphin"
-            style={{
-              width: '80px',
-              height: '80px',
-              filter: 'drop-shadow(0 3px 10px rgba(59, 130, 246, 0.4))',
-            }}
-          />
-        </div>
-      </div>
 
       {/* Crab 1 - appears near bottom */}
       <div
@@ -988,10 +941,11 @@ const Portfolio = () => {
       lastScrollRef.current = currentScroll;
       setScrollPosition(currentScroll);
 
-      // Check if user is near the bottom (within 500px of the bottom)
+      // Check if user has scrolled to around 85%
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const nearBottom = currentScroll >= maxScroll - 500;
-      setIslandVisible(nearBottom);
+      const scrollPercentage = currentScroll / maxScroll;
+      const at85Percent = scrollPercentage >= 0.85;
+      setIslandVisible(at85Percent);
 
       // Update active section
       const sections = ['home', 'about', 'skills', 'projects', 'contact'];
@@ -1026,14 +980,14 @@ const Portfolio = () => {
     <div style={{ fontFamily: "'Inter', sans-serif", color: '#e6f1ff', position: 'relative' }}>
       <WaterRippleBackground ripples={ripples} scrollDirection={scrollDirection} scrollPosition={scrollPosition} />
       <ScrollingBoat scrollPosition={scrollPosition} scrollDirection={scrollDirection} />
-      
+
       {/* Navigation */}
       <nav style={{
         position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
-        padding: '1.5rem 2rem',
+        padding: '1rem 2rem',
         backdropFilter: 'blur(10px)',
         background: 'rgba(10, 25, 47, 0.85)',
         borderBottom: '1px solid rgba(100, 255, 218, 0.1)',
@@ -1071,19 +1025,30 @@ const Portfolio = () => {
               transform: translateY(0) scale(1);
             }
           }
+          @keyframes slideInFromLeft {
+            from {
+              opacity: 0;
+              transform: translateX(-100px);
+            }
+            to {
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
         `}</style>
         <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{
-            fontSize: '1.5rem',
+            fontSize: '1.35rem',
             fontWeight: '800',
-            background: 'linear-gradient(135deg, #64ffda 0%, #2dd4bf 100%)',
+            fontFamily: 'Caslon',
+            background: 'linear-gradient(135deg, #e6f1ff 0%, #64ffda 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
           }}>
             Saagar Gahlot
           </div>
-          <div style={{ display: 'flex', gap: '2rem' }}>
+          <div style={{ display: 'flex', gap: '1.5rem' }}>
             {['home', 'about', 'skills', 'projects', 'contact'].map((section) => (
               <a
                 key={section}
@@ -1092,7 +1057,7 @@ const Portfolio = () => {
                 style={{
                   color: activeSection === section ? '#64ffda' : '#8892b0',
                   textDecoration: 'none',
-                  fontSize: '0.95rem',
+                  fontSize: '0.85rem',
                   fontWeight: '500',
                   position: 'relative',
                   transition: 'color 0.3s ease',
@@ -1151,9 +1116,9 @@ const Portfolio = () => {
             fontSize: 'clamp(1.2rem, 3vw, 1.8rem)',
             color: '#8892b0',
             marginBottom: '2rem',
-            fontWeight: '300',
+            fontWeight: '250',
             lineHeight: '1.1',
-            background: 'linear-gradient(135deg, #e6f1ff 0%, #64ffda 100%)',
+            background: 'linear-gradient(135deg, #e6f1ff 0%, #64ffda 75%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
@@ -1200,7 +1165,7 @@ const Portfolio = () => {
                 e.target.style.boxShadow = 'none';
               }}
             >
-              My Work
+              My Projects
             </button>
             
             <button
@@ -1228,7 +1193,7 @@ const Portfolio = () => {
                 e.target.style.transform = 'translateY(0)';
               }}
             >
-              Get In Touch
+              Contact Me
             </button>
           </div>
         </div>
@@ -1241,32 +1206,26 @@ const Portfolio = () => {
         zIndex: 1,
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-          <div style={{ marginBottom: '4rem' }}>
-            <span style={{
-              fontSize: '0.9rem',
-              color: '#64ffda',
-              textTransform: 'uppercase',
-              letterSpacing: '3px',
-              fontWeight: '600',
-            }}>
-              About Me
-            </span>
+          <div style={{ marginBottom: '1rem' }}>
             <h2 style={{
               fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+              fontFamily: 'Caslon', 
               fontWeight: '800',
               marginTop: '1rem',
+              color: '#ffffff',
+              animation: 'slideInFromLeft 0.8s ease-out',
             }}>
-              Who I Am
+              ABOUT ME
             </h2>
           </div>
-          
+
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: '4rem',
             alignItems: 'center',
           }}>
-            <div>
+            <div style={{ maxWidth: '600px' }}>
               <p style={{
                 color: '#c0cae9ff',
                 fontSize: '1.1rem',
@@ -1298,15 +1257,15 @@ const Portfolio = () => {
             </div>
             
               <div style={{
-                width: '100%',         // Takes full container width
-                maxWidth: '450px',     // ← Max size limit
-                aspectRatio: '1',      // Keeps it square
+                width: '100%',
+                maxWidth: '450px',
+                aspectRatio: '1',
                 borderRadius: '1rem',
                 overflow: 'hidden',
                 animation: 'float 4s ease-in-out infinite',
                 boxShadow: '0 20px 60px rgba(100, 255, 218, 0.2)',
                 border: '3px solid #ffffffff',
-                margin: '0 auto',      // Centers it
+                margin: '0 auto',
               }}>
                 <img 
                   src="photo/me.jpg" 
@@ -1325,34 +1284,35 @@ const Portfolio = () => {
 
       {/* Skills Section */}
       <section id="skills" style={{
-        padding: '8rem 2rem',
+        padding: '5rem 2rem',
         position: 'relative',
         zIndex: 1,
       }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-          <div style={{ marginBottom: '4rem' }}>
-            <span style={{
-              fontSize: '0.9rem',
-              color: '#64ffda',
-              textTransform: 'uppercase',
-              letterSpacing: '3px',
-              fontWeight: '600',
-            }}>
-              My Expertise
-            </span>
+        <div style={{
+          maxWidth: '900px',
+          margin: '0 auto',
+          background: 'rgba(255, 255, 255, 0.03)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '1.5rem',
+          padding: '1.5rem 2rem',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+        }}>
+          <div style={{ marginBottom: '2.5rem' }}>
             <h2 style={{
-              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+              fontSize: 'clamp(2rem, 4vw, 3rem)',
               fontWeight: '800',
-              marginTop: '1rem',
+              fontFamily: 'Caslon',
+              marginTop: '0.75rem',
+              color: '#ffffff',
             }}>
-              Skills
+              MY SKILLS
             </h2>
           </div>
-          
+
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '2rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '1.5rem',
           }}>
             {[
               {
@@ -1378,7 +1338,7 @@ const Portfolio = () => {
                   background: 'rgba(17, 34, 64, 0.6)',
                   border: '1px solid rgba(100, 255, 218, 0.2)',
                   borderRadius: '1rem',
-                  padding: '2.5rem',
+                  padding: '1.25rem',
                   transition: 'all 0.3s ease',
                   cursor: 'pointer',
                   backdropFilter: 'blur(10px)',
@@ -1394,11 +1354,11 @@ const Portfolio = () => {
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>{category.icon}</div>
+                <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>{category.icon}</div>
                 <h3 style={{
-                  fontSize: '1.5rem',
+                  fontSize: '1.3rem',
                   color: '#64ffda',
-                  marginBottom: '1.5rem',
+                  marginBottom: '0.75rem',
                   fontWeight: '700',
                 }}>
                   {category.title}
@@ -1407,8 +1367,8 @@ const Portfolio = () => {
                   {category.skills.map((skill, i) => (
                     <li key={i} style={{
                       color: '#c0cae9ff',
-                      padding: '0.5rem 0',
-                      fontSize: '1rem',
+                      padding: '0.3rem 0',
+                      fontSize: '0.95rem',
                     }}>
                       <span style={{ color: '#64ffda', marginRight: '0.5rem' }}>▹</span>
                       {skill}
@@ -1423,34 +1383,35 @@ const Portfolio = () => {
 
       {/* Projects Section */}
       <section id="projects" style={{
-        padding: '8rem 2rem',
+        padding: '5rem 2rem',
         position: 'relative',
         zIndex: 1,
       }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-          <div style={{ marginBottom: '4rem' }}>
-            <span style={{
-              fontSize: '0.9rem',
-              color: '#64ffda',
-              textTransform: 'uppercase',
-              letterSpacing: '3px',
-              fontWeight: '600',
-            }}>
-              My Work
-            </span>
+        <div style={{
+          maxWidth: '900px',
+          margin: '0 auto',
+          background: 'rgba(255, 255, 255, 0.03)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '1.5rem',
+          padding: '1.5rem 2rem',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+        }}>
+          <div style={{ marginBottom: '2.5rem' }}>
             <h2 style={{
-              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+              fontSize: 'clamp(2rem, 4vw, 3rem)',
               fontWeight: '800',
-              marginTop: '1rem',
+              fontFamily: 'Caslon',
+              marginTop: '0.75rem',
+              color: '#ffffff',
             }}>
-              Featured Projects
+              MY PROJECTS
             </h2>
           </div>
-          
+
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))',
-            gap: '2rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '1.5rem',
           }}>
             {[
               {
@@ -1512,47 +1473,47 @@ const Portfolio = () => {
                 />
                 
                 <div style={{
-                  height: '200px',
+                  height: '100px',
                   background: 'linear-gradient(135deg, rgba(100, 255, 218, 0.1) 0%, rgba(45, 212, 191, 0.1) 100%)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '4rem',
+                  fontSize: '2.5rem',
                 }}>
                   {project.icon}
                 </div>
-                
-                <div style={{ padding: '2rem' }}>
+
+                <div style={{ padding: '1rem' }}>
                   <h3 style={{
-                    fontSize: '1.5rem',
-                    marginBottom: '1rem',
+                    fontSize: '1.2rem',
+                    marginBottom: '0.4rem',
                     fontWeight: '700',
                   }}>
                     {project.title}
                   </h3>
-                  
+
                   <p style={{
                     color: '#c0cae9ff',
-                    marginBottom: '1.5rem',
-                    fontSize: '1rem',
-                    lineHeight: '1.7',
+                    marginBottom: '0.65rem',
+                    fontSize: '0.9rem',
+                    lineHeight: '1.5',
                   }}>
                     {project.description}
                   </p>
-                  
+
                   <div style={{
                     display: 'flex',
                     flexWrap: 'wrap',
-                    gap: '0.5rem',
-                    marginBottom: '1.5rem',
+                    gap: '0.4rem',
+                    marginBottom: '0.65rem',
                   }}>
                     {project.tags.map((tag, i) => (
                       <span key={i} style={{
                         background: 'rgba(100, 255, 218, 0.1)',
                         color: '#64ffda',
-                        padding: '0.4rem 1rem',
+                        padding: '0.3rem 0.75rem',
                         borderRadius: '0.3rem',
-                        fontSize: '0.85rem',
+                        fontSize: '0.8rem',
                         border: '1px solid rgba(100, 255, 218, 0.3)',
                       }}>
                         {tag}
@@ -1560,7 +1521,7 @@ const Portfolio = () => {
                     ))}
                   </div>
                   
-                  <div style={{ display: 'flex', gap: '1.5rem' }}>
+                  <div style={{ display: 'flex', gap: '1rem' }}>
                     {project.link && (
                       <button
                         onClick={(e) => {
@@ -1571,15 +1532,16 @@ const Portfolio = () => {
                         style={{
                           background: 'none',
                           border: 'none',
-                          color: '#64ffda',
+                          color: '#ffffffff',
                           cursor: 'pointer',
-                          fontSize: '0.95rem',
+                          fontSize: '0.85rem',
                           transition: 'opacity 0.3s ease',
+                          textDecorationLine: 'underline'
                         }}
                         onMouseEnter={(e) => e.target.style.opacity = '0.7'}
                         onMouseLeave={(e) => e.target.style.opacity = '1'}
                       >
-                        → View Code
+                        <strong>View Code</strong>
                       </button>
                     )}
                   </div>
@@ -1600,7 +1562,7 @@ const Portfolio = () => {
         <div
           style={{
             position: 'absolute',
-            right: '15%',
+            left: '10%',
             top: '24%',
             fontSize: '80px',
             filter: 'drop-shadow(0 5px 15px rgba(100, 255, 218, 0.4))',
@@ -1622,13 +1584,15 @@ const Portfolio = () => {
             letterSpacing: '3px',
             fontWeight: '600',
           }}>
-            Get In Touch WIth Me!
+            CONTACT ME!
           </span>
           <h2 style={{
-            fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+            fontSize: 'clamp(5rem, 5vw, 4rem)',
             fontWeight: '800',
+            fontFamily: 'Caslon',
             marginTop: '1rem',
             marginBottom: '2rem',
+            animation: 'slideInFromLeft 0.8s ease-out',
           }}>
             Let's Work Together!
           </h2>
@@ -1651,11 +1615,13 @@ const Portfolio = () => {
             {[
               { title: 'Email', value: 'saagargahlot@gmail.com', link: 'mailto:saagargahlot@gmail.com' },
               { title: 'GitHub', value: '@saagargahlot', link: 'https://github.com/saagargahlot' },
-              { title: 'LinkedIn', value: '/in/yourprofile', link: 'https://ca.linkedin.com/in/saagar-gahlot' },
+              { title: 'LinkedIn', value: '/in/saagargahlot', link: 'https://ca.linkedin.com/in/saagar-gahlot' },
             ].map((contact, index) => (
               <a
                 key={index}
                 href={contact.link}
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={createRipple}
                 style={{
                   background: 'rgba(17, 34, 64, 0.6)',
@@ -1707,7 +1673,10 @@ const Portfolio = () => {
         zIndex: 1,
       }}>
         <p style={{ fontSize: '0.95rem' }}>
-          © 2025 Saagar Gahlot. Built with React and Pure Passion 💙 
+          © 2025 Saagar Gahlot
+        </p>
+        <p style={{ fontSize: '0.95rem' }}>
+          Built with React and Pure Passion 💙
         </p>
       </footer>
     </div>
