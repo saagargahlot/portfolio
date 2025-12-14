@@ -17,4 +17,5 @@ npm install
 npm run dev
 ```
 
-3. vite will display the url and voila!
+3. vite will display the url, click it and voila! Upon scrolling, the user will be able to see more aquatic animals along with a boat that moves depending on the direction the user scrolls. 
+
