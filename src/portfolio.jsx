@@ -111,7 +111,7 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
              Q 0,25 15,50
              Q 13,88 10,88
              Q 10,25 10,8
-             Q 10,15 11,28"
+             Q 10,15 11,25"
           fill="none"
           stroke="url(#pathGradient)"
           strokeWidth="0.3"
@@ -122,7 +122,7 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
 
       {/* Boat following the path */}
       <img
-        src="photo/boat.png"
+        src="/photo/boat.png"
         alt="Sailing boat"
         style={{
           position: 'fixed',
@@ -151,7 +151,6 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
     : 1000;
   const scrollPercentage = Math.min(scrollPosition / maxScroll, 1);
   const deepWaterVisible = scrollPercentage > 0.4; // Show after 40% scroll
-  const dolphinVisible = scrollPercentage > 0.4 && scrollPercentage < 0.8; // Show dolphin between 40-80% scroll
   const coralVisible = scrollPercentage > 0.95; // Show coral after 95% scroll
 
   return (
@@ -337,7 +336,7 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         }}
       >
         <img
-          src="photo/coral-reef.png"
+          src="/photo/coral-reef.png"
           alt="Coral Reef"
           style={{
             width: '120px',
@@ -377,7 +376,7 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         }}
       >
         <img
-          src="photo/coral-reef.png"
+          src="/photo/coral-reef.png"
           alt="Coral Reef"
           style={{
             width: '120px',
@@ -797,30 +796,6 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
             transform: translateY(-8px);
           }
         }
-
-        @keyframes dolphinSwim {
-          0% {
-            left: -10%;
-          }
-          100% {
-            left: 110%;
-          }
-        }
-
-        @keyframes dolphinBob {
-          0%, 100% {
-            transform: scaleX(1) translateY(0);
-          }
-          25% {
-            transform: scaleX(1) translateY(-35px);
-          }
-          50% {
-            transform: scaleX(1) translateY(-10px);
-          }
-          75% {
-            transform: scaleX(1) translateY(-30px);
-          }
-        }
         
         @keyframes flyAcross {
           0% {
@@ -995,6 +970,8 @@ const Portfolio = () => {
         animation: 'slideDown 0.6s ease',
       }}>
         <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+
           @keyframes slideDown {
             from { transform: translateY(-100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -1087,18 +1064,42 @@ const Portfolio = () => {
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto', animation: 'fadeInUp 0.8s ease' }}>
           <div style={{
-            display: 'inline-block',
-            padding: '0.5rem 1.5rem',
-            border: '2px solid #64ffda',
-            borderRadius: '2rem',
-            color: '#64ffda',
-            fontSize: '0.9rem',
+            display: 'flex',
+            gap: '1rem',
+            alignItems: 'center',
             marginBottom: '2rem',
-            animation: 'float 3s ease-in-out infinite',
+            flexWrap: 'wrap',
           }}>
-            Available for opportunities! 
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '0.76rem 2rem',
+              background: '#64ffda',
+              color: '#0a192f',
+              border: 'none',
+              borderRadius: '2rem',
+              fontSize: '1rem',
+              fontWeight: '600',
+              animation: 'float 3s ease-in-out infinite',
+            }}>
+              Available for opportunities!
+            </div>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              padding: '0.5rem 1.5rem',
+              border: '2px solid #64ffda',
+              borderRadius: '2rem',
+              color: '#64ffda',
+              fontSize: '0.9rem',
+              animation: 'float 3s ease-in-out infinite',
+            }}>
+              <span style={{ fontSize: '1.2rem' }}>📍</span>
+              <span>Based in Alberta</span>
+            </div>
           </div>
-          
+
           <h1 style={{
             fontSize: 'clamp(3rem, 8vw, 6rem)',
             fontWeight: '900',
@@ -1267,8 +1268,8 @@ const Portfolio = () => {
                 border: '3px solid #ffffffff',
                 margin: '0 auto',
               }}>
-                <img 
-                  src="photo/me.jpg" 
+                <img
+                  src="/photo/me.jpg"
                   alt="Saagar Gahlot"
                   style={{
                     width: '100%',
@@ -1326,9 +1327,9 @@ const Portfolio = () => {
                 skills: ['Node.js', 'Python', 'Java', 'C', 'C++']
               },
               {
-                title: 'Database, Tools and More',
+                title: 'Database, AI Development Tools and Others',
                 icon: '',
-                skills: ['MongoDB', 'SQL', 'Git & GitHub', 'Docker', 'AWS', 'AI/ML', 'Reinforcement Learning', 'CLI']
+                skills: ['MongoDB', 'SQL', 'Claude Code', 'Cursor', 'Copilot', 'Git & GitHub', 'Docker', 'AWS', 'AI/ML', 'Reinforcement Learning', 'CLI']
               }
             ].map((category, index) => (
               <div
@@ -1415,21 +1416,21 @@ const Portfolio = () => {
           }}>
             {[
               {
-                icon: '🎮',
+                image: '/path/to/2048-game-screenshot.png', // Add your image path here
                 title: '2048 Game',
                 description: 'Classic 2048 puzzle game implementation with smooth animations and responsive design. Built to practice game logic and state management.',
                 tags: ['JavaScript', 'HTML', 'CSS', 'Typescript', 'Zustand', 'Game Development'],
                 link: 'https://github.com/saagargahlot/2048-game'
               },
               {
-                icon: '🎬',
+                image: '/path/to/moviezilla-screenshot.png', // Add your image path here
                 title: 'Moviezilla',
                 description: 'A comprehensive movie discovery platform that allows users to browse, search, and explore movies with detailed information and ratings.',
                 tags: ['Node.js', 'API Integration', 'JavaScript', 'MongoDB', 'Pug template system', 'Mongoose'],
                 link: 'https://github.com/saagargahlot/proj-moviezilla'
               },
               {
-                icon: '🎨',
+                image: '/path/to/project3-screenshot.png', // Add your image path here
                 title: 'TODO',
                 description: 'TODO',
                 tags: ['TODO'],
@@ -1473,14 +1474,25 @@ const Portfolio = () => {
                 />
                 
                 <div style={{
-                  height: '100px',
+                  height: '200px',
+                  overflow: 'hidden',
                   background: 'linear-gradient(135deg, rgba(100, 255, 218, 0.1) 0%, rgba(45, 212, 191, 0.1) 100%)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '2.5rem',
                 }}>
-                  {project.icon}
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      transition: 'transform 0.3s ease',
+                    }}
+                    onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
+                    onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                  />
                 </div>
 
                 <div style={{ padding: '1rem' }}>
