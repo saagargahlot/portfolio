@@ -261,134 +261,6 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
       </div>
 
 
-      {/* Crab 1 - appears near bottom */}
-      <div
-        style={{
-          position: 'absolute',
-          left: '10%',
-          bottom: '6%',
-          animation: 'crabWalk1 22s ease-in-out infinite',
-          opacity: coralVisible ? 1 : 0,
-          transition: coralVisible ? 'opacity 0.7s ease-in-out' : 'opacity 0.3s ease-out',
-          zIndex: 1,
-        }}
-      >
-        <div
-          style={{
-            fontSize: '35px',
-            animation: 'crabFlip1 22s ease-in-out infinite',
-            filter: 'drop-shadow(0 2px 8px rgba(239, 68, 68, 0.3))',
-          }}
-        >
-          🦀
-        </div>
-      </div>
-
-      {/* Crab 2 - appears near bottom */}
-      <div
-        style={{
-          position: 'absolute',
-          left: '85%',
-          bottom: '7%',
-          animation: 'crabWalk2 25s ease-in-out infinite 5s',
-          opacity: coralVisible ? 1 : 0,
-          transition: coralVisible ? 'opacity 0.7s ease-in-out' : 'opacity 0.3s ease-out',
-          zIndex: 1,
-        }}
-      >
-        <div
-          style={{
-            fontSize: '30px',
-            animation: 'crabFlip2 25s ease-in-out infinite 5s',
-            filter: 'drop-shadow(0 2px 8px rgba(239, 68, 68, 0.3))',
-          }}
-        >
-          🦀
-        </div>
-      </div>
-
-      {/* Coral Reefs at bottom - Left side */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '8%',
-          left: '18%',
-          fontSize: '45px',
-          opacity: coralVisible ? 1 : 0,
-          transform: coralVisible ? 'translateY(0)' : 'translateY(50px)',
-          transition: coralVisible ? 'opacity 0.9s ease-out, transform 0.9s ease-out' : 'opacity 0.15s ease-out, transform 0.15s ease-out',
-          filter: 'drop-shadow(0 2px 8px rgba(236, 72, 153, 0.3))',
-          zIndex: 1,
-        }}
-      >
-        🪸
-      </div>
-
-      {/* Coral Reef Image - Left side */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '3%',
-          left: '2%',
-          opacity: coralVisible ? 1 : 0,
-          transform: coralVisible ? 'translateY(0)' : 'translateY(50px)',
-          transition: coralVisible ? 'opacity 1.1s ease-out, transform 1.1s ease-out' : 'opacity 0.15s ease-out, transform 0.15s ease-out',
-          zIndex: 1,
-        }}
-      >
-        <img
-          src="/photo/coral-reef.png"
-          alt="Coral Reef"
-          loading="eager"
-          style={{
-            width: '120px',
-            height: 'auto',
-            filter: 'drop-shadow(0 3px 12px rgba(100, 255, 218, 0.4))',
-          }}
-        />
-      </div>
-
-      {/* Coral Reefs at bottom - Right side */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '7%',
-          left: '78%',
-          fontSize: '55px',
-          opacity: coralVisible ? 1 : 0,
-          transform: coralVisible ? 'translateY(0)' : 'translateY(50px)',
-          transition: coralVisible ? 'opacity 1.1s ease-out, transform 1.1s ease-out' : 'opacity 0.15s ease-out, transform 0.15s ease-out',
-          filter: 'drop-shadow(0 2px 8px rgba(168, 85, 247, 0.3))',
-          zIndex: 1,
-        }}
-      >
-        🪸
-      </div>
-
-      {/* Coral Reef Image - Right side */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '2%',
-          right: '2%',
-          opacity: coralVisible ? 1 : 0,
-          transform: coralVisible ? 'translateY(0)' : 'translateY(50px)',
-          transition: coralVisible ? 'opacity 1.4s ease-out, transform 1.4s ease-out' : 'opacity 0.15s ease-out, transform 0.15s ease-out',
-          zIndex: 1,
-        }}
-      >
-        <img
-          src="/photo/coral-reef.png"
-          alt="Coral Reef"
-          loading="eager"
-          style={{
-            width: '120px',
-            height: 'auto',
-            filter: 'drop-shadow(0 3px 12px rgba(100, 255, 218, 0.4))',
-          }}
-        />
-      </div>
-      
       {/* Animated water gradient layers */}
       <div style={{
         position: 'absolute',
@@ -965,7 +837,6 @@ const Portfolio = () => {
 
       // Update active section
       const sections = ['home', 'about', 'skills', 'projects', 'contact'];
-      const scrollPosition = window.scrollY + 100;
 
       // Check if user is at the bottom of the page
       const isAtBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 50;
@@ -973,16 +844,28 @@ const Portfolio = () => {
       if (isAtBottom) {
         setActiveSection('contact');
       } else {
+        // Use middle of viewport for better accuracy
+        const viewportMiddle = window.scrollY + (window.innerHeight / 2);
+
+        let currentSection = 'home';
+        let minDistance = Infinity;
+
         for (const section of sections) {
           const element = document.getElementById(section);
           if (element) {
             const { offsetTop, offsetHeight } = element;
-            if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-              setActiveSection(section);
-              break;
+            const sectionMiddle = offsetTop + (offsetHeight / 2);
+            const distance = Math.abs(viewportMiddle - sectionMiddle);
+
+            // Find the section whose middle is closest to viewport middle
+            if (distance < minDistance) {
+              minDistance = distance;
+              currentSection = section;
             }
           }
         }
+
+        setActiveSection(currentSection);
       }
     };
 
