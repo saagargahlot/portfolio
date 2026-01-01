@@ -124,6 +124,7 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
       <img
         src="/photo/boat.png"
         alt="Sailing boat"
+        loading="eager"
         style={{
           position: 'fixed',
           left: `${boatPosition.x}%`,
@@ -338,6 +339,7 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         <img
           src="/photo/coral-reef.png"
           alt="Coral Reef"
+          loading="eager"
           style={{
             width: '120px',
             height: 'auto',
@@ -378,6 +380,7 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         <img
           src="/photo/coral-reef.png"
           alt="Coral Reef"
+          loading="eager"
           style={{
             width: '120px',
             height: 'auto',
@@ -880,6 +883,7 @@ const Portfolio = () => {
   const [scrollDirection, setScrollDirection] = useState('down');
   const [scrollPosition, setScrollPosition] = useState(0);
   const [islandVisible, setIslandVisible] = useState(false);
+  const [contentLoaded, setContentLoaded] = useState(false);
   const rippleIdRef = useRef(0);
   const lastScrollRef = useRef(0);
 
@@ -901,6 +905,43 @@ const Portfolio = () => {
   const handleButtonClick = (e) => {
     createRipple(e);
   };
+
+  // Handle content loading (images, fonts, etc.)
+  useEffect(() => {
+    const handleLoad = () => {
+      // Add a small delay to ensure fonts and images are fully rendered
+      setTimeout(() => {
+        setContentLoaded(true);
+        // Trigger a scroll event to recalculate positions
+        window.dispatchEvent(new Event('scroll'));
+      }, 100);
+    };
+
+    const handleResize = () => {
+      // Recalculate on window resize
+      window.dispatchEvent(new Event('scroll'));
+    };
+
+    // Wait for all content to load
+    if (document.readyState === 'complete') {
+      handleLoad();
+    } else {
+      window.addEventListener('load', handleLoad);
+    }
+
+    window.addEventListener('resize', handleResize);
+
+    // Also recalculate after a delay to catch late-loading content
+    const timeoutId = setTimeout(() => {
+      window.dispatchEvent(new Event('scroll'));
+    }, 1000);
+
+    return () => {
+      window.removeEventListener('load', handleLoad);
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -1271,6 +1312,7 @@ const Portfolio = () => {
                 <img
                   src="/photo/me.jpg"
                   alt="Saagar Gahlot"
+                  loading="eager"
                   style={{
                     width: '100%',
                     height: '100%',
