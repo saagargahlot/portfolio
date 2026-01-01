@@ -111,7 +111,7 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
              Q 0,25 15,50
              Q 13,88 10,88
              Q 10,25 10,8
-             Q 10,15 11,25"
+             Q 10,15 10,40"
           fill="none"
           stroke="url(#pathGradient)"
           strokeWidth="0.3"
@@ -993,9 +993,11 @@ const Portfolio = () => {
   };
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", color: '#e6f1ff', position: 'relative' }}>
+    <>
       <WaterRippleBackground ripples={ripples} scrollDirection={scrollDirection} scrollPosition={scrollPosition} />
       <ScrollingBoat scrollPosition={scrollPosition} scrollDirection={scrollDirection} />
+
+      <div style={{ fontFamily: "'Inter', sans-serif", color: '#e6f1ff', position: 'relative' }}>
 
       {/* Navigation */}
       <nav style={{
@@ -1003,7 +1005,7 @@ const Portfolio = () => {
         top: 0,
         left: 0,
         right: 0,
-        padding: '1rem 2rem',
+        padding: '1rem 0',
         backdropFilter: 'blur(10px)',
         background: 'rgba(10, 25, 47, 0.85)',
         borderBottom: '1px solid rgba(100, 255, 218, 0.1)',
@@ -1054,7 +1056,7 @@ const Portfolio = () => {
             }
           }
         `}</style>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 3rem' }}>
           <div style={{
             fontSize: '1.35rem',
             fontWeight: '800',
@@ -1332,12 +1334,12 @@ const Portfolio = () => {
         zIndex: 1,
       }}>
         <div style={{
-          maxWidth: '900px',
+          maxWidth: '1100px',
           margin: '0 auto',
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(10px)',
           borderRadius: '1.5rem',
-          padding: '1.5rem 2rem',
+          padding: '1.5rem 2.5rem',
           border: '1px solid rgba(255, 255, 255, 0.1)',
         }}>
           <div style={{ marginBottom: '2.5rem' }}>
@@ -1354,7 +1356,7 @@ const Portfolio = () => {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             gap: '1.5rem',
           }}>
             {[
@@ -1431,12 +1433,12 @@ const Portfolio = () => {
         zIndex: 1,
       }}>
         <div style={{
-          maxWidth: '900px',
+          maxWidth: '1100px',
           margin: '0 auto',
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(10px)',
           borderRadius: '1.5rem',
-          padding: '1.5rem 2rem',
+          padding: '1.5rem 2.5rem',
           border: '1px solid rgba(255, 255, 255, 0.1)',
         }}>
           <div style={{ marginBottom: '2.5rem' }}>
@@ -1453,7 +1455,7 @@ const Portfolio = () => {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: '1.5rem',
           }}>
             {[
@@ -1630,7 +1632,7 @@ const Portfolio = () => {
           🏝️
         </div>
 
-        <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
           <span style={{
             fontSize: '0.9rem',
             color: '#64ffda',
@@ -1733,7 +1735,8 @@ const Portfolio = () => {
           Built with React and Pure Passion 💙
         </p>
       </footer>
-    </div>
+      </div>
+    </>
   );
 };
 
