@@ -146,7 +146,7 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
 
       
 
-const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => {
+const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition, isMobile = false }) => {
   const maxScroll = typeof document !== 'undefined'
     ? document.documentElement.scrollHeight - window.innerHeight
     : 1000;
@@ -164,9 +164,10 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
       overflow: 'hidden',
       zIndex: 0,
       background: 'linear-gradient(135deg, #0a192f 0%, #112240 50%, #1a365d 100%)',
+      willChange: isMobile ? 'auto' : 'transform',
     }}>
 
-      <div
+      {!isMobile && <div
         style={{
           position: 'absolute',
           left: '70%',
@@ -184,9 +185,9 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         >
           🐠
         </div>
-      </div>
+      </div>}
 
-      <div
+      {!isMobile && <div
         style={{
           position: 'absolute',
           left: '40%',
@@ -204,9 +205,9 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         >
           🐡
         </div>
-      </div>
+      </div>}
 
-      <div
+      {!isMobile && <div
         style={{
           position: 'absolute',
           left: '85%',
@@ -224,10 +225,10 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         >
           🐟
         </div>
-      </div>
+      </div>}
 
       {/* Jellyfish - appears in deeper water */}
-      <div
+      {!isMobile && <div
         style={{
           position: 'absolute',
           left: '5%',
@@ -241,10 +242,10 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         }}
       >
         🪼
-      </div>
+      </div>}
 
       {/* Jellyfish 2 */}
-      <div
+      {!isMobile && <div
         style={{
           position: 'absolute',
           left: '92%',
@@ -258,7 +259,7 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
         }}
       >
         🪼
-      </div>
+      </div>}
 
 
       {/* Animated water gradient layers */}
@@ -273,7 +274,7 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
           radial-gradient(circle at 80% 80%, rgba(45, 212, 191, 0.12) 0%, transparent 50%),
           radial-gradient(circle at 40% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 50%)
         `,
-        animation: 'waterFlow 25s ease-in-out infinite',
+        animation: isMobile ? 'none' : 'waterFlow 25s ease-in-out infinite',
       }} />
       
       {/* Animated Wave Layers using SVG */}
@@ -744,6 +745,15 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition }) => 
             d: path("M0,160L48,154.7C96,149,192,139,288,149.3C384,160,480,192,576,192C672,192,768,160,864,138.7C960,117,1056,107,1152,117.3C1248,128,1344,160,1392,176L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
           }
         }
+
+        /* Respect user's reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+          }
+        }
       `}</style>
     </div>
   );
@@ -756,6 +766,8 @@ const Portfolio = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [islandVisible, setIslandVisible] = useState(false);
   const [contentLoaded, setContentLoaded] = useState(false);
+  const [showAllProjects, setShowAllProjects] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const rippleIdRef = useRef(0);
   const lastScrollRef = useRef(0);
 
@@ -873,6 +885,17 @@ const Portfolio = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Detect mobile devices for performance optimization
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const scrollToSection = (sectionId, e) => {
     e.preventDefault();
     createRipple(e);
@@ -882,10 +905,58 @@ const Portfolio = () => {
     }
   };
 
+  // All projects data
+  const allProjects = [
+    {
+      image: '/photo/2048-game.png',
+      title: '2048 Game',
+      description: 'Classic 2048 puzzle game implementation with smooth animations and responsive design. Built to practice game logic and state management.',
+      tags: ['JavaScript', 'HTML', 'CSS', 'Typescript', 'Zustand', 'Game Development'],
+      link: 'https://github.com/saagargahlot/2048-game'
+    },
+    {
+      image: '/photo/moviezilla.png',
+      title: 'Moviezilla',
+      description: 'A comprehensive movie discovery platform that allows users to browse, search, and explore movies with detailed information and ratings.',
+      tags: ['Node.js', 'API Integration', 'JavaScript', 'MongoDB', 'Pug template system', 'Mongoose'],
+      link: 'https://github.com/saagargahlot/proj-moviezilla'
+    },
+    {
+      image: '/photo/ecommerce.png',
+      title: 'E-Commerce Platform',
+      description: 'Full-stack e-commerce application with user authentication, product management, shopping cart, and secure payment processing.',
+      tags: ['React', 'Node.js', 'Express', 'MongoDB', 'Stripe API'],
+      link: 'https://github.com/saagargahlot/ecommerce-platform'
+    },
+    {
+      image: '/photo/weather-app.png',
+      title: 'Weather Dashboard',
+      description: 'Real-time weather application with location-based forecasts, interactive maps, and weather alerts using external APIs.',
+      tags: ['React', 'OpenWeather API', 'Geolocation', 'Chart.js'],
+      link: 'https://github.com/saagargahlot/weather-dashboard'
+    },
+    {
+      image: '/photo/task-manager.png',
+      title: 'Task Management App',
+      description: 'Productivity application for managing tasks, projects, and deadlines with drag-and-drop functionality and team collaboration features.',
+      tags: ['React', 'TypeScript', 'Firebase', 'Drag & Drop'],
+      link: 'https://github.com/saagargahlot/task-manager'
+    },
+    {
+      image: '/photo/portfolio-builder.png',
+      title: 'Portfolio Builder',
+      description: 'No-code portfolio website builder that allows users to create professional portfolios using customizable templates and themes.',
+      tags: ['React', 'Redux', 'HTML/CSS Generator', 'Export Features'],
+      link: 'https://github.com/saagargahlot/portfolio-builder'
+    }
+  ];
+
+  const displayedProjects = showAllProjects ? allProjects : allProjects.slice(0, 3);
+
   return (
     <>
-      <WaterRippleBackground ripples={ripples} scrollDirection={scrollDirection} scrollPosition={scrollPosition} />
-      <ScrollingBoat scrollPosition={scrollPosition} scrollDirection={scrollDirection} />
+      <WaterRippleBackground ripples={ripples} scrollDirection={scrollDirection} scrollPosition={scrollPosition} isMobile={isMobile} />
+      {!isMobile && <ScrollingBoat scrollPosition={scrollPosition} scrollDirection={scrollDirection} />}
 
       <div style={{ fontFamily: "'Inter', sans-serif", color: '#e6f1ff', position: 'relative' }}>
 
@@ -1057,7 +1128,7 @@ const Portfolio = () => {
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
           }}>
-            Creating experiences with code and creativity!
+            Computer Science Graduate from Carleton University
           </p>
           
           <p style={{
@@ -1347,29 +1418,9 @@ const Portfolio = () => {
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: '1.5rem',
+            marginBottom: '2rem',
           }}>
-            {[
-              {
-                image: '/path/to/2048-game-screenshot.png', // Add your image path here
-                title: '2048 Game',
-                description: 'Classic 2048 puzzle game implementation with smooth animations and responsive design. Built to practice game logic and state management.',
-                tags: ['JavaScript', 'HTML', 'CSS', 'Typescript', 'Zustand', 'Game Development'],
-                link: 'https://github.com/saagargahlot/2048-game'
-              },
-              {
-                image: '/path/to/moviezilla-screenshot.png', // Add your image path here
-                title: 'Moviezilla',
-                description: 'A comprehensive movie discovery platform that allows users to browse, search, and explore movies with detailed information and ratings.',
-                tags: ['Node.js', 'API Integration', 'JavaScript', 'MongoDB', 'Pug template system', 'Mongoose'],
-                link: 'https://github.com/saagargahlot/proj-moviezilla'
-              },
-              {
-                image: '/path/to/project3-screenshot.png', // Add your image path here
-                title: 'TODO',
-                description: 'TODO',
-                tags: ['TODO'],
-              },
-            ].map((project, index) => (
+            {displayedProjects.map((project, index) => (
               <div
                 key={index}
                 onClick={createRipple}
@@ -1495,6 +1546,39 @@ const Portfolio = () => {
               </div>
             ))}
           </div>
+
+          {/* View More/Less Button */}
+          {allProjects.length > 3 && (
+            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+              <button
+                onClick={(e) => {
+                  handleButtonClick(e);
+                  setShowAllProjects(!showAllProjects);
+                }}
+                style={{
+                  padding: '1rem 2.5rem',
+                  background: 'transparent',
+                  color: '#64ffda',
+                  border: '2px solid #64ffda',
+                  borderRadius: '0.5rem',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'rgba(100, 255, 218, 0.1)';
+                  e.target.style.transform = 'translateY(-3px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'transparent';
+                  e.target.style.transform = 'translateY(0)';
+                }}
+              >
+                {showAllProjects ? 'Show Less' : `View More Projects (${allProjects.length - 3} more)`}
+              </button>
+            </div>
+          )}
         </div>
       </section>
 
