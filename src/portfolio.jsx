@@ -111,7 +111,7 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
              Q 0,25 15,50
              Q 13,88 10,88
              Q 10,25 10,8
-             Q 10,15 10,40"
+             Q 10,15 10.2,45"
           fill="none"
           stroke="url(#pathGradient)"
           strokeWidth="0.3"
@@ -906,15 +906,8 @@ const Portfolio = () => {
     }
   };
 
-  // All projects data
+  // All projects data - ordered from highest to lowest importance
   const allProjects = [
-    {
-      image: '/photo/2048-game.png',
-      title: '2048 Game',
-      description: 'Classic 2048 puzzle game implementation with smooth animations and responsive design. Built to practice game logic and state management.',
-      tags: ['JavaScript', 'HTML', 'CSS', 'Typescript', 'Zustand', 'Game Development'],
-      link: 'https://github.com/saagargahlot/2048-game'
-    },
     {
       image: '/photo/moviezilla.png',
       title: 'Moviezilla',
@@ -924,31 +917,45 @@ const Portfolio = () => {
     },
     {
       image: '/photo/ecommerce.png',
-      title: 'E-Commerce Platform',
+      title: 'Streetwear E-commerce Store',
       description: 'Full-stack e-commerce application with user authentication, product management, shopping cart, and secure payment processing.',
       tags: ['React', 'Node.js', 'Express', 'MongoDB', 'Stripe API'],
       link: 'https://github.com/saagargahlot/ecommerce-platform'
     },
     {
-      image: '/photo/weather-app.png',
-      title: 'Weather Dashboard',
-      description: 'Real-time weather application with location-based forecasts, interactive maps, and weather alerts using external APIs.',
-      tags: ['React', 'OpenWeather API', 'Geolocation', 'Chart.js'],
-      link: 'https://github.com/saagargahlot/weather-dashboard'
+      image: '/photo/chat-server.png',
+      title: 'Real-Time Chat Server',
+      description: 'No-code portfolio website builder that allows users to create professional portfolios using customizable templates and themes.',
+      tags: ['React', 'Redux', 'HTML/CSS Generator', 'Export Features'],
+      link: 'https://github.com/saagargahlot/portfolio-builder'
     },
     {
-      image: '/photo/task-manager.png',
-      title: 'Task Management App',
+      image: '/photo/racer-game.png',
+      title: 'Highway Racer Game',
       description: 'Productivity application for managing tasks, projects, and deadlines with drag-and-drop functionality and team collaboration features.',
       tags: ['React', 'TypeScript', 'Firebase', 'Drag & Drop'],
       link: 'https://github.com/saagargahlot/task-manager'
     },
     {
-      image: '/photo/portfolio-builder.png',
-      title: 'Portfolio Builder',
-      description: 'No-code portfolio website builder that allows users to create professional portfolios using customizable templates and themes.',
-      tags: ['React', 'Redux', 'HTML/CSS Generator', 'Export Features'],
-      link: 'https://github.com/saagargahlot/portfolio-builder'
+      image: '/photo/garden.png',
+      title: 'Memory Garden Game',
+      description: 'Real-time weather application with location-based forecasts, interactive maps, and weather alerts using external APIs.',
+      tags: ['React', 'OpenWeather API', 'Geolocation', 'Chart.js'],
+      link: 'https://github.com/saagargahlot/weather-dashboard'
+    },
+    {
+      image: '/photo/light-game.png',
+      title: 'Beware Of The Light Game',
+      description: 'Real-time weather application with location-based forecasts, interactive maps, and weather alerts using external APIs.',
+      tags: ['React', 'OpenWeather API', 'Geolocation', 'Chart.js'],
+      link: 'https://github.com/saagargahlot/weather-dashboard'
+    },
+    {
+      image: '/photo/2048-game.png',
+      title: '2048 Game',
+      description: 'Classic 2048 puzzle game implementation with smooth animations and responsive design. Built to practice game logic and state management.',
+      tags: ['JavaScript', 'HTML', 'CSS', 'Typescript', 'Zustand', 'Game Development'],
+      link: 'https://github.com/saagargahlot/2048-game'
     }
   ];
 
@@ -1431,12 +1438,12 @@ const Portfolio = () => {
               {
                 title: 'Frontend',
                 icon: '',
-                skills: ['HTML & CSS', 'JavaScript', 'React', 'TypeScript', 'Tailwind CSS', 'GUI']
+                skills: ['HTML & CSS', 'JavaScript', 'React', 'Swift', 'TypeScript', 'Tailwind CSS', 'GUI']
               },
               {
                 title: 'Backend',
                 icon: '',
-                skills: ['Node.js', 'Python', 'Java', 'C', 'C++']
+                skills: ['Node.js', 'Python', 'Java', 'C', 'C++', 'Rust', ]
               },
               {
                 title: 'Database, AI Development Tools and Others',
