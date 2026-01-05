@@ -1155,15 +1155,23 @@ const Portfolio = () => {
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'center',
         padding: 'clamp(5rem, 10vh, 6rem) clamp(1rem, 4vw, 2rem) 2rem',
         position: 'relative',
         zIndex: 1,
       }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', width: '100%', animation: 'fadeInUp 0.8s ease' }}>
+        <div style={{
+          maxWidth: '1400px',
+          margin: '0 auto',
+          width: '100%',
+          animation: 'fadeInUp 0.8s ease',
+          textAlign: 'center',
+        }}>
           <div style={{
             display: 'flex',
             gap: 'clamp(0.5rem, 2vw, 1rem)',
             alignItems: 'center',
+            justifyContent: 'center',
             marginBottom: 'clamp(1.5rem, 3vh, 2rem)',
             flexWrap: 'wrap',
           }}>
@@ -1228,14 +1236,19 @@ const Portfolio = () => {
             fontSize: 'clamp(1rem, 2.5vw, 1.1rem)',
             color: '#c0cae9ff',
             maxWidth: '600px',
-            marginBottom: 'clamp(2rem, 4vh, 3rem)',
+            margin: '0 auto clamp(2rem, 4vh, 3rem)',
             lineHeight: '1.8',
           }}>
             I build exceptional digital experiences that combine beautiful design with powerful functionality.
             Passionate about clean code and user focused solutions.
           </p>
 
-          <div style={{ display: 'flex', gap: 'clamp(0.75rem, 2vw, 1rem)', flexWrap: 'wrap' }}>
+          <div style={{
+            display: 'flex',
+            gap: 'clamp(0.75rem, 2vw, 1rem)',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}>
             <button
               onClick={(e) => {
                 handleButtonClick(e);
