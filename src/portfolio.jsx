@@ -911,50 +911,50 @@ const Portfolio = () => {
     {
       image: '/photo/moviezilla.png',
       title: 'Moviezilla',
-      description: 'A comprehensive movie discovery platform that allows users to browse, search, and explore movies with detailed information and ratings.',
-      tags: ['Node.js', 'API Integration', 'JavaScript', 'MongoDB', 'Pug template system', 'Mongoose'],
+      description: 'Movie favorites management application with user authentication, CRUD operations, and admin controls. Users can search movies, curate favorites lists, while administrators manage user accounts.',
+      tags: ['Node.js', 'Express', 'MongoDB', 'Mongoose', 'Pug', 'JavaScript'],
       link: 'https://github.com/saagargahlot/proj-moviezilla'
-    },
-    {
-      image: '/photo/ecommerce.png',
-      title: 'Streetwear E-commerce Store',
-      description: 'Full-stack e-commerce application with user authentication, product management, shopping cart, and secure payment processing.',
-      tags: ['React', 'Node.js', 'Express', 'MongoDB', 'Stripe API'],
-      link: 'https://github.com/saagargahlot/ecommerce-platform'
     },
     {
       image: '/photo/chat-server.png',
       title: 'Real-Time Chat Server',
-      description: 'No-code portfolio website builder that allows users to create professional portfolios using customizable templates and themes.',
-      tags: ['React', 'Redux', 'HTML/CSS Generator', 'Export Features'],
-      link: 'https://github.com/saagargahlot/portfolio-builder'
+      description: 'Multi-client chat application with real-time messaging using Socket.io. Supports public messaging, private one-to-one chats, and group messaging across multiple browser connections.',
+      tags: ['Node.js', 'Socket.io', 'JavaScript', 'Real-time Communication'],
+      link: 'https://github.com/saagargahlot/proj-chat-server'
     },
     {
-      image: '/photo/racer-game.png',
-      title: 'Highway Racer Game',
-      description: 'Productivity application for managing tasks, projects, and deadlines with drag-and-drop functionality and team collaboration features.',
-      tags: ['React', 'TypeScript', 'Firebase', 'Drag & Drop'],
-      link: 'https://github.com/saagargahlot/task-manager'
+      image: '/photo/ecommerce.png',
+      title: 'Saagar\'s Clothing',
+      description: 'Modern e-commerce store built with React and Vite. Features responsive design, fast performance with Hot Module Replacement, and ESLint code quality enforcement.',
+      tags: ['React', 'Vite', 'JavaScript', 'CSS', 'E-commerce'],
+      link: 'https://github.com/saagargahlot/saagars-clothing'
     },
     {
       image: '/photo/garden.png',
-      title: 'Memory Garden Game',
-      description: 'Real-time weather application with location-based forecasts, interactive maps, and weather alerts using external APIs.',
-      tags: ['React', 'OpenWeather API', 'Geolocation', 'Chart.js'],
-      link: 'https://github.com/saagargahlot/weather-dashboard'
+      title: 'Memory Garden',
+      description: 'Procedural garden game where your movement patterns create unique flowers. Features timelapse recording, screenshot export, and dynamic flower generation based on gameplay.',
+      tags: ['Python', 'Pygame', 'Procedural Generation', 'Game Development'],
+      link: 'https://github.com/saagargahlot/memory-garden'
     },
     {
-      image: '/photo/light-game.png',
-      title: 'Beware Of The Light Game',
-      description: 'Real-time weather application with location-based forecasts, interactive maps, and weather alerts using external APIs.',
-      tags: ['React', 'OpenWeather API', 'Geolocation', 'Chart.js'],
-      link: 'https://github.com/saagargahlot/weather-dashboard'
+      image: '/photo/racer-game.png',
+      title: 'Highway Racer',
+      description: 'Fast-paced arcade racing game with Survival and Race modes. Features 10 car customization options, smart AI opponents, smooth lane-changing mechanics, and progressive difficulty.',
+      tags: ['Python', 'Pygame', 'Game Development', 'AI'],
+      link: 'https://github.com/saagargahlot/racing-game'
+    },
+    {
+      image: '/photo/pacman.png',
+      title: 'Pac-Man Arcade Game',
+      description: 'Faithful recreation of the classic arcade game with authentic ghost AI, progressive difficulty, and high score persistence. Features custom game loop, collision detection, and responsive HUD.',
+      tags: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'Game Development'],
+      link: 'https://github.com/saagargahlot/Pac-Man-Arcade-Game'
     },
     {
       image: '/photo/2048-game.png',
       title: '2048 Game',
-      description: 'Classic 2048 puzzle game implementation with smooth animations and responsive design. Built to practice game logic and state management.',
-      tags: ['JavaScript', 'HTML', 'CSS', 'Typescript', 'Zustand', 'Game Development'],
+      description: 'Classic 2048 puzzle game implementation with smooth animations and responsive design. Built to practice game logic and state management with modern TypeScript.',
+      tags: ['TypeScript', 'React', 'Zustand', 'Game Development', 'State Management'],
       link: 'https://github.com/saagargahlot/2048-game'
     }
   ];
