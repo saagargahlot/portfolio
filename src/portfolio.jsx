@@ -768,6 +768,7 @@ const Portfolio = () => {
   const [contentLoaded, setContentLoaded] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const rippleIdRef = useRef(0);
   const lastScrollRef = useRef(0);
 
@@ -1017,9 +1018,9 @@ const Portfolio = () => {
             }
           }
         `}</style>
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 clamp(1rem, 4vw, 2rem)' }}>
           <div style={{
-            fontSize: '1.35rem',
+            fontSize: 'clamp(1.1rem, 3vw, 1.35rem)',
             fontWeight: '800',
             fontFamily: 'Caslon',
             background: 'linear-gradient(135deg, #e6f1ff 0%, #64ffda 100%)',
@@ -1029,7 +1030,12 @@ const Portfolio = () => {
           }}>
             Saagar Gahlot
           </div>
-          <div style={{ display: 'flex', gap: '1.5rem' }}>
+
+          {/* Desktop Navigation */}
+          <div style={{
+            display: isMobile ? 'none' : 'flex',
+            gap: '1.5rem'
+          }}>
             {['home', 'about', 'skills', 'projects', 'contact'].map((section) => (
               <a
                 key={section}
@@ -1044,6 +1050,7 @@ const Portfolio = () => {
                   transition: 'color 0.3s ease',
                   textTransform: 'capitalize',
                   cursor: 'pointer',
+                  whiteSpace: 'nowrap',
                 }}
                 onMouseEnter={(e) => e.target.style.color = '#64ffda'}
                 onMouseLeave={(e) => {
@@ -1054,7 +1061,93 @@ const Portfolio = () => {
               </a>
             ))}
           </div>
+
+          {/* Mobile Hamburger Menu */}
+          {isMobile && (
+            <button
+              onClick={(e) => {
+                handleButtonClick(e);
+                setMobileMenuOpen(!mobileMenuOpen);
+              }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#64ffda',
+                fontSize: '1.5rem',
+                cursor: 'pointer',
+                padding: '0.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+                zIndex: 1001,
+              }}
+              aria-label="Toggle menu"
+            >
+              <div style={{
+                width: '25px',
+                height: '2px',
+                background: '#64ffda',
+                transition: 'all 0.3s ease',
+                transform: mobileMenuOpen ? 'rotate(45deg) translateY(6px)' : 'none',
+              }} />
+              <div style={{
+                width: '25px',
+                height: '2px',
+                background: '#64ffda',
+                transition: 'all 0.3s ease',
+                opacity: mobileMenuOpen ? 0 : 1,
+              }} />
+              <div style={{
+                width: '25px',
+                height: '2px',
+                background: '#64ffda',
+                transition: 'all 0.3s ease',
+                transform: mobileMenuOpen ? 'rotate(-45deg) translateY(-6px)' : 'none',
+              }} />
+            </button>
+          )}
         </div>
+
+        {/* Mobile Menu Dropdown */}
+        {isMobile && mobileMenuOpen && (
+          <div style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            right: 0,
+            background: 'rgba(10, 25, 47, 0.98)',
+            backdropFilter: 'blur(10px)',
+            borderBottom: '1px solid rgba(100, 255, 218, 0.1)',
+            padding: '1rem 0',
+            animation: 'slideDown 0.3s ease',
+          }}>
+            {['home', 'about', 'skills', 'projects', 'contact'].map((section) => (
+              <a
+                key={section}
+                href={`#${section}`}
+                onClick={(e) => {
+                  scrollToSection(section, e);
+                  setMobileMenuOpen(false);
+                }}
+                style={{
+                  display: 'block',
+                  color: activeSection === section ? '#64ffda' : '#8892b0',
+                  textDecoration: 'none',
+                  fontSize: '1.1rem',
+                  fontWeight: '500',
+                  padding: '1rem 2rem',
+                  transition: 'all 0.3s ease',
+                  textTransform: 'capitalize',
+                  borderLeft: activeSection === section ? '3px solid #64ffda' : '3px solid transparent',
+                }}
+                onTouchStart={(e) => e.currentTarget.style.background = 'rgba(100, 255, 218, 0.1)'}
+                onTouchEnd={(e) => e.currentTarget.style.background = 'transparent'}
+              >
+                {section}
+              </a>
+            ))}
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
@@ -1062,29 +1155,29 @@ const Portfolio = () => {
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
-        padding: '6rem 2rem 2rem',
+        padding: 'clamp(5rem, 10vh, 6rem) clamp(1rem, 4vw, 2rem) 2rem',
         position: 'relative',
         zIndex: 1,
       }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', animation: 'fadeInUp 0.8s ease' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', width: '100%', animation: 'fadeInUp 0.8s ease' }}>
           <div style={{
             display: 'flex',
-            gap: '1rem',
+            gap: 'clamp(0.5rem, 2vw, 1rem)',
             alignItems: 'center',
-            marginBottom: '2rem',
+            marginBottom: 'clamp(1.5rem, 3vh, 2rem)',
             flexWrap: 'wrap',
           }}>
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
-              padding: '0.76rem 2rem',
+              padding: 'clamp(0.6rem, 2vw, 0.76rem) clamp(1rem, 3vw, 2rem)',
               background: '#64ffda',
               color: '#0a192f',
               border: 'none',
               borderRadius: '2rem',
-              fontSize: '1rem',
+              fontSize: 'clamp(0.85rem, 2vw, 1rem)',
               fontWeight: '600',
-              animation: 'float 3s ease-in-out infinite',
+              animation: isMobile ? 'none' : 'float 3s ease-in-out infinite',
             }}>
               Available for opportunities!
             </div>
@@ -1092,14 +1185,14 @@ const Portfolio = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.5rem',
-              padding: '0.5rem 1.5rem',
+              padding: 'clamp(0.5rem, 1.5vw, 0.5rem) clamp(1rem, 2.5vw, 1.5rem)',
               border: '2px solid #64ffda',
               borderRadius: '2rem',
               color: '#64ffda',
-              fontSize: '0.9rem',
-              animation: 'float 3s ease-in-out infinite',
+              fontSize: 'clamp(0.8rem, 2vw, 0.9rem)',
+              animation: isMobile ? 'none' : 'float 3s ease-in-out infinite',
             }}>
-              <span style={{ fontSize: '1.2rem' }}>📍</span>
+              <span style={{ fontSize: 'clamp(1rem, 2.5vw, 1.2rem)' }}>📍</span>
               <span>Based in Alberta</span>
             </div>
           </div>
@@ -1132,29 +1225,29 @@ const Portfolio = () => {
           </p>
           
           <p style={{
-            fontSize: '1.1rem',
+            fontSize: 'clamp(1rem, 2.5vw, 1.1rem)',
             color: '#c0cae9ff',
             maxWidth: '600px',
-            marginBottom: '3rem',
+            marginBottom: 'clamp(2rem, 4vh, 3rem)',
             lineHeight: '1.8',
           }}>
-            I build exceptional digital experiences that combine beautiful design with powerful functionality. 
+            I build exceptional digital experiences that combine beautiful design with powerful functionality.
             Passionate about clean code and user focused solutions.
           </p>
-          
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+
+          <div style={{ display: 'flex', gap: 'clamp(0.75rem, 2vw, 1rem)', flexWrap: 'wrap' }}>
             <button
               onClick={(e) => {
                 handleButtonClick(e);
                 scrollToSection('projects', e);
               }}
               style={{
-                padding: '1rem 2.5rem',
+                padding: 'clamp(0.85rem, 2.5vw, 1rem) clamp(1.5rem, 4vw, 2.5rem)',
                 background: '#64ffda',
                 color: '#0a192f',
                 border: 'none',
                 borderRadius: '0.5rem',
-                fontSize: '1rem',
+                fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
                 fontWeight: '600',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
@@ -1172,19 +1265,19 @@ const Portfolio = () => {
             >
               My Projects
             </button>
-            
+
             <button
               onClick={(e) => {
                 handleButtonClick(e);
                 scrollToSection('contact', e);
               }}
               style={{
-                padding: '1rem 2.5rem',
+                padding: 'clamp(0.85rem, 2.5vw, 1rem) clamp(1.5rem, 4vw, 2.5rem)',
                 background: 'transparent',
                 color: '#64ffda',
                 border: '2px solid #64ffda',
                 borderRadius: '0.5rem',
-                fontSize: '1rem',
+                fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
                 fontWeight: '600',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
@@ -1206,19 +1299,19 @@ const Portfolio = () => {
 
       {/* About Section */}
       <section id="about" style={{
-        padding: '8rem 2rem',
+        padding: 'clamp(4rem, 10vh, 8rem) clamp(1rem, 4vw, 2rem)',
         position: 'relative',
         zIndex: 1,
       }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-          <div style={{ marginBottom: '1rem' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
+          <div style={{ marginBottom: 'clamp(1rem, 3vh, 2rem)' }}>
             <h2 style={{
-              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-              fontFamily: 'Caslon', 
+              fontSize: 'clamp(2rem, 6vw, 4rem)',
+              fontFamily: 'Caslon',
               fontWeight: '800',
-              marginTop: '1rem',
+              marginTop: 'clamp(0.5rem, 2vh, 1rem)',
               color: '#ffffff',
-              animation: 'slideInFromLeft 0.8s ease-out',
+              animation: isMobile ? 'none' : 'slideInFromLeft 0.8s ease-out',
             }}>
               ABOUT ME
             </h2>
@@ -1226,48 +1319,48 @@ const Portfolio = () => {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '4rem',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: 'clamp(2rem, 5vw, 4rem)',
             alignItems: 'center',
           }}>
             <div style={{ maxWidth: '600px' }}>
               <p style={{
                 color: '#c0cae9ff',
-                fontSize: '1.1rem',
+                fontSize: 'clamp(1rem, 2.5vw, 1.1rem)',
                 lineHeight: '1.8',
-                marginBottom: '1.5rem',
+                marginBottom: 'clamp(1rem, 3vh, 1.5rem)',
               }}>
-                Hello. I'm a developer who is passionate about creating things that live on the internet. 
-                My journey in the coding space began with curiosity, which led me to build a simple McDonald's kiosk. 
-                I then wanted to learn more and more about different languages and their respective purposes. 
+                Hello. I'm a developer who is passionate about creating things that live on the internet.
+                My journey in the coding space began with curiosity, which led me to build a simple McDonald's kiosk.
+                I then wanted to learn more and more about different languages and their respective purposes.
               </p>
               <p style={{
                 color: '#c0cae9ff',
-                fontSize: '1.1rem',
+                fontSize: 'clamp(1rem, 2.5vw, 1.1rem)',
                 lineHeight: '1.8',
-                marginBottom: '1.5rem',
+                marginBottom: 'clamp(1rem, 3vh, 1.5rem)',
               }}>
-                Fast-forward to today, I am a graduate of Carleton University with a Major Degree in Computer Science and 
-                have had the privilege of working on diverse projects ranging from responsive websites to complex applications. 
+                Fast-forward to today, I am a graduate of Carleton University with a Major Degree in Computer Science and
+                have had the privilege of working on diverse projects ranging from responsive websites to complex applications.
                 My focus is on building accessible, performant digital experiences.
               </p>
               <p style={{
                 color: '#c0cae9ff',
-                fontSize: '1.1rem',
+                fontSize: 'clamp(1rem, 2.5vw, 1.1rem)',
                 lineHeight: '1.8',
               }}>
-                When I'm not coding, I'm exploring new technologies, contributing to open-source projects, or working on personal projects to sharpen my skills. 
+                When I'm not coding, I'm exploring new technologies, contributing to open-source projects, or working on personal projects to sharpen my skills.
                 I am always looking to get better and learn more.
               </p>
             </div>
             
               <div style={{
                 width: '100%',
-                maxWidth: '450px',
+                maxWidth: isMobile ? '300px' : '450px',
                 aspectRatio: '1',
                 borderRadius: '1rem',
                 overflow: 'hidden',
-                animation: 'float 4s ease-in-out infinite',
+                animation: isMobile ? 'none' : 'float 4s ease-in-out infinite',
                 boxShadow: '0 20px 60px rgba(100, 255, 218, 0.2)',
                 border: '3px solid #ffffffff',
                 margin: '0 auto',
@@ -1290,25 +1383,26 @@ const Portfolio = () => {
 
       {/* Skills Section */}
       <section id="skills" style={{
-        padding: '5rem 2rem',
+        padding: 'clamp(3rem, 8vh, 5rem) clamp(1rem, 4vw, 2rem)',
         position: 'relative',
         zIndex: 1,
       }}>
         <div style={{
           maxWidth: '1100px',
           margin: '0 auto',
+          width: '100%',
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(10px)',
           borderRadius: '1.5rem',
-          padding: '1.5rem 2.5rem',
+          padding: 'clamp(1.5rem, 4vw, 2.5rem)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
         }}>
-          <div style={{ marginBottom: '2.5rem' }}>
+          <div style={{ marginBottom: 'clamp(1.5rem, 4vh, 2.5rem)' }}>
             <h2 style={{
-              fontSize: 'clamp(2rem, 4vw, 3rem)',
+              fontSize: 'clamp(1.75rem, 5vw, 3rem)',
               fontWeight: '800',
               fontFamily: 'Caslon',
-              marginTop: '0.75rem',
+              marginTop: 'clamp(0.5rem, 2vh, 0.75rem)',
               color: '#ffffff',
             }}>
               MY SKILLS
@@ -1317,8 +1411,8 @@ const Portfolio = () => {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '1.5rem',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: 'clamp(1rem, 3vw, 1.5rem)',
           }}>
             {[
               {
@@ -1389,25 +1483,26 @@ const Portfolio = () => {
 
       {/* Projects Section */}
       <section id="projects" style={{
-        padding: '5rem 2rem',
+        padding: 'clamp(3rem, 8vh, 5rem) clamp(1rem, 4vw, 2rem)',
         position: 'relative',
         zIndex: 1,
       }}>
         <div style={{
           maxWidth: '1100px',
           margin: '0 auto',
+          width: '100%',
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(10px)',
           borderRadius: '1.5rem',
-          padding: '1.5rem 2.5rem',
+          padding: 'clamp(1.5rem, 4vw, 2.5rem)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
         }}>
-          <div style={{ marginBottom: '2.5rem' }}>
+          <div style={{ marginBottom: 'clamp(1.5rem, 4vh, 2.5rem)' }}>
             <h2 style={{
-              fontSize: 'clamp(2rem, 4vw, 3rem)',
+              fontSize: 'clamp(1.75rem, 5vw, 3rem)',
               fontWeight: '800',
               fontFamily: 'Caslon',
-              marginTop: '0.75rem',
+              marginTop: 'clamp(0.5rem, 2vh, 0.75rem)',
               color: '#ffffff',
             }}>
               MY PROJECTS
@@ -1416,9 +1511,9 @@ const Portfolio = () => {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1.5rem',
-            marginBottom: '2rem',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: 'clamp(1rem, 3vw, 1.5rem)',
+            marginBottom: 'clamp(1.5rem, 3vh, 2rem)',
           }}>
             {displayedProjects.map((project, index) => (
               <div
@@ -1584,63 +1679,67 @@ const Portfolio = () => {
 
       {/* Contact Section */}
       <section id="contact" style={{
-        padding: '8rem 2rem',
+        padding: 'clamp(4rem, 10vh, 8rem) clamp(1rem, 4vw, 2rem)',
         position: 'relative',
         zIndex: 1,
       }}>
 
-        <div
+        {!isMobile && <div
           style={{
             position: 'absolute',
             left: '10%',
             top: '24%',
-            fontSize: '80px',
+            fontSize: 'clamp(50px, 10vw, 80px)',
             filter: 'drop-shadow(0 5px 15px rgba(100, 255, 218, 0.4))',
             zIndex: 10,
             opacity: islandVisible ? 1 : 0,
             transform: islandVisible ? 'translateY(0) scale(1)' : 'translateY(50px) scale(0.8)',
             transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
-            //animation: islandVisible ? 'floatIsland 3s ease-in-out infinite' : 'none',
           }}
         >
           🏝️
-        </div>
+        </div>}
 
-        <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', width: '100%', textAlign: 'center' }}>
           <span style={{
-            fontSize: '0.9rem',
+            fontSize: 'clamp(0.75rem, 2vw, 0.9rem)',
             color: '#64ffda',
             textTransform: 'uppercase',
-            letterSpacing: '3px',
+            letterSpacing: 'clamp(2px, 0.5vw, 3px)',
             fontWeight: '600',
+            display: 'block',
           }}>
             CONTACT ME!
           </span>
           <h2 style={{
-            fontSize: 'clamp(5rem, 5vw, 4rem)',
+            fontSize: 'clamp(2.5rem, 8vw, 4rem)',
             fontWeight: '800',
             fontFamily: 'Caslon',
-            marginTop: '1rem',
-            marginBottom: '2rem',
-            animation: 'slideInFromLeft 0.8s ease-out',
+            marginTop: 'clamp(0.75rem, 2vh, 1rem)',
+            marginBottom: 'clamp(1.5rem, 3vh, 2rem)',
+            animation: isMobile ? 'none' : 'slideInFromLeft 0.8s ease-out',
           }}>
             Let's Work Together!
           </h2>
           <p style={{
             color: '#c0cae9ff',
-            fontSize: '1.1rem',
+            fontSize: 'clamp(1rem, 2.5vw, 1.1rem)',
             lineHeight: '1.8',
-            marginBottom: '3rem',
+            marginBottom: 'clamp(2rem, 4vh, 3rem)',
+            maxWidth: '600px',
+            margin: '0 auto clamp(2rem, 4vh, 3rem)',
           }}>
-            I am always interested in hearing about new projects and opportunities. 
+            I am always interested in hearing about new projects and opportunities.
             Whether you have a question or just want to say hi, please feel free to reach out!
           </p>
           
           <div style={{
-            display: 'flex',
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))',
             justifyContent: 'center',
-            gap: '2rem',
-            flexWrap: 'wrap',
+            gap: 'clamp(1rem, 3vw, 2rem)',
+            maxWidth: isMobile ? '100%' : '800px',
+            margin: '0 auto',
           }}>
             {[
               { title: 'Email', value: 'saagargahlot@gmail.com', link: 'mailto:saagargahlot@gmail.com' },
@@ -1657,8 +1756,7 @@ const Portfolio = () => {
                   background: 'rgba(17, 34, 64, 0.6)',
                   border: '1px solid rgba(100, 255, 218, 0.2)',
                   borderRadius: '1rem',
-                  padding: '2rem',
-                  minWidth: '220px',
+                  padding: 'clamp(1.5rem, 4vw, 2rem)',
                   textDecoration: 'none',
                   color: 'inherit',
                   transition: 'all 0.3s ease',
@@ -1677,14 +1775,14 @@ const Portfolio = () => {
                 }}
               >
                 <h3 style={{
-                  fontSize: '1.2rem',
+                  fontSize: 'clamp(1.1rem, 3vw, 1.2rem)',
                   color: '#64ffda',
                   marginBottom: '0.5rem',
                   fontWeight: '700',
                 }}>
                   {contact.title}
                 </h3>
-                <p style={{ color: '#8892b0', fontSize: '0.95rem' }}>
+                <p style={{ color: '#8892b0', fontSize: 'clamp(0.85rem, 2vw, 0.95rem)' }}>
                   {contact.value}
                 </p>
               </a>
@@ -1696,16 +1794,16 @@ const Portfolio = () => {
       {/* Footer */}
       <footer style={{
         borderTop: '1px solid rgba(100, 255, 218, 0.1)',
-        padding: '3rem 2rem',
+        padding: 'clamp(2rem, 5vh, 3rem) clamp(1rem, 4vw, 2rem)',
         textAlign: 'center',
         color: '#c0cae9ff',
         position: 'relative',
         zIndex: 1,
       }}>
-        <p style={{ fontSize: '0.95rem' }}>
+        <p style={{ fontSize: 'clamp(0.85rem, 2vw, 0.95rem)', marginBottom: '0.5rem' }}>
           © 2025 Saagar Gahlot
         </p>
-        <p style={{ fontSize: '0.95rem' }}>
+        <p style={{ fontSize: 'clamp(0.85rem, 2vw, 0.95rem)' }}>
           Built with React and Pure Passion 💙
         </p>
       </footer>
