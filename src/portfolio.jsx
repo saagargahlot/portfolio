@@ -1577,9 +1577,7 @@ const Portfolio = () => {
                   height: '200px',
                   overflow: 'hidden',
                   background: 'linear-gradient(135deg, rgba(100, 255, 218, 0.1) 0%, rgba(45, 212, 191, 0.1) 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  position: 'relative',
                 }}>
                   <img
                     src={project.image}
@@ -1588,6 +1586,8 @@ const Portfolio = () => {
                       width: '100%',
                       height: '100%',
                       objectFit: 'cover',
+                      objectPosition: 'center',
+                      display: 'block',
                       transition: 'transform 0.3s ease',
                     }}
                     onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
