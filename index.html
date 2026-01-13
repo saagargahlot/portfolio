@@ -31,10 +31,20 @@
         width: 100%;
         min-height: 100vh;
       }
+
+      /* Twemoji emoji image styling for consistent rendering */
+      img.emoji {
+        height: 1em;
+        width: 1em;
+        margin: 0 0.05em 0 0.1em;
+        vertical-align: -0.1em;
+        display: inline-block;
+      }
     </style>
   </head>
   <body>
     <div id="root"></div>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

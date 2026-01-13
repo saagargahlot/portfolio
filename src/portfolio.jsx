@@ -897,6 +897,16 @@ const Portfolio = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Parse emojis with Twemoji for consistent rendering across platforms
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.twemoji) {
+      window.twemoji.parse(document.body, {
+        folder: 'svg',
+        ext: '.svg'
+      });
+    }
+  }, [isMobile, showAllProjects]); // Re-parse when content changes
+
   const scrollToSection = (sectionId, e) => {
     e.preventDefault();
     createRipple(e);
@@ -1552,14 +1562,12 @@ const Portfolio = () => {
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-10px)';
                   e.currentTarget.style.boxShadow = '0 25px 70px rgba(100, 255, 218, 0.2)';
-                  const topBar = e.currentTarget.querySelector('.top-bar');
-                  if (topBar) topBar.style.transform = 'scaleX(1)';
+                  e.currentTarget.style.border = '2px solid #64ffda';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = 'none';
-                  const topBar = e.currentTarget.querySelector('.top-bar');
-                  if (topBar) topBar.style.transform = 'scaleX(0)';
+                  e.currentTarget.style.border = '1px solid rgba(100, 255, 218, 0.2)';
                 }}
               >
                 <div
