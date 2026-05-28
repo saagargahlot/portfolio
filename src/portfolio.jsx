@@ -849,7 +849,7 @@ const Portfolio = () => {
       setIslandVisible(at85Percent);
 
       // Update active section
-      const sections = ['home', 'about', 'skills', 'projects', 'contact'];
+      const sections = ['home', 'about', 'experience', 'skills', 'projects', 'contact'];
 
       // Check if user is at the bottom of the page
       const isAtBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 50;
@@ -919,6 +919,13 @@ const Portfolio = () => {
   // All projects data - ordered from highest to lowest importance
   const allProjects = [
     {
+      image: '/photo/dungeon-break.png',
+      title: 'Dungeon Break',
+      description: 'Solo-developed iOS RPG from concept to App Store launch in Swift and SpriteKit. Achieved 150+ downloads in the first release window, then shipped a full v1.2 update within two weeks based on live analytics. Combat system supports hero rarity levels, skill trees, and distinct dungeon zones.',
+      tags: ['Swift', 'SpriteKit', 'Xcode', 'iOS', 'Game Development'],
+      link: null,
+    },
+    {
       image: '/photo/moviezilla.png',
       title: 'Moviezilla',
       description: 'Movie favorites management application with user authentication, CRUD operations, and admin controls. Users can search movies, curate favorites lists, while administrators manage user accounts.',
@@ -928,15 +935,15 @@ const Portfolio = () => {
     {
       image: '/photo/chat-server.png',
       title: 'Real-Time Chat Server',
-      description: 'Multi-client chat application with real-time messaging using Socket.io. Supports public messaging, private one-to-one chats, and group messaging across multiple browser connections.',
+      description: 'Architected a WebSocket server handling public, group, and private channels with low-latency bidirectional communication. Designed room-based namespacing and connection state management for clean isolation of message streams across concurrent users.',
       tags: ['Node.js', 'Socket.io', 'JavaScript', 'Real-time Communication'],
       link: 'https://github.com/saagargahlot/proj-chat-server'
     },
     {
       image: '/photo/ecommerce.png',
-      title: 'Saagar\'s Clothing',
-      description: 'Modern e-commerce store built with React and Vite. Features responsive design, fast performance with Hot Module Replacement, and ESLint code quality enforcement.',
-      tags: ['React', 'Vite', 'JavaScript', 'CSS', 'E-commerce'],
+      title: 'Streetwear E-Commerce Store',
+      description: 'Built a dynamic product page with item filtering, cart management across components using React hooks, and a multi-step checkout flow. Structured global state to keep the cart accurate during navigation without relying on a backend.',
+      tags: ['React.js', 'CSS3', 'JavaScript', 'E-commerce'],
       link: 'https://github.com/saagargahlot/saagars-clothing'
     },
     {
@@ -1053,7 +1060,7 @@ const Portfolio = () => {
             display: isMobile ? 'none' : 'flex',
             gap: '1.5rem'
           }}>
-            {['home', 'about', 'skills', 'projects', 'contact'].map((section) => (
+            {['home', 'about', 'experience', 'skills', 'projects', 'contact'].map((section) => (
               <a
                 key={section}
                 href={`#${section}`}
@@ -1138,7 +1145,7 @@ const Portfolio = () => {
             padding: '1rem 0',
             animation: 'slideDown 0.3s ease',
           }}>
-            {['home', 'about', 'skills', 'projects', 'contact'].map((section) => (
+            {['home', 'about', 'experience', 'skills', 'projects', 'contact'].map((section) => (
               <a
                 key={section}
                 href={`#${section}`}
@@ -1246,9 +1253,9 @@ const Portfolio = () => {
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
           }}>
-            Computer Science Graduate from Carleton University
+            Full-Stack Developer &amp; iOS Developer
           </p>
-          
+
           <p style={{
             fontSize: 'clamp(1rem, 2.5vw, 1.1rem)',
             color: '#c0cae9ff',
@@ -1256,8 +1263,9 @@ const Portfolio = () => {
             margin: '0 auto clamp(2rem, 4vh, 3rem)',
             lineHeight: '1.8',
           }}>
-            I build exceptional digital experiences that combine beautiful design with powerful functionality.
-            Passionate about clean code and user focused solutions.
+            Computer Science graduate from Carleton University. I build exceptional digital experiences
+            spanning full-stack web apps to shipped iOS games on the App Store.
+            Passionate about clean code and user-focused solutions.
           </p>
 
           <div style={{
@@ -1411,6 +1419,95 @@ const Portfolio = () => {
         </div>
       </section>
 
+      {/* Experience Section */}
+      <section id="experience" style={{
+        padding: 'clamp(3rem, 8vh, 5rem) clamp(1rem, 4vw, 2rem)',
+        position: 'relative',
+        zIndex: 1,
+      }}>
+        <div style={{
+          maxWidth: '1100px',
+          margin: '0 auto',
+          width: '100%',
+          background: 'rgba(255, 255, 255, 0.03)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '1.5rem',
+          padding: 'clamp(1.5rem, 4vw, 2.5rem)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+        }}>
+          <div style={{ marginBottom: 'clamp(1.5rem, 4vh, 2.5rem)' }}>
+            <h2 style={{
+              fontSize: 'clamp(1.75rem, 5vw, 3rem)',
+              fontWeight: '800',
+              fontFamily: 'Caslon',
+              marginTop: 'clamp(0.5rem, 2vh, 0.75rem)',
+              color: '#ffffff',
+            }}>
+              EXPERIENCE
+            </h2>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(1.5rem, 4vh, 2rem)' }}>
+            {[
+              {
+                role: 'Indie iOS Developer',
+                period: 'Feb 2026 – Present',
+                bullets: [
+                  'Organized the complete App Store submission process, successfully launching Dungeon Break to 150+ downloads within its first release window.',
+                  'Iterated to v1.2 in under two weeks based on live user feedback.',
+                  'Independently owned the whole development lifecycle, operating the same as a full product team.',
+                ],
+              },
+              {
+                role: 'Data Annotation | Analyst',
+                period: 'Sept 2025 – Jan 2026',
+                bullets: [
+                  'Wrote code samples and reviewed technical content across numerous programming languages to support clients.',
+                  'Consistently met quality benchmarks and identified errors across high-volume task queues.',
+                ],
+              },
+            ].map((job, index) => (
+              <div
+                key={index}
+                style={{
+                  background: 'rgba(17, 34, 64, 0.6)',
+                  border: '1px solid rgba(100, 255, 218, 0.2)',
+                  borderRadius: '1rem',
+                  padding: 'clamp(1.25rem, 3vw, 1.75rem)',
+                  backdropFilter: 'blur(10px)',
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#64ffda';
+                  e.currentTarget.style.boxShadow = '0 20px 60px rgba(100, 255, 218, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(100, 255, 218, 0.2)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                  <h3 style={{ fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', color: '#64ffda', fontWeight: '700', margin: 0 }}>
+                    {job.role}
+                  </h3>
+                  <span style={{ fontSize: '0.85rem', color: '#8892b0', whiteSpace: 'nowrap' }}>
+                    {job.period}
+                  </span>
+                </div>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                  {job.bullets.map((bullet, i) => (
+                    <li key={i} style={{ color: '#c0cae9ff', fontSize: 'clamp(0.9rem, 2vw, 1rem)', lineHeight: '1.7', padding: '0.25rem 0' }}>
+                      <span style={{ color: '#64ffda', marginRight: '0.5rem' }}>▹</span>
+                      {bullet}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Skills Section */}
       <section id="skills" style={{
         padding: 'clamp(3rem, 8vh, 5rem) clamp(1rem, 4vw, 2rem)',
@@ -1441,24 +1538,29 @@ const Portfolio = () => {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(250px, 1fr))',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(220px, 1fr))',
             gap: 'clamp(1rem, 3vw, 1.5rem)',
           }}>
             {[
               {
+                title: 'Languages',
+                icon: '',
+                skills: ['JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'C', 'Rust', 'Swift', 'SQL', 'HTML/CSS', 'Haskell', 'Prolog']
+              },
+              {
                 title: 'Frontend',
                 icon: '',
-                skills: ['HTML & CSS', 'JavaScript', 'React', 'Swift', 'TypeScript', 'Tailwind CSS', 'GUI']
+                skills: ['React.js', 'HTML5', 'CSS3', 'Canvas API', 'Tailwind CSS', 'Responsive Design']
               },
               {
                 title: 'Backend',
                 icon: '',
-                skills: ['Node.js', 'Python', 'Java', 'C', 'C++', 'Rust', ]
+                skills: ['Node.js', 'Express.js', 'RESTful APIs', 'MongoDB', 'SQLite', 'Socket.io', 'Spotify API', 'Docker']
               },
               {
-                title: 'Database, AI Development Tools and Others',
+                title: 'Tools',
                 icon: '',
-                skills: ['MongoDB', 'SQL', 'Claude Code', 'Cursor', 'Copilot', 'Git & GitHub', 'Docker', 'AWS', 'AI/ML', 'Reinforcement Learning', 'CLI']
+                skills: ['Git/GitHub', 'Claude Code', 'Pygame', 'UML', 'Design Patterns', 'QT Framework', 'Linux', 'AWS', 'Agile Development', 'Xcode']
               }
             ].map((category, index) => (
               <div
@@ -1772,7 +1874,7 @@ const Portfolio = () => {
             {[
               { title: 'Email', value: 'saagargahlot@gmail.com', link: 'mailto:saagargahlot@gmail.com' },
               { title: 'GitHub', value: '@saagargahlot', link: 'https://github.com/saagargahlot' },
-              { title: 'LinkedIn', value: '/in/saagargahlot', link: 'https://ca.linkedin.com/in/saagar-gahlot' },
+              { title: 'LinkedIn', value: '/in/saagar-gahlot', link: 'https://www.linkedin.com/in/saagar-gahlot/' },
             ].map((contact, index) => (
               <a
                 key={index}
@@ -1829,7 +1931,7 @@ const Portfolio = () => {
         zIndex: 1,
       }}>
         <p style={{ fontSize: 'clamp(0.85rem, 2vw, 0.95rem)', marginBottom: '0.5rem' }}>
-          © 2025 Saagar Gahlot
+          © 2026 Saagar Gahlot
         </p>
         <p style={{ fontSize: 'clamp(0.85rem, 2vw, 0.95rem)' }}>
           Built with React and Pure Passion 💙
