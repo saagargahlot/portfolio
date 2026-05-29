@@ -141,56 +141,74 @@ const ScrollingBoat = React.memo(() => {
   const pathLengthRef = useRef(null); // cached once — path never changes
 
   useEffect(() => {
+    // targetY — where the page actually is (updated on every scroll event)
+    // smoothY — interpolated position the boat renders from (lerps toward targetY)
+    // This absorbs large wheel-click jumps from office mice so the boat never
+    // teleports — it always eases to its destination over ~8 frames.
+    let targetY = window.scrollY;
+    let smoothY = window.scrollY;
+
+    const renderBoat = () => {
+      rafRef.current = null;
+
+      // Lerp: close enough → snap; otherwise ease 15% per frame (~8 frames to settle)
+      const diff = targetY - smoothY;
+      if (Math.abs(diff) < 0.5) {
+        smoothY = targetY;
+      } else {
+        smoothY += diff * 0.15;
+        // Keep running until converged
+        rafRef.current = requestAnimationFrame(renderBoat);
+      }
+
+      if (!pathRef.current || !wrapperRef.current) return;
+
+      if (pathLengthRef.current === null)
+        pathLengthRef.current = pathRef.current.getTotalLength();
+      const pathLength = pathLengthRef.current;
+
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const pct    = Math.min(smoothY / maxScroll, 1);
+      const point  = pathRef.current.getPointAtLength(pathLength * pct);
+      const nPoint = pathRef.current.getPointAtLength(Math.min(pathLength * pct + 20, pathLength));
+
+      let newAngle = Math.atan2(nPoint.y - point.y, nPoint.x - point.x) * (180 / Math.PI);
+      const prev  = prevAngleRef.current;
+      let   delta = newAngle - prev;
+      if (delta >  180) delta -= 360;
+      if (delta < -180) delta += 360;
+      const angle = prev + delta * 0.15;
+      prevAngleRef.current = angle;
+
+      const hw = 35; // half of 70px
+      wrapperRef.current.style.transform =
+        `translate(${(point.x / 100) * window.innerWidth - hw}px,` +
+        ` ${(point.y / 100) * window.innerHeight - hw}px)` +
+        ` rotate(${angle + 90}deg)`;
+
+      // Idle float — cleared every frame we render, fires 1 s after last frame
+      if (imgRef.current) imgRef.current.style.animation = 'none';
+      clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = setTimeout(() => {
+        if (imgRef.current)
+          imgRef.current.style.animation = 'boatFloat 3s ease-in-out infinite';
+      }, 1000);
+    };
+
     const handleScroll = () => {
-      // rAF gate: one DOM write per display frame at most
-      if (rafRef.current !== null) return;
-      rafRef.current = requestAnimationFrame(() => {
-        rafRef.current = null;
-        if (!pathRef.current || !wrapperRef.current) return;
-
-        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        const percentage = Math.min(window.scrollY / maxScroll, 1);
-        if (pathLengthRef.current === null)
-          pathLengthRef.current = pathRef.current.getTotalLength();
-        const pathLength = pathLengthRef.current;
-        const point    = pathRef.current.getPointAtLength(pathLength * percentage);
-        const nextPoint = pathRef.current.getPointAtLength(
-          Math.min(pathLength * percentage + 20, pathLength)
-        );
-
-        let newAngle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
-        const prevAngle = prevAngleRef.current;
-        let angleDiff = newAngle - prevAngle;
-        if (angleDiff > 180)  angleDiff -= 360;
-        if (angleDiff < -180) angleDiff += 360;
-        const smoothedAngle = prevAngle + angleDiff * 0.15;
-        prevAngleRef.current = smoothedAngle;
-
-        // Resolve to px so the browser can fully compositor-promote the transform
-        // (vw/vh inside calc() can block GPU compositing on some Windows drivers).
-        const hw = 35; // half of 70px element
-        const px = (point.x / 100) * window.innerWidth  - hw;
-        const py = (point.y / 100) * window.innerHeight - hw;
-        wrapperRef.current.style.transform =
-          `translate(${px}px, ${py}px) rotate(${smoothedAngle + 90}deg)`;
-
-        // Idle detection — cancel float, restart 1s timer
-        if (imgRef.current) imgRef.current.style.animation = 'none';
-        if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
-        idleTimerRef.current = setTimeout(() => {
-          if (imgRef.current)
-            imgRef.current.style.animation = 'boatFloat 3s ease-in-out infinite';
-        }, 1000);
-      });
+      targetY = window.scrollY;
+      // Kick off the loop only if it isn't already running
+      if (rafRef.current === null)
+        rafRef.current = requestAnimationFrame(renderBoat);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (rafRef.current !== null)   cancelAnimationFrame(rafRef.current);
-      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+      clearTimeout(idleTimerRef.current);
     };
-  }, []); // empty deps — runs once, completely self-contained
+  }, []);
 
   return (
     <>
@@ -295,14 +313,17 @@ const FishLayer = React.memo(() => {
   }, []);
 
   return (
-    <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 1 }}>
-      <div ref={f1} style={{ position: 'absolute', top: '65%' }}>
+    <div style={{
+      position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+      pointerEvents: 'none', zIndex: 1,
+    }}>
+      <div ref={f1} style={{ position: 'absolute', top: '65%', left: 0 }}>
         <span style={{ fontSize: '25px', filter: 'drop-shadow(0 2px 8px rgba(45,212,191,0.3))', display: 'block' }}>🐠</span>
       </div>
-      <div ref={f2} style={{ position: 'absolute', top: '75%' }}>
+      <div ref={f2} style={{ position: 'absolute', top: '75%', left: 0 }}>
         <span style={{ fontSize: '28px', filter: 'drop-shadow(0 2px 8px rgba(56,189,248,0.3))', display: 'block' }}>🐡</span>
       </div>
-      <div ref={f3} style={{ position: 'absolute', top: '68%' }}>
+      <div ref={f3} style={{ position: 'absolute', top: '68%', left: 0 }}>
         <span style={{ fontSize: '22px', filter: 'drop-shadow(0 2px 8px rgba(45,212,191,0.3))', display: 'block' }}>🐟</span>
       </div>
     </div>
