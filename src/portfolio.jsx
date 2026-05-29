@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
+const ScrollingBoat = ({ scrollPosition }) => {
   const pathRef = useRef(null);
   const [boatPosition, setBoatPosition] = useState({ x: 0, y: 0, angle: 0 });
-  const [scrollPercentage, setScrollPercentage] = useState(0);
   const [isIdle, setIsIdle] = useState(false);
   const prevAngleRef = useRef(0);
   const scrollTimeoutRef = useRef(null);
@@ -33,12 +32,10 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
     if (pathRef.current) {
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       const percentage = Math.min(scrollPosition / maxScroll, 1);
-      setScrollPercentage(percentage);
 
       const pathLength = pathRef.current.getTotalLength();
       const point = pathRef.current.getPointAtLength(pathLength * percentage);
 
-      // Use a larger lookahead for smoother angle calculation
       const nextPoint = pathRef.current.getPointAtLength(
         Math.min(pathLength * percentage + 20, pathLength)
       );
@@ -65,18 +62,10 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
     <>
       <style>{`
         @keyframes boatFloat {
-          0%, 100% {
-            transform: translate(-50%, -50%) rotate(${boatPosition.angle + 90}deg) translateY(0px) translateX(0px) rotate(-2deg);
-          }
-          25% {
-            transform: translate(-50%, -50%) rotate(${boatPosition.angle + 90}deg) translateY(-8px) translateX(3px) rotate(1deg);
-          }
-          50% {
-            transform: translate(-50%, -50%) rotate(${boatPosition.angle + 90}deg) translateY(-3px) translateX(-2px) rotate(2deg);
-          }
-          75% {
-            transform: translate(-50%, -50%) rotate(${boatPosition.angle + 90}deg) translateY(-10px) translateX(1px) rotate(-1deg);
-          }
+          0%, 100% { transform: translateY(0px) rotate(-2deg); }
+          25% { transform: translateY(-8px) rotate(1deg); }
+          50% { transform: translateY(-3px) rotate(2deg); }
+          75% { transform: translateY(-10px) rotate(-1deg); }
         }
       `}</style>
 
@@ -120,11 +109,8 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
         />
       </svg>
 
-      {/* Boat following the path */}
-      <img
-        src="/photo/boat.png"
-        alt="Sailing boat"
-        loading="eager"
+      {/* Wrapper handles position + path rotation; img handles idle bobbing */}
+      <div
         style={{
           position: 'fixed',
           left: `${boatPosition.x}%`,
@@ -132,13 +118,24 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
           width: '70px',
           height: '70px',
           transform: `translate(-50%, -50%) rotate(${boatPosition.angle + 90}deg)`,
-          transition: isIdle ? 'none' : 'all 0.15s linear',
-          animation: isIdle ? 'boatFloat 3s ease-in-out infinite' : 'none',
-          filter: 'drop-shadow(0 5px 15px rgba(100, 255, 218, 0.6))',
+          transition: isIdle ? 'none' : 'left 0.15s linear, top 0.15s linear, transform 0.15s linear',
           zIndex: 0,
           pointerEvents: 'none',
         }}
-      />
+      >
+        <img
+          src="/photo/boat.png"
+          alt="Sailing boat"
+          loading="eager"
+          style={{
+            width: '70px',
+            height: '70px',
+            animation: isIdle ? 'boatFloat 3s ease-in-out infinite' : 'none',
+            filter: 'drop-shadow(0 5px 15px rgba(100, 255, 218, 0.6))',
+            display: 'block',
+          }}
+        />
+      </div>
     </>
 
   );
@@ -146,13 +143,12 @@ const ScrollingBoat = ({ scrollPosition, scrollDirection }) => {
 
       
 
-const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition, isMobile = false }) => {
+const WaterRippleBackground = ({ ripples, scrollPosition, isMobile = false }) => {
   const maxScroll = typeof document !== 'undefined'
     ? document.documentElement.scrollHeight - window.innerHeight
     : 1000;
   const scrollPercentage = Math.min(scrollPosition / maxScroll, 1);
-  const deepWaterVisible = scrollPercentage > 0.4; // Show after 40% scroll
-  const coralVisible = scrollPercentage > 0.95; // Show coral after 95% scroll
+  const deepWaterVisible = scrollPercentage > 0.4;
 
   return (
     <div style={{
@@ -170,9 +166,10 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition, isMob
       {!isMobile && <div
         style={{
           position: 'absolute',
-          left: '70%',
+          left: 0,
           top: '65%',
           animation: 'swim2 55s ease-in-out infinite',
+          willChange: 'transform',
           zIndex: 1,
         }}
       >
@@ -193,6 +190,7 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition, isMob
           left: '40%',
           top: '75%',
           animation: 'swim3 20s ease-in-out infinite',
+          willChange: 'transform',
           zIndex: 1,
         }}
       >
@@ -210,9 +208,10 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition, isMob
       {!isMobile && <div
         style={{
           position: 'absolute',
-          left: '85%',
+          left: 0,
           top: '68%',
           animation: 'swim2 50s ease-in-out infinite',
+          willChange: 'transform',
           zIndex: 1,
         }}
       >
@@ -345,7 +344,6 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition, isMob
             height: '20px',
             border: '2px solid rgba(100, 255, 218, 0.6)',
             borderRadius: '50%',
-            transform: 'translate(-50%, -50%)',
             animation: `ripple ${ripple.duration}ms ease-out forwards`,
             pointerEvents: 'none',
           }}
@@ -361,16 +359,8 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition, isMob
         }
         
         @keyframes ripple {
-          from {
-            width: 20px;
-            height: 20px;
-            opacity: 1;
-          }
-          to {
-            width: 400px;
-            height: 400px;
-            opacity: 0;
-          }
+          from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+          to { transform: translate(-50%, -50%) scale(20); opacity: 0; }
         }
         
         @keyframes bobbing {
@@ -410,39 +400,21 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition, isMob
         }
         
         @keyframes swim1 {
-          0% {
-            left: -10%;
-          }
-          50% {
-            left: 110%;
-          }
-          100% {
-            left: -10%;
-          }
+          0% { transform: translateX(-10vw); }
+          50% { transform: translateX(110vw); }
+          100% { transform: translateX(-10vw); }
         }
 
         @keyframes swim2 {
-          0% {
-            left: 110%;
-          }
-          50% {
-            left: -10%;
-          }
-          100% {
-            left: 110%;
-          }
+          0% { transform: translateX(110vw); }
+          50% { transform: translateX(-10vw); }
+          100% { transform: translateX(110vw); }
         }
 
         @keyframes swim3 {
-          0%, 100% {
-            left: 40%;
-          }
-          25% {
-            left: 20%;
-          }
-          75% {
-            left: 60%;
-          }
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-20vw); }
+          75% { transform: translateX(20vw); }
         }
 
         @keyframes flipAndBob1 {
@@ -762,15 +734,14 @@ const WaterRippleBackground = ({ ripples, scrollDirection, scrollPosition, isMob
 const Portfolio = () => {
   const [ripples, setRipples] = useState([]);
   const [activeSection, setActiveSection] = useState('home');
-  const [scrollDirection, setScrollDirection] = useState('down');
   const [scrollPosition, setScrollPosition] = useState(0);
   const [islandVisible, setIslandVisible] = useState(false);
-  const [contentLoaded, setContentLoaded] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const rippleIdRef = useRef(0);
   const lastScrollRef = useRef(0);
+  const scrollRafRef = useRef(null);
 
   const createRipple = (e) => {
     const ripple = {
@@ -794,10 +765,7 @@ const Portfolio = () => {
   // Handle content loading (images, fonts, etc.)
   useEffect(() => {
     const handleLoad = () => {
-      // Add a small delay to ensure fonts and images are fully rendered
       setTimeout(() => {
-        setContentLoaded(true);
-        // Trigger a scroll event to recalculate positions
         window.dispatchEvent(new Event('scroll'));
       }, 100);
     };
@@ -830,60 +798,59 @@ const Portfolio = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScroll = window.scrollY;
+      if (scrollRafRef.current !== null) return;
+      scrollRafRef.current = requestAnimationFrame(() => {
+        scrollRafRef.current = null;
+        const currentScroll = window.scrollY;
 
-      // Determine scroll direction
-      if (currentScroll > lastScrollRef.current) {
-        setScrollDirection('down');
-      } else if (currentScroll < lastScrollRef.current) {
-        setScrollDirection('up');
-      }
+        lastScrollRef.current = currentScroll;
+        setScrollPosition(currentScroll);
 
-      lastScrollRef.current = currentScroll;
-      setScrollPosition(currentScroll);
+        // Check if user has scrolled to around 85%
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercentage = currentScroll / maxScroll;
+        const at85Percent = scrollPercentage >= 0.85;
+        setIslandVisible(at85Percent);
 
-      // Check if user has scrolled to around 85%
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercentage = currentScroll / maxScroll;
-      const at85Percent = scrollPercentage >= 0.85;
-      setIslandVisible(at85Percent);
+        // Update active section
+        const sections = ['home', 'about', 'experience', 'skills', 'projects', 'contact'];
 
-      // Update active section
-      const sections = ['home', 'about', 'experience', 'skills', 'projects', 'contact'];
+        // Check if user is at the bottom of the page
+        const isAtBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 50;
 
-      // Check if user is at the bottom of the page
-      const isAtBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 50;
+        if (isAtBottom) {
+          setActiveSection('contact');
+        } else {
+          // Use middle of viewport for better accuracy
+          const viewportMiddle = window.scrollY + (window.innerHeight / 2);
 
-      if (isAtBottom) {
-        setActiveSection('contact');
-      } else {
-        // Use middle of viewport for better accuracy
-        const viewportMiddle = window.scrollY + (window.innerHeight / 2);
+          let currentSection = 'home';
+          let minDistance = Infinity;
 
-        let currentSection = 'home';
-        let minDistance = Infinity;
+          for (const section of sections) {
+            const element = document.getElementById(section);
+            if (element) {
+              const { offsetTop, offsetHeight } = element;
+              const sectionMiddle = offsetTop + (offsetHeight / 2);
+              const distance = Math.abs(viewportMiddle - sectionMiddle);
 
-        for (const section of sections) {
-          const element = document.getElementById(section);
-          if (element) {
-            const { offsetTop, offsetHeight } = element;
-            const sectionMiddle = offsetTop + (offsetHeight / 2);
-            const distance = Math.abs(viewportMiddle - sectionMiddle);
-
-            // Find the section whose middle is closest to viewport middle
-            if (distance < minDistance) {
-              minDistance = distance;
-              currentSection = section;
+              if (distance < minDistance) {
+                minDistance = distance;
+                currentSection = section;
+              }
             }
           }
-        }
 
-        setActiveSection(currentSection);
-      }
+          setActiveSection(currentSection);
+        }
+      });
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollRafRef.current !== null) cancelAnimationFrame(scrollRafRef.current);
+    };
   }, []);
 
   // Detect mobile devices for performance optimization
@@ -980,8 +947,8 @@ const Portfolio = () => {
 
   return (
     <>
-      <WaterRippleBackground ripples={ripples} scrollDirection={scrollDirection} scrollPosition={scrollPosition} isMobile={isMobile} />
-      {!isMobile && <ScrollingBoat scrollPosition={scrollPosition} scrollDirection={scrollDirection} />}
+      <WaterRippleBackground ripples={ripples} scrollPosition={scrollPosition} isMobile={isMobile} />
+      {!isMobile && <ScrollingBoat scrollPosition={scrollPosition} />}
 
       <div style={{ fontFamily: "'Inter', sans-serif", color: '#e6f1ff', position: 'relative' }}>
 
@@ -1474,7 +1441,6 @@ const Portfolio = () => {
                   border: '1px solid rgba(100, 255, 218, 0.2)',
                   borderRadius: '1rem',
                   padding: 'clamp(1.25rem, 3vw, 1.75rem)',
-                  backdropFilter: 'blur(10px)',
                   transition: 'all 0.3s ease',
                 }}
                 onMouseEnter={(e) => {
@@ -1573,7 +1539,6 @@ const Portfolio = () => {
                   padding: '1.25rem',
                   transition: 'all 0.3s ease',
                   cursor: 'pointer',
-                  backdropFilter: 'blur(10px)',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-10px)';
@@ -1659,7 +1624,6 @@ const Portfolio = () => {
                   transition: 'all 0.3s ease',
                   cursor: 'pointer',
                   position: 'relative',
-                  backdropFilter: 'blur(10px)',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-10px)';
