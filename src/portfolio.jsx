@@ -11,71 +11,71 @@ const BOAT_FLOAT_STYLE = `
   }
 `;
 
-const ScrollingBoat = ({ scrollPosition }) => {
-  const pathRef = useRef(null);
+// React.memo prevents Portfolio re-renders from cascading into the boat.
+// The boat manages its own scroll listener and never re-renders due to scroll.
+const ScrollingBoat = React.memo(() => {
+  const pathRef    = useRef(null);
   const wrapperRef = useRef(null);
-  const imgRef = useRef(null);
-  const [isIdle, setIsIdle] = useState(false);
-  const prevAngleRef = useRef(0);
-  const scrollTimeoutRef = useRef(null);
+  const imgRef     = useRef(null);
+  const prevAngleRef  = useRef(0);
+  const rafRef        = useRef(null);
+  const idleTimerRef  = useRef(null);
 
-  // Idle detection — only two state changes per scroll session (start + stop).
   useEffect(() => {
-    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-    setIsIdle(false);
-    scrollTimeoutRef.current = setTimeout(() => setIsIdle(true), 1000);
-    return () => { if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current); };
-  }, [scrollPosition]);
+    const handleScroll = () => {
+      // rAF gate: one DOM write per display frame at most
+      if (rafRef.current !== null) return;
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = null;
+        if (!pathRef.current || !wrapperRef.current) return;
 
-  // Update boat position by writing directly to the DOM ref — no setState, no
-  // React reconciliation on every scroll frame. Using transform: translate() so
-  // the browser keeps the element on its own compositor layer (no layout cost).
-  useEffect(() => {
-    if (!pathRef.current || !wrapperRef.current) return;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const percentage = Math.min(window.scrollY / maxScroll, 1);
+        const pathLength = pathRef.current.getTotalLength();
+        const point    = pathRef.current.getPointAtLength(pathLength * percentage);
+        const nextPoint = pathRef.current.getPointAtLength(
+          Math.min(pathLength * percentage + 20, pathLength)
+        );
 
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    const percentage = Math.min(scrollPosition / maxScroll, 1);
-    const pathLength = pathRef.current.getTotalLength();
-    const point = pathRef.current.getPointAtLength(pathLength * percentage);
-    const nextPoint = pathRef.current.getPointAtLength(
-      Math.min(pathLength * percentage + 20, pathLength)
-    );
+        let newAngle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
+        const prevAngle = prevAngleRef.current;
+        let angleDiff = newAngle - prevAngle;
+        if (angleDiff > 180)  angleDiff -= 360;
+        if (angleDiff < -180) angleDiff += 360;
+        const smoothedAngle = prevAngle + angleDiff * 0.15;
+        prevAngleRef.current = smoothedAngle;
 
-    let newAngle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
-    const prevAngle = prevAngleRef.current;
-    let angleDiff = newAngle - prevAngle;
-    if (angleDiff > 180) angleDiff -= 360;
-    if (angleDiff < -180) angleDiff += 360;
-    const smoothedAngle = prevAngle + angleDiff * 0.15;
-    prevAngleRef.current = smoothedAngle;
+        // point.x/y are SVG viewBox units 0-100 === 0-100vw / 0-100vh.
+        // Pure transform keeps the boat on the GPU compositor layer.
+        wrapperRef.current.style.transform =
+          `translate(calc(${point.x}vw - 50%), calc(${point.y}vh - 50%)) rotate(${smoothedAngle + 90}deg)`;
 
-    // point.x/y are in SVG viewBox units (0–100), equivalent to viewport %.
-    // translate(calc(Xvw - 50%), calc(Yvh - 50%)) centres the element at (X%, Y%).
-    wrapperRef.current.style.transform =
-      `translate(calc(${point.x}vw - 50%), calc(${point.y}vh - 50%)) rotate(${smoothedAngle + 90}deg)`;
-  }, [scrollPosition]);
+        // Idle detection — cancel float, restart 1s timer
+        if (imgRef.current) imgRef.current.style.animation = 'none';
+        if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+        idleTimerRef.current = setTimeout(() => {
+          if (imgRef.current)
+            imgRef.current.style.animation = 'boatFloat 3s ease-in-out infinite';
+        }, 1000);
+      });
+    };
 
-  // Switch idle float animation on/off via DOM ref so no re-render is needed.
-  useEffect(() => {
-    if (!imgRef.current) return;
-    imgRef.current.style.animation = isIdle ? 'boatFloat 3s ease-in-out infinite' : 'none';
-  }, [isIdle]);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafRef.current !== null)   cancelAnimationFrame(rafRef.current);
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    };
+  }, []); // empty deps — runs once, completely self-contained
 
   return (
     <>
       <style>{BOAT_FLOAT_STYLE}</style>
 
-      {/* Invisible path used only for getPointAtLength calculations */}
+      {/* Invisible path — only used for getPointAtLength() */}
       <svg
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100vh',
-          pointerEvents: 'none',
-          zIndex: 100,
-        }}
+        style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh',
+                 pointerEvents: 'none', zIndex: 100 }}
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
       >
@@ -87,35 +87,20 @@ const ScrollingBoat = ({ scrollPosition }) => {
         </defs>
         <path
           ref={pathRef}
-          d="M 0,8
-             Q 12,24 18 35
-             Q 30,15 55,34
-             Q 50,40 50,50
-             Q 0,25 15,50
-             Q 13,88 10,88
-             Q 10,25 10,8
-             Q 10,15 10.2,45"
-          fill="none"
-          stroke="url(#pathGradient)"
-          strokeWidth="0.3"
-          strokeDasharray="1,3"
-          opacity="0"
+          d="M 0,8 Q 12,24 18 35 Q 30,15 55,34 Q 50,40 50,50
+             Q 0,25 15,50 Q 13,88 10,88 Q 10,25 10,8 Q 10,15 10.2,45"
+          fill="none" stroke="url(#pathGradient)"
+          strokeWidth="0.3" strokeDasharray="1,3" opacity="0"
         />
       </svg>
 
-      {/* position: fixed; left/top stay 0 — only transform changes, keeping
-          the element on the GPU compositor layer at all times. */}
       <div
         ref={wrapperRef}
         style={{
-          position: 'fixed',
-          left: 0,
-          top: 0,
-          width: '70px',
-          height: '70px',
+          position: 'fixed', left: 0, top: 0,
+          width: '70px', height: '70px',
           willChange: 'transform',
-          zIndex: 0,
-          pointerEvents: 'none',
+          zIndex: 0, pointerEvents: 'none',
         }}
       >
         <img
@@ -124,8 +109,7 @@ const ScrollingBoat = ({ scrollPosition }) => {
           alt="Sailing boat"
           loading="eager"
           style={{
-            width: '70px',
-            height: '70px',
+            width: '70px', height: '70px',
             filter: 'drop-shadow(0 5px 15px rgba(100, 255, 218, 0.6))',
             display: 'block',
           }}
@@ -133,7 +117,7 @@ const ScrollingBoat = ({ scrollPosition }) => {
       </div>
     </>
   );
-};
+});
 
       
 
@@ -160,10 +144,9 @@ const WaterRippleBackground = ({ ripples, scrollPosition, isMobile = false }) =>
       {!isMobile && <div
         style={{
           position: 'absolute',
-          left: 0,
+          left: '70%',
           top: '65%',
           animation: 'swim2 55s ease-in-out infinite',
-          willChange: 'transform',
           zIndex: 1,
         }}
       >
@@ -184,7 +167,6 @@ const WaterRippleBackground = ({ ripples, scrollPosition, isMobile = false }) =>
           left: '40%',
           top: '75%',
           animation: 'swim3 20s ease-in-out infinite',
-          willChange: 'transform',
           zIndex: 1,
         }}
       >
@@ -202,10 +184,9 @@ const WaterRippleBackground = ({ ripples, scrollPosition, isMobile = false }) =>
       {!isMobile && <div
         style={{
           position: 'absolute',
-          left: 0,
+          left: '85%',
           top: '68%',
           animation: 'swim2 50s ease-in-out infinite',
-          willChange: 'transform',
           zIndex: 1,
         }}
       >
@@ -394,21 +375,21 @@ const WaterRippleBackground = ({ ripples, scrollPosition, isMobile = false }) =>
         }
         
         @keyframes swim1 {
-          0% { transform: translateX(-10vw); }
-          50% { transform: translateX(110vw); }
-          100% { transform: translateX(-10vw); }
+          0%   { left: -10%; }
+          50%  { left: 110%; }
+          100% { left: -10%; }
         }
 
         @keyframes swim2 {
-          0% { transform: translateX(110vw); }
-          50% { transform: translateX(-10vw); }
-          100% { transform: translateX(110vw); }
+          0%   { left: 110%; }
+          50%  { left: -10%; }
+          100% { left: 110%; }
         }
 
         @keyframes swim3 {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-20vw); }
-          75% { transform: translateX(20vw); }
+          0%, 100% { left: 40%; }
+          25%      { left: 20%; }
+          75%      { left: 60%; }
         }
 
         @keyframes flipAndBob1 {
@@ -942,7 +923,7 @@ const Portfolio = () => {
   return (
     <>
       <WaterRippleBackground ripples={ripples} scrollPosition={scrollPosition} isMobile={isMobile} />
-      {!isMobile && <ScrollingBoat scrollPosition={scrollPosition} />}
+      {!isMobile && <ScrollingBoat />}
 
       <div style={{ fontFamily: "'Inter', sans-serif", color: '#e6f1ff', position: 'relative' }}>
 
