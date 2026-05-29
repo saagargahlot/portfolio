@@ -151,13 +151,15 @@ const ScrollingBoat = React.memo(() => {
     const renderBoat = () => {
       rafRef.current = null;
 
-      // Lerp: close enough → snap; otherwise ease 15% per frame (~8 frames to settle)
+      // Lerp toward target at 30 % per frame (~5 frames / 80 ms to settle).
+      // Cap lag at 400 px so rapid office-mouse clicks never leave the boat far behind.
       const diff = targetY - smoothY;
-      if (Math.abs(diff) < 0.5) {
+      const absDiff = Math.abs(diff);
+      if (absDiff < 1) {
         smoothY = targetY;
       } else {
-        smoothY += diff * 0.15;
-        // Keep running until converged
+        if (absDiff > 400) smoothY = targetY - Math.sign(diff) * 400;
+        smoothY += (targetY - smoothY) * 0.3;
         rafRef.current = requestAnimationFrame(renderBoat);
       }
 
@@ -276,32 +278,36 @@ const FishLayer = React.memo(() => {
       const t = (ts - startRef.current) / 1000; // elapsed seconds
       const W = window.innerWidth;
 
-      // 🐠 — sweeps right→left→right over 55 s; +13.75 s offset so it's on-screen immediately
+      // Fish emoji (🐠🐟) face LEFT natively in most fonts (Segoe UI Emoji, Noto, etc.).
+      // dx/da = -0.6W*sin(a), so sin>0 → moving left → show natural orientation (scaleX 1).
+      // sin<0 → moving right → flip to face right (scaleX -1).
+
+      // 🐠 — sweeps right→left→right over 55 s; offset starts it mid-screen immediately
       if (f1.current) {
         const t1  = (t + 13.75) % 55;
         const a1  = (t1 / 55) * Math.PI * 2;
-        const x1  = (110 - 120 * (1 - Math.cos(a1)) / 2) / 100 * W; // px, 110%→-10%
+        const x1  = (110 - 120 * (1 - Math.cos(a1)) / 2) / 100 * W;
         const bob = 12 * Math.sin((t / 2.5) * Math.PI * 2);
-        const dir = Math.sin(a1) > 0 ? -1 : 1; // -1=face left while going left, 1=face right
+        const dir = Math.sin(a1) > 0 ? 1 : -1;
         f1.current.style.transform = `translateX(${x1}px) translateY(${bob}px) scaleX(${dir})`;
       }
 
       // 🐡 — oscillates 20%↔60% over 20 s
       if (f2.current) {
         const a2  = (t / 20) * Math.PI * 2;
-        const x2  = (40 - 20 * Math.sin(a2)) / 100 * W; // px
+        const x2  = (40 - 20 * Math.sin(a2)) / 100 * W;
         const bob = 10 * Math.sin((t / 2) * Math.PI * 2);
-        const dir = Math.cos(a2) < 0 ? 1 : -1; // face the direction of travel
+        const dir = Math.cos(a2) < 0 ? -1 : 1;
         f2.current.style.transform = `translateX(${x2}px) translateY(${bob}px) scaleX(${dir})`;
       }
 
-      // 🐟 — sweeps right→left→right over 50 s; +37.5 s offset
+      // 🐟 — sweeps right→left→right over 50 s; offset starts it mid-screen immediately
       if (f3.current) {
         const t3  = (t + 37.5) % 50;
         const a3  = (t3 / 50) * Math.PI * 2;
         const x3  = (110 - 120 * (1 - Math.cos(a3)) / 2) / 100 * W;
         const bob = 10 * Math.sin((t / 3) * Math.PI * 2);
-        const dir = Math.sin(a3) > 0 ? -1 : 1;
+        const dir = Math.sin(a3) > 0 ? 1 : -1;
         f3.current.style.transform = `translateX(${x3}px) translateY(${bob}px) scaleX(${dir})`;
       }
 
