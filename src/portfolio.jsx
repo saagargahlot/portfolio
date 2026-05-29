@@ -1,75 +1,71 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+// Defined outside the component so the string reference is stable — React won't
+// re-inject the <style> content on every render.
+const BOAT_FLOAT_STYLE = `
+  @keyframes boatFloat {
+    0%, 100% { transform: translateY(0px) rotate(-2deg); }
+    25%       { transform: translateY(-8px) rotate(1deg); }
+    50%       { transform: translateY(-3px) rotate(2deg); }
+    75%       { transform: translateY(-10px) rotate(-1deg); }
+  }
+`;
+
 const ScrollingBoat = ({ scrollPosition }) => {
   const pathRef = useRef(null);
-  const [boatPosition, setBoatPosition] = useState({ x: 0, y: 0, angle: 0 });
+  const wrapperRef = useRef(null);
+  const imgRef = useRef(null);
   const [isIdle, setIsIdle] = useState(false);
   const prevAngleRef = useRef(0);
   const scrollTimeoutRef = useRef(null);
 
-  // Detect when user stops scrolling
+  // Idle detection — only two state changes per scroll session (start + stop).
   useEffect(() => {
+    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
     setIsIdle(false);
-
-    // Clear existing timeout
-    if (scrollTimeoutRef.current) {
-      clearTimeout(scrollTimeoutRef.current);
-    }
-
-    // Set new timeout - consider user "idle" after 1.5 seconds of no scrolling
-    scrollTimeoutRef.current = setTimeout(() => {
-      setIsIdle(true);
-    }, 1000);
-
-    return () => {
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-    };
+    scrollTimeoutRef.current = setTimeout(() => setIsIdle(true), 1000);
+    return () => { if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current); };
   }, [scrollPosition]);
 
+  // Update boat position by writing directly to the DOM ref — no setState, no
+  // React reconciliation on every scroll frame. Using transform: translate() so
+  // the browser keeps the element on its own compositor layer (no layout cost).
   useEffect(() => {
-    if (pathRef.current) {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const percentage = Math.min(scrollPosition / maxScroll, 1);
+    if (!pathRef.current || !wrapperRef.current) return;
 
-      const pathLength = pathRef.current.getTotalLength();
-      const point = pathRef.current.getPointAtLength(pathLength * percentage);
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const percentage = Math.min(scrollPosition / maxScroll, 1);
+    const pathLength = pathRef.current.getTotalLength();
+    const point = pathRef.current.getPointAtLength(pathLength * percentage);
+    const nextPoint = pathRef.current.getPointAtLength(
+      Math.min(pathLength * percentage + 20, pathLength)
+    );
 
-      const nextPoint = pathRef.current.getPointAtLength(
-        Math.min(pathLength * percentage + 20, pathLength)
-      );
+    let newAngle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
+    const prevAngle = prevAngleRef.current;
+    let angleDiff = newAngle - prevAngle;
+    if (angleDiff > 180) angleDiff -= 360;
+    if (angleDiff < -180) angleDiff += 360;
+    const smoothedAngle = prevAngle + angleDiff * 0.15;
+    prevAngleRef.current = smoothedAngle;
 
-      let newAngle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
-
-      // Smooth angle transitions to prevent twirling
-      const prevAngle = prevAngleRef.current;
-      let angleDiff = newAngle - prevAngle;
-
-      // Handle angle wrap-around (e.g., 359° to 1°)
-      if (angleDiff > 180) angleDiff -= 360;
-      if (angleDiff < -180) angleDiff += 360;
-
-      // Interpolate angle for smoother rotation
-      const smoothedAngle = prevAngle + angleDiff * 0.15;
-      prevAngleRef.current = smoothedAngle;
-
-      setBoatPosition({ x: point.x, y: point.y, angle: smoothedAngle });
-    }
+    // point.x/y are in SVG viewBox units (0–100), equivalent to viewport %.
+    // translate(calc(Xvw - 50%), calc(Yvh - 50%)) centres the element at (X%, Y%).
+    wrapperRef.current.style.transform =
+      `translate(calc(${point.x}vw - 50%), calc(${point.y}vh - 50%)) rotate(${smoothedAngle + 90}deg)`;
   }, [scrollPosition]);
+
+  // Switch idle float animation on/off via DOM ref so no re-render is needed.
+  useEffect(() => {
+    if (!imgRef.current) return;
+    imgRef.current.style.animation = isIdle ? 'boatFloat 3s ease-in-out infinite' : 'none';
+  }, [isIdle]);
 
   return (
     <>
-      <style>{`
-        @keyframes boatFloat {
-          0%, 100% { transform: translateY(0px) rotate(-2deg); }
-          25% { transform: translateY(-8px) rotate(1deg); }
-          50% { transform: translateY(-3px) rotate(2deg); }
-          75% { transform: translateY(-10px) rotate(-1deg); }
-        }
-      `}</style>
+      <style>{BOAT_FLOAT_STYLE}</style>
 
-      {/* Visible dotted path that curves around content */}
+      {/* Invisible path used only for getPointAtLength calculations */}
       <svg
         style={{
           position: 'fixed',
@@ -89,8 +85,6 @@ const ScrollingBoat = ({ scrollPosition }) => {
             <stop offset="100%" stopColor="rgba(100, 255, 218, 0.4)" />
           </linearGradient>
         </defs>
-
-        {/* Path curves: left around About image, right between skills, left around projects, right to island */}
         <path
           ref={pathRef}
           d="M 0,8
@@ -109,35 +103,35 @@ const ScrollingBoat = ({ scrollPosition }) => {
         />
       </svg>
 
-      {/* Wrapper handles position + path rotation; img handles idle bobbing */}
+      {/* position: fixed; left/top stay 0 — only transform changes, keeping
+          the element on the GPU compositor layer at all times. */}
       <div
+        ref={wrapperRef}
         style={{
           position: 'fixed',
-          left: `${boatPosition.x}%`,
-          top: `${boatPosition.y}%`,
+          left: 0,
+          top: 0,
           width: '70px',
           height: '70px',
-          transform: `translate(-50%, -50%) rotate(${boatPosition.angle + 90}deg)`,
-          transition: isIdle ? 'none' : 'left 0.15s linear, top 0.15s linear, transform 0.15s linear',
+          willChange: 'transform',
           zIndex: 0,
           pointerEvents: 'none',
         }}
       >
         <img
+          ref={imgRef}
           src="/photo/boat.png"
           alt="Sailing boat"
           loading="eager"
           style={{
             width: '70px',
             height: '70px',
-            animation: isIdle ? 'boatFloat 3s ease-in-out infinite' : 'none',
             filter: 'drop-shadow(0 5px 15px rgba(100, 255, 218, 0.6))',
             display: 'block',
           }}
         />
       </div>
     </>
-
   );
 };
 
