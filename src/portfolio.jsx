@@ -241,7 +241,73 @@ const ScrollingBoat = React.memo(() => {
   );
 });
 
-      
+// Fish are driven entirely by a JS requestAnimationFrame loop — no CSS animations.
+// CSS animation engines on Windows Chrome are unreliable when parent elements have
+// compositing hints or when keyframes are injected dynamically. Direct DOM writes
+// via refs with pure pixel transforms are guaranteed to work on every platform.
+const FishLayer = React.memo(() => {
+  const f1 = useRef(null); // 🐠
+  const f2 = useRef(null); // 🐡
+  const f3 = useRef(null); // 🐟
+  const rafRef   = useRef(null);
+  const startRef = useRef(null);
+
+  useEffect(() => {
+    const tick = (ts) => {
+      if (!startRef.current) startRef.current = ts;
+      const t = (ts - startRef.current) / 1000; // elapsed seconds
+      const W = window.innerWidth;
+
+      // 🐠 — sweeps right→left→right over 55 s; +13.75 s offset so it's on-screen immediately
+      if (f1.current) {
+        const t1  = (t + 13.75) % 55;
+        const a1  = (t1 / 55) * Math.PI * 2;
+        const x1  = (110 - 120 * (1 - Math.cos(a1)) / 2) / 100 * W; // px, 110%→-10%
+        const bob = 12 * Math.sin((t / 2.5) * Math.PI * 2);
+        const dir = Math.sin(a1) > 0 ? -1 : 1; // -1=face left while going left, 1=face right
+        f1.current.style.transform = `translateX(${x1}px) translateY(${bob}px) scaleX(${dir})`;
+      }
+
+      // 🐡 — oscillates 20%↔60% over 20 s
+      if (f2.current) {
+        const a2  = (t / 20) * Math.PI * 2;
+        const x2  = (40 - 20 * Math.sin(a2)) / 100 * W; // px
+        const bob = 10 * Math.sin((t / 2) * Math.PI * 2);
+        const dir = Math.cos(a2) < 0 ? 1 : -1; // face the direction of travel
+        f2.current.style.transform = `translateX(${x2}px) translateY(${bob}px) scaleX(${dir})`;
+      }
+
+      // 🐟 — sweeps right→left→right over 50 s; +37.5 s offset
+      if (f3.current) {
+        const t3  = (t + 37.5) % 50;
+        const a3  = (t3 / 50) * Math.PI * 2;
+        const x3  = (110 - 120 * (1 - Math.cos(a3)) / 2) / 100 * W;
+        const bob = 10 * Math.sin((t / 3) * Math.PI * 2);
+        const dir = Math.sin(a3) > 0 ? -1 : 1;
+        f3.current.style.transform = `translateX(${x3}px) translateY(${bob}px) scaleX(${dir})`;
+      }
+
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+  }, []);
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 1 }}>
+      <div ref={f1} style={{ position: 'absolute', top: '65%' }}>
+        <span style={{ fontSize: '25px', filter: 'drop-shadow(0 2px 8px rgba(45,212,191,0.3))', display: 'block' }}>🐠</span>
+      </div>
+      <div ref={f2} style={{ position: 'absolute', top: '75%' }}>
+        <span style={{ fontSize: '28px', filter: 'drop-shadow(0 2px 8px rgba(56,189,248,0.3))', display: 'block' }}>🐡</span>
+      </div>
+      <div ref={f3} style={{ position: 'absolute', top: '68%' }}>
+        <span style={{ fontSize: '22px', filter: 'drop-shadow(0 2px 8px rgba(45,212,191,0.3))', display: 'block' }}>🐟</span>
+      </div>
+    </div>
+  );
+});
 
 const WaterRippleBackground = ({ ripples, scrollPosition, isMobile = false }) => {
   const maxScroll = typeof document !== 'undefined'
@@ -262,67 +328,6 @@ const WaterRippleBackground = ({ ripples, scrollPosition, isMobile = false }) =>
       background: 'linear-gradient(135deg, #0a192f 0%, #112240 50%, #1a365d 100%)',
     }}>
 
-      {!isMobile && <div
-        style={{
-          position: 'absolute',
-          left: '70%',
-          top: '65%',
-          animation: 'swim2 55s ease-in-out infinite',
-          animationDelay: '-13.75s',
-          zIndex: 1,
-        }}
-      >
-        <div
-          style={{
-            fontSize: '25px',
-            animation: 'flipAndBob2 55s ease-in-out infinite',
-            filter: 'drop-shadow(0 2px 8px rgba(45, 212, 191, 0.3))',
-          }}
-        >
-          🐠
-        </div>
-      </div>}
-
-      {!isMobile && <div
-        style={{
-          position: 'absolute',
-          left: '40%',
-          top: '75%',
-          animation: 'swim3 20s ease-in-out infinite',
-          zIndex: 1,
-        }}
-      >
-        <div
-          style={{
-            fontSize: '28px',
-            animation: 'flipAndBob3 20s ease-in-out infinite',
-            filter: 'drop-shadow(0 2px 8px rgba(56, 189, 248, 0.3))',
-          }}
-        >
-          🐡
-        </div>
-      </div>}
-
-      {!isMobile && <div
-        style={{
-          position: 'absolute',
-          left: '85%',
-          top: '68%',
-          animation: 'swim2 50s ease-in-out infinite',
-          animationDelay: '-37.5s',
-          zIndex: 1,
-        }}
-      >
-        <div
-          style={{
-            fontSize: '22px',
-            animation: 'flipAndBob2 50s ease-in-out infinite',
-            filter: 'drop-shadow(0 2px 8px rgba(45, 212, 191, 0.3))',
-          }}
-        >
-          🐟
-        </div>
-      </div>}
 
       {/* Jellyfish - appears in deeper water */}
       {!isMobile && <div
@@ -670,6 +675,7 @@ const Portfolio = () => {
   return (
     <>
       <WaterRippleBackground ripples={ripples} scrollPosition={scrollPosition} isMobile={isMobile} />
+      {!isMobile && <FishLayer />}
       {!isMobile && <ScrollingBoat />}
 
       <div style={{ fontFamily: "'Inter', sans-serif", color: '#e6f1ff', position: 'relative' }}>
