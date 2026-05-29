@@ -2,12 +2,119 @@ import React, { useState, useEffect, useRef } from 'react';
 
 // Defined outside the component so the string reference is stable — React won't
 // re-inject the <style> content on every render.
-const BOAT_FLOAT_STYLE = `
+// All static animation CSS is defined here and injected into <head> once via
+// Portfolio's useEffect so it is never touched by React reconciliation.
+const ALL_ANIMATIONS_CSS = `
   @keyframes boatFloat {
     0%, 100% { transform: translateY(0px) rotate(-2deg); }
     25%       { transform: translateY(-8px) rotate(1deg); }
     50%       { transform: translateY(-3px) rotate(2deg); }
     75%       { transform: translateY(-10px) rotate(-1deg); }
+  }
+  @keyframes waterFlow {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(3%, 3%) rotate(90deg); }
+    50% { transform: translate(-2%, 4%) rotate(180deg); }
+    75% { transform: translate(4%, -2%) rotate(270deg); }
+  }
+  @keyframes ripple {
+    from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    to   { transform: translate(-50%, -50%) scale(20); opacity: 0; }
+  }
+  @keyframes swim1 {
+    0%   { left: -10%; }
+    50%  { left: 110%; }
+    100% { left: -10%; }
+  }
+  @keyframes swim2 {
+    0%   { left: 110%; }
+    50%  { left: -10%; }
+    100% { left: 110%; }
+  }
+  @keyframes swim3 {
+    0%, 100% { left: 40%; }
+    25%      { left: 20%; }
+    75%      { left: 60%; }
+  }
+  @keyframes flipAndBob1 {
+    0%    { transform: scaleX(-1) translateY(0); }
+    12.5% { transform: scaleX(-1) translateY(-30px); }
+    25%   { transform: scaleX(-1) translateY(-10px); }
+    37.5% { transform: scaleX(-1) translateY(-40px); }
+    49%   { transform: scaleX(-1) translateY(0); }
+    50%   { transform: scaleX(1) translateY(0); }
+    62.5% { transform: scaleX(1) translateY(-30px); }
+    75%   { transform: scaleX(1) translateY(-10px); }
+    87.5% { transform: scaleX(1) translateY(-40px); }
+    100%  { transform: scaleX(1) translateY(0); }
+  }
+  @keyframes flipAndBob2 {
+    0%    { transform: scaleX(1) translateY(0); }
+    12.5% { transform: scaleX(1) translateY(-30px); }
+    25%   { transform: scaleX(1) translateY(-10px); }
+    37.5% { transform: scaleX(1) translateY(-40px); }
+    49%   { transform: scaleX(1) translateY(0); }
+    50%   { transform: scaleX(-1) translateY(0); }
+    62.5% { transform: scaleX(-1) translateY(-30px); }
+    75%   { transform: scaleX(-1) translateY(-10px); }
+    87.5% { transform: scaleX(-1) translateY(-40px); }
+    100%  { transform: scaleX(-1) translateY(0); }
+  }
+  @keyframes flipAndBob3 {
+    0%     { transform: scaleX(1) translateY(0); }
+    6.25%  { transform: scaleX(1) translateY(-30px); }
+    12.5%  { transform: scaleX(1) translateY(-10px); }
+    18.75% { transform: scaleX(1) translateY(-40px); }
+    24%    { transform: scaleX(1) translateY(0); }
+    25%    { transform: scaleX(-1) translateY(0); }
+    31.25% { transform: scaleX(-1) translateY(-30px); }
+    37.5%  { transform: scaleX(-1) translateY(-10px); }
+    43.75% { transform: scaleX(-1) translateY(-40px); }
+    50%    { transform: scaleX(-1) translateY(0); }
+    56.25% { transform: scaleX(-1) translateY(-30px); }
+    62.5%  { transform: scaleX(-1) translateY(-10px); }
+    68.75% { transform: scaleX(-1) translateY(-40px); }
+    74%    { transform: scaleX(-1) translateY(0); }
+    75%    { transform: scaleX(1) translateY(0); }
+    81.25% { transform: scaleX(1) translateY(-30px); }
+    87.5%  { transform: scaleX(1) translateY(-10px); }
+    93.75% { transform: scaleX(1) translateY(-40px); }
+    100%   { transform: scaleX(1) translateY(0); }
+  }
+  @keyframes jellyfishFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25%      { transform: translateY(-80px) rotate(-5deg); }
+    50%      { transform: translateY(-120px) rotate(0deg); }
+    75%      { transform: translateY(-80px) rotate(5deg); }
+  }
+  @keyframes wave1 {
+    0%, 100% { d: path("M0,160L48,144C96,128,192,96,288,106.7C384,117,480,171,576,176C672,181,768,139,864,128C960,117,1056,139,1152,149.3C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"); }
+    25%      { d: path("M0,192L48,176C96,160,192,128,288,128C384,128,480,160,576,176C672,192,768,192,864,181.3C960,171,1056,149,1152,154.7C1248,160,1344,192,1392,208L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"); }
+    50%      { d: path("M0,128L48,149.3C96,171,192,213,288,218.7C384,224,480,192,576,165.3C672,139,768,117,864,133.3C960,149,1056,203,1152,213.3C1248,224,1344,192,1392,176L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"); }
+    75%      { d: path("M0,224L48,202.7C96,181,192,139,288,138.7C384,139,480,181,576,202.7C672,224,768,224,864,213.3C960,203,1056,181,1152,170.7C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"); }
+  }
+  @keyframes wave2 {
+    0%, 100% { d: path("M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,213.3C672,224,768,224,864,208C960,192,1056,160,1152,154.7C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"); }
+    33%      { d: path("M0,256L48,234.7C96,213,192,171,288,165.3C384,160,480,192,576,197.3C672,203,768,181,864,186.7C960,192,1056,224,1152,229.3C1248,235,1344,213,1392,202.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"); }
+    66%      { d: path("M0,192L48,181.3C96,171,192,149,288,160C384,171,480,213,576,218.7C672,224,768,192,864,165.3C960,139,1056,117,1152,128C1248,139,1344,181,1392,202.7L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"); }
+  }
+  @keyframes wave3 {
+    0%, 100% { d: path("M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,133.3C672,117,768,107,864,117.3C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"); }
+    40%      { d: path("M0,128L48,138.7C96,149,192,171,288,165.3C384,160,480,128,576,122.7C672,117,768,139,864,144C960,149,1056,139,1152,138.7C1248,139,1344,149,1392,154.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"); }
+    80%      { d: path("M0,160L48,154.7C96,149,192,139,288,149.3C384,160,480,192,576,192C672,192,768,160,864,138.7C960,117,1056,107,1152,117.3C1248,128,1344,160,1392,176L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"); }
+  }
+  @keyframes slideDown      { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes fadeInUp       { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes float          { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+  @keyframes floatIsland    { 0%, 100% { transform: translateY(0px) rotate(-2deg); } 50% { transform: translateY(-15px) rotate(2deg); } }
+  @keyframes islandAppear   { from { opacity: 0; transform: translateY(50px) scale(0.8); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes slideInFromLeft { from { opacity: 0; transform: translateX(-100px); } to { opacity: 1; transform: translateX(0); } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 `;
 
@@ -45,10 +152,13 @@ const ScrollingBoat = React.memo(() => {
         const smoothedAngle = prevAngle + angleDiff * 0.15;
         prevAngleRef.current = smoothedAngle;
 
-        // point.x/y are SVG viewBox units 0-100 === 0-100vw / 0-100vh.
-        // Pure transform keeps the boat on the GPU compositor layer.
+        // Resolve to px so the browser can fully compositor-promote the transform
+        // (vw/vh inside calc() can block GPU compositing on some Windows drivers).
+        const hw = 35; // half of 70px element
+        const px = (point.x / 100) * window.innerWidth  - hw;
+        const py = (point.y / 100) * window.innerHeight - hw;
         wrapperRef.current.style.transform =
-          `translate(calc(${point.x}vw - 50%), calc(${point.y}vh - 50%)) rotate(${smoothedAngle + 90}deg)`;
+          `translate(${px}px, ${py}px) rotate(${smoothedAngle + 90}deg)`;
 
         // Idle detection — cancel float, restart 1s timer
         if (imgRef.current) imgRef.current.style.animation = 'none';
@@ -70,8 +180,6 @@ const ScrollingBoat = React.memo(() => {
 
   return (
     <>
-      <style>{BOAT_FLOAT_STYLE}</style>
-
       {/* Invisible path — only used for getPointAtLength() */}
       <svg
         style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh',
@@ -147,6 +255,7 @@ const WaterRippleBackground = ({ ripples, scrollPosition, isMobile = false }) =>
           left: '70%',
           top: '65%',
           animation: 'swim2 55s ease-in-out infinite',
+          animationDelay: '-13.75s',
           zIndex: 1,
         }}
       >
@@ -187,6 +296,7 @@ const WaterRippleBackground = ({ ripples, scrollPosition, isMobile = false }) =>
           left: '85%',
           top: '68%',
           animation: 'swim2 50s ease-in-out infinite',
+          animationDelay: '-37.5s',
           zIndex: 1,
         }}
       >
@@ -325,383 +435,7 @@ const WaterRippleBackground = ({ ripples, scrollPosition, isMobile = false }) =>
         />
       ))}
       
-      <style>{`
-        @keyframes waterFlow {
-          0%, 100% { transform: translate(0, 0) rotate(0deg); }
-          25% { transform: translate(3%, 3%) rotate(90deg); }
-          50% { transform: translate(-2%, 4%) rotate(180deg); }
-          75% { transform: translate(4%, -2%) rotate(270deg); }
-        }
-        
-        @keyframes ripple {
-          from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-          to { transform: translate(-50%, -50%) scale(20); opacity: 0; }
-        }
-        
-        @keyframes bobbing {
-          0%, 100% {
-            transform: translateY(0) rotate(-2deg);
-          }
-          50% {
-            transform: translateY(-15px) rotate(2deg);
-          }
-        }
-        
-        @keyframes waveRide {
-          0% {
-            transform: translateY(0) rotate(0deg);
-          }
-          25% {
-            transform: translateY(-20px) rotate(-3deg);
-          }
-          50% {
-            transform: translateY(-5px) rotate(0deg);
-          }
-          75% {
-            transform: translateY(-18px) rotate(3deg);
-          }
-          100% {
-            transform: translateY(0) rotate(0deg);
-          }
-        }
-        
-        @keyframes drift {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(50px);
-          }
-        }
-        
-        @keyframes swim1 {
-          0%   { left: -10%; }
-          50%  { left: 110%; }
-          100% { left: -10%; }
-        }
-
-        @keyframes swim2 {
-          0%   { left: 110%; }
-          50%  { left: -10%; }
-          100% { left: 110%; }
-        }
-
-        @keyframes swim3 {
-          0%, 100% { left: 40%; }
-          25%      { left: 20%; }
-          75%      { left: 60%; }
-        }
-
-        @keyframes flipAndBob1 {
-          0% {
-            transform: scaleX(-1) translateY(0);
-          }
-          12.5% {
-            transform: scaleX(-1) translateY(-30px);
-          }
-          25% {
-            transform: scaleX(-1) translateY(-10px);
-          }
-          37.5% {
-            transform: scaleX(-1) translateY(-40px);
-          }
-          49% {
-            transform: scaleX(-1) translateY(0);
-          }
-          50% {
-            transform: scaleX(1) translateY(0);
-          }
-          62.5% {
-            transform: scaleX(1) translateY(-30px);
-          }
-          75% {
-            transform: scaleX(1) translateY(-10px);
-          }
-          87.5% {
-            transform: scaleX(1) translateY(-40px);
-          }
-          100% {
-            transform: scaleX(1) translateY(0);
-          }
-        }
-
-        @keyframes flipAndBob2 {
-          0% {
-            transform: scaleX(1) translateY(0);
-          }
-          12.5% {
-            transform: scaleX(1) translateY(-30px);
-          }
-          25% {
-            transform: scaleX(1) translateY(-10px);
-          }
-          37.5% {
-            transform: scaleX(1) translateY(-40px);
-          }
-          49% {
-            transform: scaleX(1) translateY(0);
-          }
-          50% {
-            transform: scaleX(-1) translateY(0);
-          }
-          62.5% {
-            transform: scaleX(-1) translateY(-30px);
-          }
-          75% {
-            transform: scaleX(-1) translateY(-10px);
-          }
-          87.5% {
-            transform: scaleX(-1) translateY(-40px);
-          }
-          100% {
-            transform: scaleX(-1) translateY(0);
-          }
-        }
-
-        @keyframes flipAndBob3 {
-          0% {
-            transform: scaleX(1) translateY(0);
-          }
-          6.25% {
-            transform: scaleX(1) translateY(-30px);
-          }
-          12.5% {
-            transform: scaleX(1) translateY(-10px);
-          }
-          18.75% {
-            transform: scaleX(1) translateY(-40px);
-          }
-          24% {
-            transform: scaleX(1) translateY(0);
-          }
-          25% {
-            transform: scaleX(-1) translateY(0);
-          }
-          31.25% {
-            transform: scaleX(-1) translateY(-30px);
-          }
-          37.5% {
-            transform: scaleX(-1) translateY(-10px);
-          }
-          43.75% {
-            transform: scaleX(-1) translateY(-40px);
-          }
-          50% {
-            transform: scaleX(-1) translateY(0);
-          }
-          56.25% {
-            transform: scaleX(-1) translateY(-30px);
-          }
-          62.5% {
-            transform: scaleX(-1) translateY(-10px);
-          }
-          68.75% {
-            transform: scaleX(-1) translateY(-40px);
-          }
-          74% {
-            transform: scaleX(-1) translateY(0);
-          }
-          75% {
-            transform: scaleX(1) translateY(0);
-          }
-          81.25% {
-            transform: scaleX(1) translateY(-30px);
-          }
-          87.5% {
-            transform: scaleX(1) translateY(-10px);
-          }
-          93.75% {
-            transform: scaleX(1) translateY(-40px);
-          }
-          100% {
-            transform: scaleX(1) translateY(0);
-          }
-        }
-
-        @keyframes verticalSwim {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          25% {
-            transform: translateY(-30px);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-          75% {
-            transform: translateY(-40px);
-          }
-        }
-
-        @keyframes jellyfishFloat {
-          0%, 100% {
-            transform: translateY(0) rotate(0deg);
-          }
-          25% {
-            transform: translateY(-80px) rotate(-5deg);
-          }
-          50% {
-            transform: translateY(-120px) rotate(0deg);
-          }
-          75% {
-            transform: translateY(-80px) rotate(5deg);
-          }
-        }
-
-        @keyframes crabWalk1 {
-          0%, 100% {
-            left: 10%;
-          }
-          50% {
-            left: 15%;
-          }
-        }
-
-        @keyframes crabWalk2 {
-          0%, 100% {
-            left: 85%;
-          }
-          50% {
-            left: 80%;
-          }
-        }
-
-        @keyframes crabFlip1 {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          12.5% {
-            transform: translateY(-8px);
-          }
-          25% {
-            transform: translateY(-15px);
-          }
-          37.5% {
-            transform: translateY(-8px);
-          }
-          50% {
-            transform: translateY(0);
-          }
-          62.5% {
-            transform: translateY(-8px);
-          }
-          75% {
-            transform: translateY(-15px);
-          }
-          87.5% {
-            transform: translateY(-8px);
-          }
-        }
-
-        @keyframes crabFlip2 {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          12.5% {
-            transform: translateY(-8px);
-          }
-          25% {
-            transform: translateY(-15px);
-          }
-          37.5% {
-            transform: translateY(-8px);
-          }
-          50% {
-            transform: translateY(0);
-          }
-          62.5% {
-            transform: translateY(-8px);
-          }
-          75% {
-            transform: translateY(-15px);
-          }
-          87.5% {
-            transform: translateY(-8px);
-          }
-        }
-        
-        @keyframes flyAcross {
-          0% {
-            left: -10%;
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-          100% {
-            left: 110%;
-            transform: translateY(0);
-          }
-        }
-        
-        @keyframes cloudDrift {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(100px);
-          }
-        }
-        
-        @keyframes glow {
-          0%, 100% {
-            filter: drop-shadow(0 0 10px rgba(255, 200, 100, 0.5));
-            transform: scale(1);
-          }
-          50% {
-            filter: drop-shadow(0 0 30px rgba(255, 200, 100, 0.8));
-            transform: scale(1.05);
-          }
-        }
-        
-        @keyframes wave1 {
-          0%, 100% {
-            d: path("M0,160L48,144C96,128,192,96,288,106.7C384,117,480,171,576,176C672,181,768,139,864,128C960,117,1056,139,1152,149.3C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
-          }
-          25% {
-            d: path("M0,192L48,176C96,160,192,128,288,128C384,128,480,160,576,176C672,192,768,192,864,181.3C960,171,1056,149,1152,154.7C1248,160,1344,192,1392,208L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
-          }
-          50% {
-            d: path("M0,128L48,149.3C96,171,192,213,288,218.7C384,224,480,192,576,165.3C672,139,768,117,864,133.3C960,149,1056,203,1152,213.3C1248,224,1344,192,1392,176L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
-          }
-          75% {
-            d: path("M0,224L48,202.7C96,181,192,139,288,138.7C384,139,480,181,576,202.7C672,224,768,224,864,213.3C960,203,1056,181,1152,170.7C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
-          }
-        }
-
-        @keyframes wave2 {
-          0%, 100% {
-            d: path("M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,213.3C672,224,768,224,864,208C960,192,1056,160,1152,154.7C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
-          }
-          33% {
-            d: path("M0,256L48,234.7C96,213,192,171,288,165.3C384,160,480,192,576,197.3C672,203,768,181,864,186.7C960,192,1056,224,1152,229.3C1248,235,1344,213,1392,202.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
-          }
-          66% {
-            d: path("M0,192L48,181.3C96,171,192,149,288,160C384,171,480,213,576,218.7C672,224,768,192,864,165.3C960,139,1056,117,1152,128C1248,139,1344,181,1392,202.7L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
-          }
-        }
-
-        @keyframes wave3 {
-          0%, 100% {
-            d: path("M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,133.3C672,117,768,107,864,117.3C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
-          }
-          40% {
-            d: path("M0,128L48,138.7C96,149,192,171,288,165.3C384,160,480,128,576,122.7C672,117,768,139,864,144C960,149,1056,139,1152,138.7C1248,139,1344,149,1392,154.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
-          }
-          80% {
-            d: path("M0,160L48,154.7C96,149,192,139,288,149.3C384,160,480,192,576,192C672,192,768,160,864,138.7C960,117,1056,107,1152,117.3C1248,128,1344,160,1392,176L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
-          }
-        }
-
-        /* Respect user's reduced motion preference */
-        @media (prefers-reduced-motion: reduce) {
-          *, *::before, *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-      `}</style>
+      
     </div>
   );
 };
@@ -736,6 +470,19 @@ const Portfolio = () => {
   const handleButtonClick = (e) => {
     createRipple(e);
   };
+
+  // Inject all static animation CSS into <head> once so React reconciliation
+  // never touches it — this is the key fix for CSS animations freezing on Windows.
+  useEffect(() => {
+    if (document.getElementById('portfolio-animations')) return;
+    const style = document.createElement('style');
+    style.id = 'portfolio-animations';
+    style.textContent =
+      "@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');\n" +
+      ALL_ANIMATIONS_CSS;
+    document.head.appendChild(style);
+    return () => { document.getElementById('portfolio-animations')?.remove(); };
+  }, []);
 
   // Handle content loading (images, fonts, etc.)
   useEffect(() => {
@@ -940,50 +687,6 @@ const Portfolio = () => {
         zIndex: 1000,
         animation: 'slideDown 0.6s ease',
       }}>
-        <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
-
-          @keyframes slideDown {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-          }
-          @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-          @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-          }
-          @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(100, 255, 218, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(100, 255, 218, 0.6); }
-          }
-          @keyframes floatIsland {
-            0%, 100% { transform: translateY(0px) rotate(-2deg); }
-            50% { transform: translateY(-15px) rotate(2deg); }
-          }
-          @keyframes islandAppear {
-            from {
-              opacity: 0;
-              transform: translateY(50px) scale(0.8);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0) scale(1);
-            }
-          }
-          @keyframes slideInFromLeft {
-            from {
-              opacity: 0;
-              transform: translateX(-100px);
-            }
-            to {
-              opacity: 1;
-              transform: translateX(0);
-            }
-          }
-        `}</style>
         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 clamp(1rem, 4vw, 2rem)' }}>
           <div style={{
             fontSize: 'clamp(1.1rem, 3vw, 1.35rem)',
