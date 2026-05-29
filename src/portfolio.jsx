@@ -1,9 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-// Defined outside the component so the string reference is stable — React won't
-// re-inject the <style> content on every render.
-// All static animation CSS is defined here and injected into <head> once via
-// Portfolio's useEffect so it is never touched by React reconciliation.
 const ALL_ANIMATIONS_CSS = `
   @keyframes boatFloat {
     0%, 100% { transform: translateY(0px) rotate(-2deg); }
@@ -118,15 +114,31 @@ const ALL_ANIMATIONS_CSS = `
   }
 `;
 
+// Inject CSS synchronously at module-load time — BEFORE React renders anything.
+// useEffect fires after the first paint, so @keyframes wouldn't exist when fish
+// elements first mount; Windows Chrome silently freezes animations that start
+// without a matching keyframe definition and never recovers.
+if (typeof document !== 'undefined') {
+  if (!document.getElementById('portfolio-animations')) {
+    const _s = document.createElement('style');
+    _s.id = 'portfolio-animations';
+    _s.textContent =
+      "@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');\n" +
+      ALL_ANIMATIONS_CSS;
+    document.head.appendChild(_s);
+  }
+}
+
 // React.memo prevents Portfolio re-renders from cascading into the boat.
 // The boat manages its own scroll listener and never re-renders due to scroll.
 const ScrollingBoat = React.memo(() => {
-  const pathRef    = useRef(null);
-  const wrapperRef = useRef(null);
-  const imgRef     = useRef(null);
+  const pathRef       = useRef(null);
+  const wrapperRef    = useRef(null);
+  const imgRef        = useRef(null);
   const prevAngleRef  = useRef(0);
   const rafRef        = useRef(null);
   const idleTimerRef  = useRef(null);
+  const pathLengthRef = useRef(null); // cached once — path never changes
 
   useEffect(() => {
     const handleScroll = () => {
@@ -138,7 +150,9 @@ const ScrollingBoat = React.memo(() => {
 
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         const percentage = Math.min(window.scrollY / maxScroll, 1);
-        const pathLength = pathRef.current.getTotalLength();
+        if (pathLengthRef.current === null)
+          pathLengthRef.current = pathRef.current.getTotalLength();
+        const pathLength = pathLengthRef.current;
         const point    = pathRef.current.getPointAtLength(pathLength * percentage);
         const nextPoint = pathRef.current.getPointAtLength(
           Math.min(pathLength * percentage + 20, pathLength)
@@ -246,7 +260,6 @@ const WaterRippleBackground = ({ ripples, scrollPosition, isMobile = false }) =>
       overflow: 'hidden',
       zIndex: 0,
       background: 'linear-gradient(135deg, #0a192f 0%, #112240 50%, #1a365d 100%)',
-      willChange: isMobile ? 'auto' : 'transform',
     }}>
 
       {!isMobile && <div
@@ -470,19 +483,6 @@ const Portfolio = () => {
   const handleButtonClick = (e) => {
     createRipple(e);
   };
-
-  // Inject all static animation CSS into <head> once so React reconciliation
-  // never touches it — this is the key fix for CSS animations freezing on Windows.
-  useEffect(() => {
-    if (document.getElementById('portfolio-animations')) return;
-    const style = document.createElement('style');
-    style.id = 'portfolio-animations';
-    style.textContent =
-      "@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');\n" +
-      ALL_ANIMATIONS_CSS;
-    document.head.appendChild(style);
-    return () => { document.getElementById('portfolio-animations')?.remove(); };
-  }, []);
 
   // Handle content loading (images, fonts, etc.)
   useEffect(() => {
