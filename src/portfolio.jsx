@@ -17,66 +17,6 @@ const ALL_ANIMATIONS_CSS = `
     from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     to   { transform: translate(-50%, -50%) scale(20); opacity: 0; }
   }
-  @keyframes swim1 {
-    0%   { left: -10%; }
-    50%  { left: 110%; }
-    100% { left: -10%; }
-  }
-  @keyframes swim2 {
-    0%   { left: 110%; }
-    50%  { left: -10%; }
-    100% { left: 110%; }
-  }
-  @keyframes swim3 {
-    0%, 100% { left: 40%; }
-    25%      { left: 20%; }
-    75%      { left: 60%; }
-  }
-  @keyframes flipAndBob1 {
-    0%    { transform: scaleX(-1) translateY(0); }
-    12.5% { transform: scaleX(-1) translateY(-30px); }
-    25%   { transform: scaleX(-1) translateY(-10px); }
-    37.5% { transform: scaleX(-1) translateY(-40px); }
-    49%   { transform: scaleX(-1) translateY(0); }
-    50%   { transform: scaleX(1) translateY(0); }
-    62.5% { transform: scaleX(1) translateY(-30px); }
-    75%   { transform: scaleX(1) translateY(-10px); }
-    87.5% { transform: scaleX(1) translateY(-40px); }
-    100%  { transform: scaleX(1) translateY(0); }
-  }
-  @keyframes flipAndBob2 {
-    0%    { transform: scaleX(1) translateY(0); }
-    12.5% { transform: scaleX(1) translateY(-30px); }
-    25%   { transform: scaleX(1) translateY(-10px); }
-    37.5% { transform: scaleX(1) translateY(-40px); }
-    49%   { transform: scaleX(1) translateY(0); }
-    50%   { transform: scaleX(-1) translateY(0); }
-    62.5% { transform: scaleX(-1) translateY(-30px); }
-    75%   { transform: scaleX(-1) translateY(-10px); }
-    87.5% { transform: scaleX(-1) translateY(-40px); }
-    100%  { transform: scaleX(-1) translateY(0); }
-  }
-  @keyframes flipAndBob3 {
-    0%     { transform: scaleX(1) translateY(0); }
-    6.25%  { transform: scaleX(1) translateY(-30px); }
-    12.5%  { transform: scaleX(1) translateY(-10px); }
-    18.75% { transform: scaleX(1) translateY(-40px); }
-    24%    { transform: scaleX(1) translateY(0); }
-    25%    { transform: scaleX(-1) translateY(0); }
-    31.25% { transform: scaleX(-1) translateY(-30px); }
-    37.5%  { transform: scaleX(-1) translateY(-10px); }
-    43.75% { transform: scaleX(-1) translateY(-40px); }
-    50%    { transform: scaleX(-1) translateY(0); }
-    56.25% { transform: scaleX(-1) translateY(-30px); }
-    62.5%  { transform: scaleX(-1) translateY(-10px); }
-    68.75% { transform: scaleX(-1) translateY(-40px); }
-    74%    { transform: scaleX(-1) translateY(0); }
-    75%    { transform: scaleX(1) translateY(0); }
-    81.25% { transform: scaleX(1) translateY(-30px); }
-    87.5%  { transform: scaleX(1) translateY(-10px); }
-    93.75% { transform: scaleX(1) translateY(-40px); }
-    100%   { transform: scaleX(1) translateY(0); }
-  }
   @keyframes jellyfishFloat {
     0%, 100% { transform: translateY(0) rotate(0deg); }
     25%      { transform: translateY(-80px) rotate(-5deg); }
@@ -102,8 +42,6 @@ const ALL_ANIMATIONS_CSS = `
   @keyframes slideDown      { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   @keyframes fadeInUp       { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes float          { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-  @keyframes floatIsland    { 0%, 100% { transform: translateY(0px) rotate(-2deg); } 50% { transform: translateY(-15px) rotate(2deg); } }
-  @keyframes islandAppear   { from { opacity: 0; transform: translateY(50px) scale(0.8); } to { opacity: 1; transform: translateY(0) scale(1); } }
   @keyframes slideInFromLeft { from { opacity: 0; transform: translateX(-100px); } to { opacity: 1; transform: translateX(0); } }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -122,9 +60,7 @@ if (typeof document !== 'undefined') {
   if (!document.getElementById('portfolio-animations')) {
     const _s = document.createElement('style');
     _s.id = 'portfolio-animations';
-    _s.textContent =
-      "@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');\n" +
-      ALL_ANIMATIONS_CSS;
+    _s.textContent = ALL_ANIMATIONS_CSS;
     document.head.appendChild(_s);
   }
 }
@@ -640,14 +576,14 @@ const Portfolio = () => {
   // All projects data - ordered from highest to lowest importance
   const allProjects = [
     {
-      image: '/photo/dungeon-break.png',
+      image: '/photo/dungeon-break.webp',
       title: 'Dungeon Break',
       description: 'Solo-developed iOS RPG from concept to App Store launch in Swift and SpriteKit. Achieved 150+ downloads in the first release window, then shipped a full v1.2 update within two weeks based on live analytics. Combat system supports hero rarity levels, skill trees, and distinct dungeon zones.',
       tags: ['Swift', 'SpriteKit', 'Xcode', 'iOS', 'Game Development'],
       link: null,
     },
     {
-      image: '/photo/moviezilla.png',
+      image: '/photo/moviezilla.webp',
       title: 'Moviezilla',
       description: 'Movie favorites management application with user authentication, CRUD operations, and admin controls. Users can search movies, curate favorites lists, while administrators manage user accounts.',
       tags: ['Node.js', 'Express', 'MongoDB', 'Mongoose', 'Pug', 'JavaScript'],
@@ -661,7 +597,7 @@ const Portfolio = () => {
       link: 'https://github.com/saagargahlot/proj-chat-server'
     },
     {
-      image: '/photo/ecommerce.png',
+      image: '/photo/ecommerce.webp',
       title: 'Streetwear E-Commerce Store',
       description: 'Built a dynamic product page with item filtering, cart management across components using React hooks, and a multi-step checkout flow. Structured global state to keep the cart accurate during navigation without relying on a backend.',
       tags: ['React.js', 'CSS3', 'JavaScript', 'E-commerce'],
@@ -724,7 +660,7 @@ const Portfolio = () => {
           <div style={{
             fontSize: 'clamp(1.1rem, 3vw, 1.35rem)',
             fontWeight: '800',
-            fontFamily: 'Caslon',
+            fontFamily: "'Big Caslon', 'Book Antiqua', Palatino, 'Palatino Linotype', Georgia, serif",
             background: 'linear-gradient(135deg, #e6f1ff 0%, #64ffda 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
@@ -954,7 +890,6 @@ const Portfolio = () => {
           }}>
             <button
               onClick={(e) => {
-                handleButtonClick(e);
                 scrollToSection('projects', e);
               }}
               style={{
@@ -984,7 +919,6 @@ const Portfolio = () => {
 
             <button
               onClick={(e) => {
-                handleButtonClick(e);
                 scrollToSection('contact', e);
               }}
               style={{
@@ -1023,7 +957,7 @@ const Portfolio = () => {
           <div style={{ marginBottom: 'clamp(1rem, 3vh, 2rem)' }}>
             <h2 style={{
               fontSize: 'clamp(2rem, 6vw, 4rem)',
-              fontFamily: 'Caslon',
+              fontFamily: "'Big Caslon', 'Book Antiqua', Palatino, 'Palatino Linotype', Georgia, serif",
               fontWeight: '800',
               marginTop: 'clamp(0.5rem, 2vh, 1rem)',
               color: '#ffffff',
@@ -1082,7 +1016,7 @@ const Portfolio = () => {
                 margin: '0 auto',
               }}>
                 <img
-                  src="/photo/me.jpg"
+                  src="/photo/me.webp"
                   alt="Saagar Gahlot"
                   loading="eager"
                   style={{
@@ -1117,7 +1051,7 @@ const Portfolio = () => {
             <h2 style={{
               fontSize: 'clamp(1.75rem, 5vw, 3rem)',
               fontWeight: '800',
-              fontFamily: 'Caslon',
+              fontFamily: "'Big Caslon', 'Book Antiqua', Palatino, 'Palatino Linotype', Georgia, serif",
               marginTop: 'clamp(0.5rem, 2vh, 0.75rem)',
               color: '#ffffff',
             }}>
@@ -1205,7 +1139,7 @@ const Portfolio = () => {
             <h2 style={{
               fontSize: 'clamp(1.75rem, 5vw, 3rem)',
               fontWeight: '800',
-              fontFamily: 'Caslon',
+              fontFamily: "'Big Caslon', 'Book Antiqua', Palatino, 'Palatino Linotype', Georgia, serif",
               marginTop: 'clamp(0.5rem, 2vh, 0.75rem)',
               color: '#ffffff',
             }}>
@@ -1309,7 +1243,7 @@ const Portfolio = () => {
             <h2 style={{
               fontSize: 'clamp(1.75rem, 5vw, 3rem)',
               fontWeight: '800',
-              fontFamily: 'Caslon',
+              fontFamily: "'Big Caslon', 'Book Antiqua', Palatino, 'Palatino Linotype', Georgia, serif",
               marginTop: 'clamp(0.5rem, 2vh, 0.75rem)',
               color: '#ffffff',
             }}>
@@ -1340,11 +1274,15 @@ const Portfolio = () => {
                   e.currentTarget.style.transform = 'translateY(-10px)';
                   e.currentTarget.style.boxShadow = '0 25px 70px rgba(100, 255, 218, 0.2)';
                   e.currentTarget.style.border = '2px solid #64ffda';
+                  const bar = e.currentTarget.querySelector('.top-bar');
+                  if (bar) bar.style.transform = 'scaleX(1)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = 'none';
                   e.currentTarget.style.border = '1px solid rgba(100, 255, 218, 0.2)';
+                  const bar = e.currentTarget.querySelector('.top-bar');
+                  if (bar) bar.style.transform = 'scaleX(0)';
                 }}
               >
                 <div
@@ -1367,6 +1305,7 @@ const Portfolio = () => {
                   <img
                     src={project.image}
                     alt={project.title}
+                    loading="lazy"
                     style={{
                       width: '100%',
                       height: '100%',
@@ -1424,7 +1363,7 @@ const Portfolio = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           handleButtonClick(e);
-                          window.open(project.link, '_blank');
+                          window.open(project.link, '_blank', 'noopener,noreferrer');
                         }}
                         style={{
                           background: 'none',
@@ -1519,7 +1458,7 @@ const Portfolio = () => {
           <h2 style={{
             fontSize: 'clamp(2.5rem, 8vw, 4rem)',
             fontWeight: '800',
-            fontFamily: 'Caslon',
+            fontFamily: "'Big Caslon', 'Book Antiqua', Palatino, 'Palatino Linotype', Georgia, serif",
             marginTop: 'clamp(0.75rem, 2vh, 1rem)',
             marginBottom: 'clamp(1.5rem, 3vh, 2rem)',
             animation: isMobile ? 'none' : 'slideInFromLeft 0.8s ease-out',
