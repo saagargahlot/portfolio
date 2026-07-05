@@ -503,7 +503,7 @@ const Portfolio = () => {
         setIslandVisible(at85Percent);
 
         // Update active section
-        const sections = ['home', 'about', 'experience', 'skills', 'projects', 'contact'];
+        const sections = ['home', 'about', 'fluctra', 'experience', 'skills', 'projects', 'contact'];
 
         // Check if user is at the bottom of the page
         const isAtBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 50;
@@ -576,6 +576,14 @@ const Portfolio = () => {
   // All projects data - ordered from highest to lowest importance
   const allProjects = [
     {
+      image: '/photo/fluctra.png',
+      title: 'Fluctra',
+      description: 'Daily pattern puzzle game live at fluctra.com. Players race to find the hidden pattern before the grid morphs, with 8 second rounds, 6 pattern types, daily challenges, real time battles, and a global leaderboard. Built solo end to end: web client, Supabase backend, Stripe and PayPal payments, plus an in-progress SwiftUI iOS port.',
+      tags: ['JavaScript', 'SwiftUI', 'Supabase', 'PostgreSQL', 'Stripe', 'PayPal', 'Vercel'],
+      link: 'https://fluctra.com',
+      linkLabel: 'Play Live',
+    },
+    {
       image: '/photo/dungeon-break.webp',
       title: 'Dungeon Break',
       description: 'Solo-developed iOS RPG from concept to App Store launch in Swift and SpriteKit. Achieved 150+ downloads in the first release window, then shipped a full v1.2 update within two weeks based on live analytics. Combat system supports hero rarity levels, skill trees, and distinct dungeon zones.',
@@ -633,7 +641,8 @@ const Portfolio = () => {
     }
   ];
 
-  const displayedProjects = showAllProjects ? allProjects : allProjects.slice(0, 3);
+  const featuredProjects = allProjects.slice(0, 3);
+  const compactProjects  = allProjects.slice(3);
 
   return (
     <>
@@ -674,7 +683,7 @@ const Portfolio = () => {
             display: isMobile ? 'none' : 'flex',
             gap: '1.5rem'
           }}>
-            {['home', 'about', 'experience', 'skills', 'projects', 'contact'].map((section) => (
+            {['home', 'about', 'fluctra', 'experience', 'skills', 'projects', 'contact'].map((section) => (
               <a
                 key={section}
                 href={`#${section}`}
@@ -759,7 +768,7 @@ const Portfolio = () => {
             padding: '1rem 0',
             animation: 'slideDown 0.3s ease',
           }}>
-            {['home', 'about', 'experience', 'skills', 'projects', 'contact'].map((section) => (
+            {['home', 'about', 'fluctra', 'experience', 'skills', 'projects', 'contact'].map((section) => (
               <a
                 key={section}
                 href={`#${section}`}
@@ -1031,6 +1040,144 @@ const Portfolio = () => {
         </div>
       </section>
 
+      {/* Fluctra Section */}
+      <section id="fluctra" style={{
+        padding: 'clamp(3rem, 8vh, 5rem) clamp(1rem, 4vw, 2rem)',
+        position: 'relative',
+        zIndex: 1,
+      }}>
+        <div style={{
+          maxWidth: '1100px',
+          margin: '0 auto',
+          width: '100%',
+          background: 'rgba(255, 255, 255, 0.03)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '1.5rem',
+          padding: 'clamp(1.5rem, 4vw, 2.5rem)',
+          border: '1px solid rgba(100, 255, 218, 0.25)',
+          boxShadow: '0 20px 60px rgba(100, 255, 218, 0.08)',
+        }}>
+          <span style={{
+            fontSize: 'clamp(0.75rem, 2vw, 0.9rem)',
+            color: '#64ffda',
+            textTransform: 'uppercase',
+            letterSpacing: 'clamp(2px, 0.5vw, 3px)',
+            fontWeight: '600',
+            display: 'block',
+          }}>
+            FEATURED WORK
+          </span>
+          <div style={{ marginBottom: 'clamp(1.5rem, 4vh, 2.5rem)' }}>
+            <h2 style={{
+              fontSize: 'clamp(1.75rem, 5vw, 3rem)',
+              fontWeight: '800',
+              fontFamily: "'Big Caslon', 'Book Antiqua', Palatino, 'Palatino Linotype', Georgia, serif",
+              marginTop: 'clamp(0.5rem, 2vh, 0.75rem)',
+              color: '#ffffff',
+            }}>
+              FLUCTRA
+            </h2>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : '1.1fr 1fr',
+            gap: 'clamp(1.5rem, 4vw, 3rem)',
+            alignItems: 'center',
+          }}>
+            <div>
+              <p style={{
+                color: '#c0cae9ff',
+                fontSize: 'clamp(1rem, 2.5vw, 1.1rem)',
+                lineHeight: '1.8',
+                marginBottom: 'clamp(1rem, 3vh, 1.5rem)',
+              }}>
+                Fluctra is a daily pattern puzzle game I designed, built, and operate solo,
+                live at fluctra.com. Players race to find the hidden pattern before the grid
+                morphs, with 8 second rounds, 6 pattern types, daily challenges, real time
+                battle mode, and a global leaderboard.
+              </p>
+              <p style={{
+                color: '#c0cae9ff',
+                fontSize: 'clamp(1rem, 2.5vw, 1.1rem)',
+                lineHeight: '1.8',
+                marginBottom: 'clamp(1rem, 3vh, 1.5rem)',
+              }}>
+                I own the full product: game design, frontend, backend, payments, and
+                deployment. The web client runs on Vercel with Supabase powering accounts
+                and leaderboards, and Stripe and PayPal handling in-game purchases. A native
+                iOS version built in SwiftUI is in active development with full unit and UI
+                test coverage.
+              </p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 clamp(1rem, 3vh, 1.5rem)' }}>
+                {[
+                  'Live product with real players, payments, and daily content',
+                  'Real time multiplayer battle mode and global leaderboards',
+                  'Secure serverless payment APIs for Stripe and PayPal',
+                  'SwiftUI iOS port sharing one design across web and mobile',
+                ].map((point, i) => (
+                  <li key={i} style={{ color: '#c0cae9ff', fontSize: 'clamp(0.9rem, 2vw, 1rem)', lineHeight: '1.7', padding: '0.25rem 0' }}>
+                    <span style={{ color: '#64ffda', marginRight: '0.5rem' }}>▹</span>
+                    {point}
+                  </li>
+                ))}
+              </ul>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: 'clamp(1.25rem, 3vh, 1.75rem)' }}>
+                {['JavaScript', 'SwiftUI', 'Supabase', 'PostgreSQL', 'Stripe', 'PayPal', 'Google OAuth', 'Vercel', 'Node.js'].map((tag, i) => (
+                  <span key={i} style={{
+                    background: 'rgba(100, 255, 218, 0.1)',
+                    color: '#64ffda',
+                    padding: '0.3rem 0.75rem',
+                    borderRadius: '0.3rem',
+                    fontSize: '0.8rem',
+                    border: '1px solid rgba(100, 255, 218, 0.3)',
+                  }}>{tag}</span>
+                ))}
+              </div>
+              <button
+                onClick={(e) => { handleButtonClick(e); window.open('https://fluctra.com', '_blank', 'noopener,noreferrer'); }}
+                style={{
+                  padding: 'clamp(0.85rem, 2.5vw, 1rem) clamp(1.5rem, 4vw, 2.5rem)',
+                  background: '#64ffda',
+                  color: '#0a192f',
+                  border: 'none',
+                  borderRadius: '0.5rem',
+                  fontSize: 'clamp(0.9rem, 2.5vw, 1rem)',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-3px)';
+                  e.target.style.boxShadow = '0 10px 30px rgba(100, 255, 218, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              >
+                Play Fluctra
+              </button>
+            </div>
+
+            <div style={{
+              borderRadius: '1rem',
+              overflow: 'hidden',
+              border: '1px solid rgba(100, 255, 218, 0.3)',
+              boxShadow: '0 20px 60px rgba(100, 255, 218, 0.15)',
+              animation: isMobile ? 'none' : 'float 4s ease-in-out infinite',
+            }}>
+              <img
+                src="/photo/fluctra.png"
+                alt="Fluctra gameplay preview"
+                loading="lazy"
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Experience Section */}
       <section id="experience" style={{
         padding: 'clamp(3rem, 8vh, 5rem) clamp(1rem, 4vw, 2rem)',
@@ -1166,7 +1313,7 @@ const Portfolio = () => {
               {
                 title: 'Backend',
                 icon: '',
-                skills: ['Node.js', 'Express.js', 'RESTful APIs', 'MongoDB', 'SQLite', 'Socket.io', 'Spotify API', 'Docker']
+                skills: ['Node.js', 'Express.js', 'RESTful APIs', 'PostgreSQL', 'MongoDB', 'SQLite', 'Supabase', 'Stripe', 'PayPal', 'Google OAuth', 'Socket.io', 'Spotify API', 'Docker']
               },
               {
                 title: 'Tools',
@@ -1251,13 +1398,14 @@ const Portfolio = () => {
             </h2>
           </div>
 
+          {/* ── Featured projects (top 3) ── */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: 'clamp(1rem, 3vw, 1.5rem)',
-            marginBottom: 'clamp(1.5rem, 3vh, 2rem)',
+            marginBottom: showAllProjects ? 'clamp(0.75rem, 2vh, 1rem)' : 'clamp(1.5rem, 3vh, 2rem)',
           }}>
-            {displayedProjects.map((project, index) => (
+            {featuredProjects.map((project, index) => (
               <div
                 key={index}
                 onClick={createRipple}
@@ -1295,9 +1443,8 @@ const Portfolio = () => {
                     transition: 'transform 0.3s ease',
                   }}
                 />
-                
                 <div style={{
-                  height: '200px',
+                  height: '220px',
                   overflow: 'hidden',
                   background: 'linear-gradient(135deg, rgba(100, 255, 218, 0.1) 0%, rgba(45, 212, 191, 0.1) 100%)',
                   position: 'relative',
@@ -1318,31 +1465,14 @@ const Portfolio = () => {
                     onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
                   />
                 </div>
-
-                <div style={{ padding: '1rem' }}>
-                  <h3 style={{
-                    fontSize: '1.2rem',
-                    marginBottom: '0.4rem',
-                    fontWeight: '700',
-                  }}>
+                <div style={{ padding: '1.1rem' }}>
+                  <h3 style={{ fontSize: '1.2rem', marginBottom: '0.4rem', fontWeight: '700' }}>
                     {project.title}
                   </h3>
-
-                  <p style={{
-                    color: '#c0cae9ff',
-                    marginBottom: '0.65rem',
-                    fontSize: '0.9rem',
-                    lineHeight: '1.5',
-                  }}>
+                  <p style={{ color: '#c0cae9ff', marginBottom: '0.65rem', fontSize: '0.9rem', lineHeight: '1.5' }}>
                     {project.description}
                   </p>
-
-                  <div style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: '0.4rem',
-                    marginBottom: '0.65rem',
-                  }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.65rem' }}>
                     {project.tags.map((tag, i) => (
                       <span key={i} style={{
                         background: 'rgba(100, 255, 218, 0.1)',
@@ -1351,44 +1481,132 @@ const Portfolio = () => {
                         borderRadius: '0.3rem',
                         fontSize: '0.8rem',
                         border: '1px solid rgba(100, 255, 218, 0.3)',
-                      }}>
-                        {tag}
-                      </span>
+                      }}>{tag}</span>
                     ))}
                   </div>
-                  
-                  <div style={{ display: 'flex', gap: '1rem' }}>
-                    {project.link && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleButtonClick(e);
-                          window.open(project.link, '_blank', 'noopener,noreferrer');
-                        }}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          color: '#ffffffff',
-                          cursor: 'pointer',
-                          fontSize: '0.85rem',
-                          transition: 'opacity 0.3s ease',
-                          textDecorationLine: 'underline'
-                        }}
-                        onMouseEnter={(e) => e.target.style.opacity = '0.7'}
-                        onMouseLeave={(e) => e.target.style.opacity = '1'}
-                      >
-                        <strong>View Code</strong>
-                      </button>
-                    )}
-                  </div>
+                  {project.link && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleButtonClick(e); window.open(project.link, '_blank', 'noopener,noreferrer'); }}
+                      style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '0.85rem', transition: 'opacity 0.3s ease', textDecorationLine: 'underline' }}
+                      onMouseEnter={(e) => e.target.style.opacity = '0.7'}
+                      onMouseLeave={(e) => e.target.style.opacity = '1'}
+                    ><strong>{project.linkLabel || 'View Code'}</strong></button>
+                  )}
                 </div>
               </div>
             ))}
           </div>
 
+          {/* ── Additional projects (compact) ── */}
+          {showAllProjects && (
+            <>
+              <div style={{ height: '1px', background: 'rgba(100, 255, 218, 0.12)', margin: '0 0 clamp(0.75rem, 2vh, 1rem)' }} />
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(195px, 1fr))',
+                gap: 'clamp(0.6rem, 2vw, 0.85rem)',
+                marginBottom: 'clamp(1.5rem, 3vh, 2rem)',
+              }}>
+                {compactProjects.map((project, index) => (
+                  <div
+                    key={index}
+                    onClick={createRipple}
+                    style={{
+                      background: 'rgba(17, 34, 64, 0.5)',
+                      border: '1px solid rgba(100, 255, 218, 0.15)',
+                      borderRadius: '0.75rem',
+                      overflow: 'hidden',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer',
+                      position: 'relative',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-6px)';
+                      e.currentTarget.style.boxShadow = '0 16px 40px rgba(100, 255, 218, 0.15)';
+                      e.currentTarget.style.border = '1px solid #64ffda';
+                      const bar = e.currentTarget.querySelector('.top-bar-sm');
+                      if (bar) bar.style.transform = 'scaleX(1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.border = '1px solid rgba(100, 255, 218, 0.15)';
+                      const bar = e.currentTarget.querySelector('.top-bar-sm');
+                      if (bar) bar.style.transform = 'scaleX(0)';
+                    }}
+                  >
+                    <div
+                      className="top-bar-sm"
+                      style={{
+                        height: '3px',
+                        background: 'linear-gradient(90deg, #64ffda, #2dd4bf)',
+                        transform: 'scaleX(0)',
+                        transformOrigin: 'left',
+                        transition: 'transform 0.3s ease',
+                      }}
+                    />
+                    {project.image && (
+                      <div style={{
+                        height: '120px',
+                        overflow: 'hidden',
+                        background: 'linear-gradient(135deg, rgba(100, 255, 218, 0.07) 0%, rgba(45, 212, 191, 0.07) 100%)',
+                      }}>
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          loading="lazy"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block', transition: 'transform 0.3s ease' }}
+                          onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
+                          onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                        />
+                      </div>
+                    )}
+                    <div style={{ padding: '0.75rem' }}>
+                      <h3 style={{ fontSize: '0.95rem', marginBottom: '0.3rem', fontWeight: '700' }}>
+                        {project.title}
+                      </h3>
+                      <p style={{
+                        color: '#a8b4d0',
+                        marginBottom: '0.5rem',
+                        fontSize: '0.78rem',
+                        lineHeight: '1.45',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                      }}>
+                        {project.description}
+                      </p>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem', marginBottom: '0.5rem' }}>
+                        {project.tags.slice(0, 3).map((tag, i) => (
+                          <span key={i} style={{
+                            background: 'rgba(100, 255, 218, 0.08)',
+                            color: '#64ffda',
+                            padding: '0.2rem 0.5rem',
+                            borderRadius: '0.25rem',
+                            fontSize: '0.7rem',
+                            border: '1px solid rgba(100, 255, 218, 0.2)',
+                          }}>{tag}</span>
+                        ))}
+                      </div>
+                      {project.link && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleButtonClick(e); window.open(project.link, '_blank', 'noopener,noreferrer'); }}
+                          style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '0.75rem', transition: 'opacity 0.3s ease', textDecorationLine: 'underline' }}
+                          onMouseEnter={(e) => e.target.style.opacity = '0.7'}
+                          onMouseLeave={(e) => e.target.style.opacity = '1'}
+                        ><strong>{project.linkLabel || 'View Code'}</strong></button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
           {/* View More/Less Button */}
-          {allProjects.length > 3 && (
-            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+          {compactProjects.length > 0 && (
+            <div style={{ textAlign: 'center', marginTop: '0.5rem' }}>
               <button
                 onClick={(e) => {
                   handleButtonClick(e);
@@ -1414,7 +1632,7 @@ const Portfolio = () => {
                   e.target.style.transform = 'translateY(0)';
                 }}
               >
-                {showAllProjects ? 'Show Less' : `View More Projects (${allProjects.length - 3} more)`}
+                {showAllProjects ? 'Show Less' : `View More Projects (${compactProjects.length} more)`}
               </button>
             </div>
           )}
