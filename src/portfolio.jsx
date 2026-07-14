@@ -4,13 +4,13 @@ import CaptainMapScene from './CaptainMapScene.jsx';
 const navSections = ['home', 'about', 'fluctra', 'experience', 'skills', 'projects', 'contact'];
 
 const routeSections = [
-  { id: 'home', label: 'Home', x: -5.4, z: 2.2 },
-  { id: 'about', label: 'About', x: -3.4, z: 0.7 },
-  { id: 'fluctra', label: 'Fluctra', x: -1.2, z: -0.45 },
-  { id: 'experience', label: 'Experience', x: 1.2, z: -0.8 },
-  { id: 'skills', label: 'Skills', x: 3.0, z: 0.35 },
-  { id: 'projects', label: 'Projects', x: 4.6, z: -1.4 },
-  { id: 'contact', label: 'Contact', x: 5.8, z: 1.4 },
+  { id: 'home', label: 'Home', x: -6.2, z: 3.4 },
+  { id: 'about', label: 'About', x: -4.3, z: 1.2 },
+  { id: 'fluctra', label: 'Fluctra', x: -1.7, z: -0.45 },
+  { id: 'experience', label: 'Experience', x: 0.9, z: -1.65 },
+  { id: 'skills', label: 'Skills', x: 3.1, z: -0.2 },
+  { id: 'projects', label: 'Projects', x: 5.1, z: -2.25 },
+  { id: 'contact', label: 'Contact', x: 6.35, z: 1.65 },
 ];
 
 const allProjects = [
