@@ -118,7 +118,7 @@ a:focus-visible {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(330px, 0.78fr) minmax(520px, 1.22fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(430px, 1.1fr);
   align-items: center;
   gap: clamp(1.5rem, 4vw, 4rem);
   width: min(1180px, calc(100% - 32px));
@@ -232,25 +232,13 @@ a:focus-visible {
 
 .captain-map-wrap {
   position: relative;
-  min-height: clamp(560px, 70vh, 760px);
+  min-height: clamp(420px, 58vh, 680px);
   overflow: hidden;
-  border: 1px solid rgba(125, 211, 252, 0.24);
+  border: 1px solid rgba(125, 211, 252, 0.2);
   background:
-    radial-gradient(circle at 50% 22%, rgba(103, 232, 249, 0.24), transparent 20rem),
-    linear-gradient(180deg, rgba(3, 18, 34, 0.22), rgba(3, 12, 24, 0.86)),
+    radial-gradient(circle at 50% 28%, rgba(103, 232, 249, 0.14), transparent 18rem),
     rgba(3, 12, 24, 0.76);
-  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.42);
-}
-
-.captain-map-wrap::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 15%, rgba(236, 254, 255, 0.14), transparent 18%),
-    linear-gradient(to bottom, rgba(4, 16, 30, 0), rgba(2, 6, 18, 0.44));
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.34);
 }
 
 .captain-map-scene,
@@ -266,7 +254,7 @@ a:focus-visible {
   right: 1rem;
   bottom: 1rem;
   left: 1rem;
-  z-index: 3;
+  z-index: 2;
   display: flex;
   justify-content: space-between;
   gap: 1rem;
@@ -564,7 +552,7 @@ a:focus-visible {
   }
 
   .captain-map-wrap {
-    min-height: 460px;
+    min-height: 360px;
   }
 
   .project-harbor,
