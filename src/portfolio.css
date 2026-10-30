@@ -853,7 +853,7 @@ footer { padding-bottom: 65px; }
 .nav-docked a {display:block;white-space:nowrap;}
 .nav-docked::before {content:'';position:absolute;inset:0 -7px;background:#101a23eb;border:1px solid #5a829444;border-radius:14px;z-index:-1;animation:navDockSurface .6s ease both;}
 @keyframes navDockSurface {from {opacity:0;transform:scale(.94);clip-path:inset(35% 0 round 8px);}to {opacity:1;transform:none;clip-path:inset(0 round 8px);}}
-@media(min-width:1100px){.site-header,main,footer {width:min(1280px,calc(100% - 196px));}}
+@media(min-width:1100px){.site-header,main,footer {width:min(1280px,calc(100% - 256px));}}
 @media(prefers-reduced-motion:reduce){.nav-docked::before {animation:none;}}
 
 .studio-editor-tabs span {padding:6px 8px;font-size:7px;}
