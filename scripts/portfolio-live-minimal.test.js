@@ -28,7 +28,7 @@ test('three real clears replay to identical board and seed',()=>{
  assert.deepEqual(replay(moves),{cells:board,seed});assert.notEqual(seed,INITIAL_SEED);
 });
 test('resume and real project images remain available',()=>{
- for(const name of ['ResumeUpdated.pdf','photo/fluctra-iphone.jpg','photo/dungeon-break.webp'])assert.ok(existsSync(new URL('../public/'+name,import.meta.url)));
+ for(const name of ['ResumeUpdated.pdf','photo/fluctra-iphone.jpg','photo/dungeon-break.webp',...[2,3,4,5].map(n=>`photo/dungeon-break-${n}.webp`),'photo/dungeon-break-qr.png'])assert.ok(existsSync(new URL('../public/'+name,import.meta.url)));
 });
 
 test('the complete workstation stays inside narrow and short viewports', async () => {

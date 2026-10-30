@@ -335,24 +335,51 @@ transform:translateY(-1px)}
 .case-study[open] summary{border-color:var(--blue);
 background:rgba(169,198,255,.06)}
 .case-study summary::-webkit-details-marker{display:none}
-.case-study summary>span{font-size:23px;
+/* Still read as caption text at rest. A tinted bar, a "Show details" cue and a
+   filled + make it obvious there is more behind it before anyone hovers. */
+.case-study summary{background:rgba(169,198,255,.07);
+border-color:rgba(169,198,255,.42)}
+.case-cue{margin-left:auto;
+font-family:inherit;
+margin-right:14px;
+font-style:normal;
+font-size:12px;
+font-weight:500;
+letter-spacing:.02em;
+color:var(--blue)}
+.case-cue i{font-style:normal}
+.case-cue i+i,.case-study[open] .case-cue i:first-child{display:none}
+.case-study[open] .case-cue i+i{display:inline}
+.case-study summary>span:last-child{font-size:20px;
 line-height:1;
-color:var(--blue);
+width:30px;
+height:30px;
+flex:none;
+display:grid;
+place-items:center;
+border-radius:50%;
+background:var(--blue);
+color:#10151d;
 transition:transform .2s}
-.case-study summary:hover>span{transform:scale(1.1)}
-.case-study[open] summary>span{transform:rotate(45deg)}
-.case-study[open] summary:hover>span{transform:rotate(45deg) scale(1.1)}
+.case-study summary:hover>span:last-child{transform:scale(1.1)}
+.case-study[open] summary>span:last-child{transform:rotate(45deg)}
+.case-study[open] summary:hover>span:last-child{transform:rotate(45deg) scale(1.1)}
 @media(prefers-reduced-motion:reduce){
-.case-study summary,.case-study summary>span{transition:none}
+.case-study summary,.case-study summary>span:last-child{transition:none}
 .case-study summary:hover{transform:none}}
 .case-body{display:grid;
 grid-template-columns:1fr 1fr;
 gap:30px 65px;
-padding:15px 0 40px}
+padding:26px;
+margin:10px 0 24px;
+background:#111c26;
+border:1px solid #354652;
+border-radius:12px}
 .case-body h4{font-size:14px;
+color:#f0f2ee;
 font-weight:500;
 margin-bottom:12px}
-.case-body p{color:var(--muted);
+.case-body p{color:#c9d6de;
 font-size:13px}
 .dungeon-visual{height:420px;
 background:#202a23;
@@ -367,6 +394,84 @@ z-index:1;
 transform:rotate(-4deg);
 transition:transform .4s}
 .dungeon-visual:hover img{transform:rotate(0) scale(1.02)}
+/* Dungeon Break slideshow: screenshots swipe past, then the App Store QR. */
+.dungeon-visual{padding:0;
+overflow:hidden;
+touch-action:pan-y;
+user-select:none}
+.dungeon-viewport{position:absolute;
+inset:0;
+overflow:hidden;
+z-index:1}
+.dungeon-track{display:flex;
+height:100%;
+transition:transform .6s cubic-bezier(.22,.72,.18,1)}
+.dungeon-slide{flex:0 0 100%;
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:26px 26px 46px}
+.dungeon-slide img{-webkit-user-drag:none}
+.app-qr-card{display:flex;
+align-items:center;
+gap:16px;
+padding:22px 24px;
+border:1px solid #b1c27d33;
+border-radius:12px;
+background:#ffffff08}
+.dungeon-visual .app-qr-card img,.dungeon-visual:hover .app-qr-card img{width:88px;
+height:88px;
+background:#fff;
+border-radius:8px;
+padding:3px;
+transform:none}
+.app-qr-card p{font-size:14px;
+line-height:1.7;
+color:#eef2ea}
+.app-qr-card p span{font-size:12px;
+color:#b8c4b0}
+.qr-store-link{display:none}
+.dungeon-dots{position:absolute;
+left:0;
+right:0;
+bottom:10px;
+display:flex;
+justify-content:center;
+z-index:2}
+.dungeon-dots button{width:24px;
+height:24px;
+padding:0;
+border:0;
+background:none;
+cursor:pointer;
+display:grid;
+place-items:center}
+.dungeon-dots button::before{content:"";
+width:7px;
+height:7px;
+border-radius:4px;
+background:#ffffff40;
+transition:width .3s,background .3s}
+.dungeon-dots button[aria-current="true"]::before{width:18px;
+background:#b1c27d}
+.dungeon-dots button:focus-visible{outline:2px solid #b1c27d;
+outline-offset:-2px;
+border-radius:6px}
+/* On a phone you can't scan your own screen: offer the link instead. */
+@media (hover:none) and (pointer:coarse){.app-qr-card{flex-direction:column;
+text-align:center;
+gap:14px}
+.dungeon-visual .app-qr-card img,.app-qr-card p{display:none}
+.qr-store-link{display:inline-flex;
+padding:12px 18px;
+border-radius:999px;
+background:#b1c27d;
+color:#141b16;
+font-weight:600;
+font-size:14px;
+text-decoration:none}
+}
 .pixel-decoration{position:absolute;
 right:20px;
 top:30px;
@@ -579,7 +684,8 @@ margin-bottom:20px}
 .dungeon-visual{height:380px}
 .chat-visual{padding:35px 25px}
 .case-body{grid-template-columns:1fr;
-gap:25px}
+gap:25px;
+padding:20px 16px}
 .more-work{padding:60px 0}
 .experiment-grid{grid-template-columns:1fr}
 .experiment{padding:23px 0}
@@ -944,5 +1050,58 @@ footer {background:#10151db3;box-shadow:0 0 16px 5px #10151d85;}
 /* A stationary pointer should not make the disclosure jump as the page scrolls. */
 .case-study summary {background:#10151ded;transition:border-color .18s,color .18s;}
 .case-study summary:hover,.case-study summary:active {transform:none;background:#17232df5;}
-.case-study summary:hover>span {transform:none;}
-.case-study[open] summary:hover>span {transform:rotate(45deg);}
+.case-study summary:hover>span:last-child {transform:none;}
+.case-study[open] summary:hover>span:last-child {transform:rotate(45deg);}
+
+/* A phone-to-repository workflow, presented as an example visitors can step through. */
+.agent-flow-demo {align-self:start;border:1px solid #48606e;border-radius:14px;background:#101d28;overflow:hidden;}
+.agent-flow-header,.agent-flow-controls {display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 20px;font-size:12px;border-bottom:1px solid #354c59;}
+.agent-flow-header small {color:#9bb7c7;font-size:10px;}
+.agent-flow-body {display:grid;grid-template-columns:130px 30px minmax(0,1fr);gap:12px;padding:24px 20px;min-height:365px;}
+.agent-flow-phone {border:2px solid #50616f;border-radius:18px;padding:16px 9px;background:#151d31;align-self:start;min-height:240px;}
+.agent-flow-phone small {font-size:9px;color:#c4c9f4;}
+.agent-flow-phone p {font-size:11px;line-height:1.6;background:#394871;border-radius:9px 9px 2px 9px;padding:9px;margin-top:24px;}
+.agent-flow-phone>span {display:block;font-size:8px;color:#a1bacb;text-align:right;margin-top:5px;}
+.agent-flow-phone .agent-reply {background:#264b49;border-radius:9px 9px 9px 2px;}
+.agent-flow-wire {align-self:start;margin-top:78px;height:1px;background:#749ea8;position:relative;}
+.agent-flow-wire i {position:absolute;width:5px;height:5px;border-radius:50%;top:-2px;background:#a6dbd1;}
+.agent-flow-demo[data-playing=true][data-step="1"] .agent-flow-wire i {animation:agentPacket 1.3s ease-in-out infinite;}
+@keyframes agentPacket {from {left:0;}to {left:100%;}}
+.agent-flow-session small {color:#8db9c5;font-size:10px;}
+.agent-flow-session h4 {font-size:18px;line-height:1.3;margin:12px 0;}
+.agent-flow-session p {color:#b9cdd7;font-size:12px;}
+.agent-flow-session pre {font:9px/1.6 monospace;white-space:pre-wrap;overflow-wrap:anywhere;color:#b5d8cf;margin-top:20px;}
+.agent-flow-controls {border-top:1px solid #354c59;border-bottom:0;}
+.agent-screen {display:none;position:absolute;inset:27px 0 0;background:#0c1925;z-index:2;padding:16px;color:#c7dce3;}
+.agent-screen>small {font:9px monospace;color:#adb8ea;}
+.agent-screen h4 {font:14px/1.4 monospace;margin:8px 0;}
+.agent-screen-log {width:48%;}
+.agent-screen-log p {opacity:.25;margin:8px 0;font:9px/1.4 monospace;transition:opacity .4s;}
+.agent-screen-log p small {display:block;font-size:7px;color:#9fbdc9;}
+.agent-screen pre {position:absolute;left:54%;right:12px;top:65px;font:8px/1.7 monospace;white-space:pre-wrap;color:#91cbbd;opacity:.2;}
+.studio-discord-chat {display:none;position:absolute;inset:0;z-index:2;padding:20px 8px;background:#192039;color:#e0e8f0;}
+.studio-discord-chat small {font:9px monospace;color:#bfc7ff;}
+.studio-discord-chat p {font:8px/1.5 monospace;margin-top:28px;padding:8px;border-radius:8px;background:#3a4975;}
+.studio-discord-chat>span {display:block;text-align:right;font:6px monospace;color:#a6b9c8;opacity:0;}
+.studio-discord-chat .studio-agent-reply {background:#28504c;opacity:0;}
+.studio-agent-connection {position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;}
+.studio-agent-connection path {fill:none;stroke:#a0b4ef;stroke-width:1.5;stroke-dasharray:.035 .965;}
+.studio-backdrop[data-agent-active=true] .agent-screen,.studio-backdrop[data-agent-active=true] .studio-discord-chat {display:block;}
+.studio-backdrop[data-agent-active=true] .studio-native-caption {font-size:0;}
+.studio-backdrop[data-agent-active=true] .studio-native-caption span {display:none;}
+.studio-backdrop[data-agent-active=true] .studio-native-caption::before {content:'Discord · agent session';font:9px monospace;}
+.studio-backdrop[data-agent-active=true][data-agent-step="0"] .studio-discord-chat p:first-of-type {animation:agentTyping 2.3s steps(12) both;}
+@keyframes agentTyping {from {clip-path:inset(0 100% 0 0);}to {clip-path:inset(0);}}
+.studio-backdrop[data-agent-active=true]:not([data-agent-step="0"]) .studio-discord-chat>span {opacity:1;}
+.studio-backdrop[data-agent-active=true][data-agent-step="1"] .studio-agent-connection {opacity:.65;}
+.studio-backdrop[data-agent-active=true][data-agent-step="1"] .studio-agent-connection path {animation:agentSend 1.3s ease-in-out both;}
+@keyframes agentSend {from {stroke-dashoffset:0;}to {stroke-dashoffset:-1;}}
+.studio-backdrop[data-agent-step="2"] [data-agent-line="2"],.studio-backdrop[data-agent-step="3"] [data-agent-line="3"],.studio-backdrop[data-agent-step="4"] [data-agent-line="4"],.studio-backdrop[data-agent-step="5"] [data-agent-line="5"],.studio-backdrop[data-agent-step="6"] [data-agent-line="6"] {opacity:1;}
+.studio-backdrop[data-agent-step="4"] .agent-screen pre,.studio-backdrop[data-agent-step="5"] .agent-screen pre,.studio-backdrop[data-agent-step="6"] .agent-screen pre {opacity:1;}
+.studio-backdrop[data-agent-step="6"] .studio-agent-reply {opacity:1;}
+@media(max-width:1150px){.studio-agent-connection {display:none;}}
+@media(max-width:600px){.agent-flow-body {grid-template-columns:105px 16px minmax(0,1fr);padding:18px 12px;gap:9px;}.agent-flow-session h4 {font-size:15px;}.agent-flow-header {align-items:flex-start;flex-direction:column;gap:5px;}}
+@media(prefers-reduced-motion:reduce){.agent-flow-wire i,.studio-agent-connection path,.studio-discord-chat p {animation:none!important;}.agent-screen-log p {transition:none;}}
+
+.studio-backdrop[data-agent-active=true][data-agent-step="6"] .studio-agent-connection {opacity:.65;}
+.studio-backdrop[data-agent-active=true][data-agent-step="6"] .studio-agent-connection path {animation:agentSend 1.3s ease-in-out reverse both;}

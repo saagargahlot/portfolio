@@ -1,4 +1,6 @@
 import React,{useEffect,useLayoutEffect,useRef,useState} from 'react';
+import {agentSteps} from './agent-workflow.js';
+import {AgentScreen} from './AgentWorkflow.jsx';
 import {createWorkspaceEntry} from './workspace-entry.js';
 import {fitWorkstation,typingDelay} from './workstation-layout.js';
 import coreSource from './game-core.js?raw';
@@ -241,10 +243,24 @@ export default function WorkstationBackdrop(){
         const tabs=backdrop.current.querySelectorAll('.studio-editor-tabs span');
         tabs.forEach((tab,i)=>{tab.textContent=labels[i];});
       }
+      if(phase===0&&round%2===0){playAgentFlow();return;}
       begin();
     }
-    begin(entry.stage);
-    return()=>{clearTimeout(timer);playback.current=null;motions.forEach(m=>m.cancel());keyMotions.forEach(m=>m.cancel());};
+    function playAgentFlow(){
+      backdrop.current.dataset.agentActive='true';
+      let step=0;
+      function progress(){
+        backdrop.current.dataset.agentStep=String(step);
+        if(step===4)keypress('enter');
+        schedule(()=>{
+          if(step<agentSteps.length-1){step++;progress();}
+          else{backdrop.current.dataset.agentActive='false';begin();}
+        },agentSteps[step].duration);
+      }
+      progress();
+    }
+    if(entry.variant%3===0)playAgentFlow();else begin(entry.stage);
+    return()=>{clearTimeout(timer);playback.current=null;backdrop.current.dataset.agentActive='false';motions.forEach(m=>m.cancel());keyMotions.forEach(m=>m.cancel());};
   },[]);
   useEffect(()=>{playback.current?.setPaused(paused||reduced||hidden);},[paused,reduced,hidden]);
   return <>
@@ -254,8 +270,9 @@ export default function WorkstationBackdrop(){
         {[0,1,2,3,4].map(i=><path key={i} style={{'--tide-index':i}} d={`M-100 ${500+i*24}C200 ${220+i*35} 430 ${810+i*8} 760 ${550+i*18}S1190 ${180+i*25} 1540 ${420+i*22}`}/>)}
       </svg>
       <div className="studio-dots">{Array.from({length:18},(_,i)=><i key={i} style={{left:`${5+(i*37)%90}%`,top:`${12+(i*23)%77}%`,animationDelay:`${-i*.7}s`}}/>)}</div>
+      <svg className="studio-agent-connection" viewBox="0 0 1440 900" preserveAspectRatio="none"><path pathLength="1" d="M150 420C360 420 460 230 920 300"/></svg>
       <div ref={companion} className="studio-companion">
-      <div className="studio-native"><div className="studio-native-caption">Dungeon Break <span>Swift · SpriteKit</span></div><div className="studio-native-device"><img src="/photo/dungeon-break.webp" alt=""/><i/></div><div className="studio-native-shadow"/></div>
+      <div className="studio-native"><div className="studio-native-caption">Dungeon Break <span>Swift · SpriteKit</span></div><div className="studio-native-device"><div className="studio-discord-chat"><small>Discord</small><p>Check why this selection crosses a row.</p><span>Delivered</span><p className="studio-agent-reply">Change and checks ready to review.</p></div><img src="/photo/dungeon-break.webp" alt=""/><i/></div><div className="studio-native-shadow"/></div>
         <div className="studio-notebook"><div className="notebook-binding"/><div className="notebook-page"><small>Board notes</small><h4>Keep the order.</h4>
           <svg viewBox="0 0 160 110"><g className="notebook-cells"><rect x="12" y="10" width="24" height="24"/><rect x="12" y="42" width="24" height="24"/><rect x="12" y="74" width="24" height="24"/><rect x="120" y="10" width="24" height="24"/><rect x="120" y="42" width="24" height="24"/><rect x="120" y="74" width="24" height="24"/></g><path className="notebook-trace" pathLength="1" d="M40 22C85 22 70 54 115 54M40 54C85 54 70 86 115 86"/><circle cx="24" cy="22" r="4"/><circle cx="132" cy="54" r="4"/></svg>
           <p>Find neighbors.<br/>Let pieces fall.<br/>Replay the seed.</p><span className="notebook-pencil"/>
@@ -263,7 +280,7 @@ export default function WorkstationBackdrop(){
       </div>
       <div ref={scene} className="studio-workstation">
 
-        <div className="studio-monitor"><div className="studio-display">
+        <div className="studio-monitor"><div className="studio-display"><AgentScreen/>
           <div className="studio-toolbar"><i/><i/><i/><span>saagar / workspace</span></div>
           <div className="studio-editor-tabs"><span>game-core.js</span><span>gravity.js</span><span>replay.js</span></div>
           <div className="studio-screen-content"><div className="studio-editor"><div className="studio-gutter"><div ref={gutter}>{Array.from({length:40},(_,i)=><span key={i}>{i+1}</span>)}</div></div><pre ref={editor}>{coreSource.slice(coreSource.indexOf('export function findGroup'),coreSource.indexOf('export function fallBoard')).trim()}</pre></div><div className="studio-output"><div ref={board} className="studio-board">{initialBoard.map((piece,i)=><span key={i} style={{color:piece.col,borderColor:piece.col+'55'}}>{piece.sym}</span>)}</div><div className="studio-server-output"><span>Client</span><i/><span>Authorized room</span><i/><span>Connected peers</span></div><div className="studio-browser-output"><b>saagar.</b><strong>I build what<br/>sparks my curiosity.</strong><div/><div/><small>Featured work</small></div></div></div>
