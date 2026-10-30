@@ -35,7 +35,6 @@ test('the complete workstation stays inside narrow and short viewports', async (
   const { fitWorkstation } = await import('../src/workstation-layout.js');
   for (const [width, height] of [[320,568],[390,844],[768,1024],[1024,600],[1366,768],[1920,1080],[2560,1440]]) {
     const { x, y, scale } = fitWorkstation(width, height);
-    // Includes a conservative margin around the lamp, cable and 3D tilt.
     assert.ok(x - 170 * scale >= 0, `left edge at ${width}×${height}`);
     assert.ok(x + 650 * scale <= width, `right edge at ${width}×${height}`);
     assert.ok(y - 60 * scale >= 0, `top edge at ${width}×${height}`);

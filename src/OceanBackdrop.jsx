@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { animate } from 'animejs';
 import { addRipple, rippleDisplacement, RIPPLE_LIFETIME } from './water.js';
 
-// One small canvas keeps the water independent of React and the project UI.
 export default function OceanBackdrop() {
   const canvasRef = useRef(null);
   const tideRef = useRef({ phase: 0 });
@@ -39,7 +38,6 @@ export default function OceanBackdrop() {
       pointer.y += (pointer.targetY-pointer.y)*.16;
       pointer.strength += ((pointer.active && !still() ? 1 : 0)-pointer.strength)*.08;
 
-      // Wide, slowly refracting bands give the water volume behind the thin contours.
       const drift=Math.sin(t)*35 + pointer.strength*(pointer.x-width*.5)*.035;
       for(let band=0;band<3;band++) {
         const x=width*(.72+band*.14)+drift;
@@ -53,8 +51,6 @@ export default function OceanBackdrop() {
         ctx.strokeStyle=beam;ctx.lineWidth=65+band*35;ctx.stroke();
       }
 
-      // Flow contours are warped by a soft pointer lens and travelling waves.
-      // Two narrow strokes suggest refracted light without a bright cursor halo.
       const lines = width < 650 ? 16 : 26;
       for (let layer=0; layer<lines; layer++) {
         const baseY=height*(layer+.5)/lines;
@@ -77,7 +73,6 @@ export default function OceanBackdrop() {
         band.addColorStop(1,'rgba(94,205,211,.25)');
         ctx.strokeStyle=band;ctx.lineWidth=layer%4===0?1.2:.65;ctx.stroke();
       }
-      // Sparse elliptical wavefronts leave a wake at the actual interaction point.
       for(const ripple of ripples) {
         if(still())break;
         const age=now-ripple.born;
@@ -90,7 +85,6 @@ export default function OceanBackdrop() {
       light.addColorStop(0,'rgba(67,162,178,.10)');light.addColorStop(1,'rgba(6,21,33,0)');
       ctx.fillStyle=light;ctx.fillRect(0,0,width,height);
 
-      // A darker reading area keeps the ocean from competing with the projects.
       const shade=ctx.createLinearGradient(0,0,width,0);
       shade.addColorStop(0,'rgba(5,18,29,0)');shade.addColorStop(.22,'rgba(5,18,29,.35)');
       shade.addColorStop(.78,'rgba(5,18,29,.35)');shade.addColorStop(1,'rgba(5,18,29,0)');

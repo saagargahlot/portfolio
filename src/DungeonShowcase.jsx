@@ -2,7 +2,6 @@ import React, {useEffect, useRef, useState} from 'react';
 
 export const dungeonURL = 'https://apps.apple.com/app/id6760920987';
 
-// Real App Store screenshots, in the order the game is played.
 export const dungeonShots = [
   ['/photo/dungeon-break.webp','Dungeon Break: three heroes face the Slime King with attack, power slash and potion controls',1010],
   ['/photo/dungeon-break-2.webp','The dungeon map, a winding path of numbered floors through the Goblin Forest'],
@@ -27,7 +26,6 @@ export default function DungeonShowcase() {
     return()=>{media.removeEventListener('change',motion);document.removeEventListener('visibilitychange',page);seen.disconnect();};
   },[]);
 
-  // Advance only while someone could be watching, and linger on the QR code.
   useEffect(()=>{
     if(held||!onScreen||hidden||reduced)return;
     const timer=setTimeout(()=>setIndex(value=>(value+1)%total),index===last?QR_MS:SHOT_MS);

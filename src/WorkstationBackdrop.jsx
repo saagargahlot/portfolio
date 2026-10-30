@@ -31,7 +31,6 @@ export default function WorkstationBackdrop(){
       backdrop.current.style.setProperty('--scene-closing', String(settle));
       companion.current.style.transform=`translate3d(${-x*10}px,${-depth*25+y*6}px,0) rotateY(${4-x*2}deg)`;
       const fit = fitWorkstation(innerWidth, innerHeight);
-      // At the closing section, place the notes beside the desk, outside the copy.
       const companionLeft=Math.min(180,Math.max(110,innerWidth*.09));
       const noteX=Math.max(companionLeft+138,fit.x-190);
       const noteY=Math.max(100,Math.min(innerHeight-275,innerHeight*.68));
@@ -73,7 +72,6 @@ export default function WorkstationBackdrop(){
       try{sessionStorage.setItem('portfolio.workspace.variant',String(visit.current.variant));}catch{}
     }
     const entry=visit.current;
-    // Display checked-in source rather than the bundler's transformed functions.
     let sources=[coreSource.slice(coreSource.indexOf('export function findGroup'),coreSource.indexOf('export function fallBoard')).trim(),coreSource.slice(coreSource.indexOf('export function fallBoard')).trim(),demoSource.slice(demoSource.indexOf('export function replay')).trim()];
     let labels=['game-core.js','gravity.js','replay.js'];
     const baseSources=[...sources];
@@ -162,7 +160,6 @@ export default function WorkstationBackdrop(){
       noteStatus.textContent='Working through the next step.';
       trace.setAttribute('d',notePaths[phase]);
       trace.style.strokeDashoffset='1';
-      // Open an existing function near its last block, then finish the edit.
       const source=sources[phase];
       renderedLines=[];editor.current.replaceChildren();
       const start=source.indexOf('\n',Math.floor(source.length*(openingStage?entry.editFraction:.72)));
@@ -183,7 +180,6 @@ export default function WorkstationBackdrop(){
       const source=sources[phase];
       const char=source[character++];
       keypress(char);
-      // Editor auto-indent is inserted with the newline, not typed space by space.
       if(char==='\n')while(source[character]===' ')character++;
       renderCode();
       if(character<source.length){schedule(tick,typingDelay(char,character));return;}
@@ -218,7 +214,6 @@ export default function WorkstationBackdrop(){
       if(phase===1&&next){
         moves.push([...group]);cells=next.cells;seed=next.seed;
         paint(cells,next.origins);
-        // paint clears old cell motions; draw the matching column sketch afterward.
         motions.push(trace.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:1100,easing:'ease-in-out',fill:'forwards'}));
         terminal.current.textContent=next.cleared+' removed · surviving order preserved';
         noteStatus.textContent='Only the affected columns fall.';

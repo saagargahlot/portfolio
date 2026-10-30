@@ -1,21 +1,22 @@
 # Portfolio
 
-This is a project that I have been waiting to make for a while. 
-It is just a portfolio website that contains some information about me and my passion. 
-It also contains my skills and previous works. 
-The portfolio website was made purely with React and pure passion 💙
+My personal site, live at [saagargahlot.com](https://saagargahlot.com).
 
-# How To View
-1. Installation
+It shows the projects I've built, including Fluctra (a puzzle game on the web and iOS) and Dungeon Break (an iOS RPG on the App Store). The hero has a small playable version of Fluctra, and the background is an animated desk scene drawn on canvas.
+
+Built with React and Vite.
+
+## Run it locally
 
 ```bash
-npm install 
-```
-
-2. Start up the server
-```bash
+npm install
 npm run dev
 ```
 
-3. vite will display the url, click it and voila! Upon scrolling, the user will be able to see more aquatic animals along with a boat that moves depending on the direction the user scrolls. 
+Vite prints a local URL to open in your browser.
 
+## Tests
+
+```bash
+npm test
+```

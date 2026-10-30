@@ -35,7 +35,6 @@ function CaseStudy({children,title='Explore the build'}){
     if(matchMedia('(prefers-reduced-motion: reduce)').matches||!el.animate){settle();return;}
     el.open=intent.current;
     const to=el.getBoundingClientRect().height;
-    // Keep content mounted through the closing motion; release it at rest.
     el.open=true;el.style.overflow='hidden';
     const animation=el.animate([{height:`${from}px`},{height:`${to}px`}],{duration:480,easing:'cubic-bezier(.22,1,.36,1)'});
     motion.current=animation;
@@ -56,7 +55,6 @@ export default function Portfolio() {
       stop();if(media.matches)return;
       const add=(owner,target,frames,delay=0,duration=1000)=>{
         if(!target || revealed.has(target))return;
-        // Observe the animated item, not its potentially screen-tall text column.
         const motion=target.animate(frames,{duration:Math.max(1100,duration),delay:Math.min(delay,160),easing:'cubic-bezier(.25,.1,.25,1)',fill:'both'});
         motion.pause();motion.currentTime=0;
         if(!groups.has(target))groups.set(target,[]);
@@ -65,7 +63,6 @@ export default function Portfolio() {
       };
       root.querySelectorAll('.section-heading,.project-info,.project-visual,.experiment,.about-photo,.about-copy,.contact').forEach(el=>{
         if(revealed.has(el))return;
-        // A restored scroll position should show the content the visitor returned to.
         if(window.scrollY>0&&el.getBoundingClientRect().top<innerHeight){revealed.add(el);return;}
         if(el.matches('.section-heading')){
           add(el,el.querySelector('h2'),[{opacity:0,transform:'translateY(32px)'},{opacity:1,transform:'none'}]);
@@ -90,8 +87,6 @@ export default function Portfolio() {
           add(el,el.querySelector('.contact-email'),[{opacity:0,transform:'translateX(-18px)'},{opacity:1,transform:'none'}],300,1200);
         }
       });
-      // Once started, finish the entrance even during a fast swipe. Repeated
-      // visibility crossings must not freeze content halfway through its reveal.
       observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
         if(!entry.isIntersecting || entry.intersectionRatio<.15)return;
         revealed.add(entry.target);
@@ -103,7 +98,6 @@ export default function Portfolio() {
       }),{threshold:[0,.15],rootMargin:'0px 0px -48px 0px'});
       groups.forEach((_,el)=>observer.observe(el));
     }
-    // Keyboard navigation must never land on a visually concealed control.
     const focus=event=>groups.forEach((list,el)=>{if(el.contains(event.target)){revealed.add(el);observer?.unobserve(el);list.forEach(m=>{started.delete(m);m.cancel();});}});
     const visibility=()=>started.forEach(m=>{
       if(document.hidden)m.pause();else m.play();

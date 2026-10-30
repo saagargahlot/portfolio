@@ -1,4 +1,3 @@
-// An illustrative task, not a connection to a visitor's Discord account.
 export const agentSteps = [
   { title: 'A task from my phone', detail: 'Check why this selection crosses a row.', duration: 2300 },
   { title: 'Discord → coding session', detail: 'The bridge delivers the message to the agent.', duration: 1300 },

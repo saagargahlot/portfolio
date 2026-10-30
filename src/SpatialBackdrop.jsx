@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { animate } from 'animejs';
 
-// Perspective-projected surface, isolated from React rendering and capped at 30fps.
 export default function SpatialBackdrop() {
   const canvasRef = useRef(null);
   const tideRef = useRef({ phase: 0 });
@@ -31,7 +30,6 @@ export default function SpatialBackdrop() {
       pointer.strength+=((pointer.active && !still()?1:0)-pointer.strength)*.08;
       const px=(pointer.x/width-.5)*.5*pointer.strength;
       const py=(pointer.y/height-.5)*.5*pointer.strength;
-      // Scroll drives the main orbit; ambient deformation is periodic at loop boundaries.
       const turn=depth*Math.PI*1.5+Math.sin(t)*.12+px;
       const tilt=.8+depth*1.1+Math.sin(t)*.06+py;
       const scale=Math.min(width*.0024,height*.0032)*(1+Math.sin(depth*Math.PI)*.24);
@@ -43,7 +41,6 @@ export default function SpatialBackdrop() {
         const perspective=520/(520+depthZ);
         return [width*(.78-Math.sin(depth*Math.PI*2)*.16)+xx*scale*perspective,height*(.43+Math.sin(depth*Math.PI)*.16)+yy*scale*perspective,depthZ];
       }
-      // A projected, continuously deformed surface: geometry rather than particles.
       for(let ring=0;ring<32;ring++){
         ctx.beginPath();let z=0;
         for(let step=0;step<=40;step++){

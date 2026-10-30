@@ -304,15 +304,6 @@ margin-top:8px}
 color:#a495ff}
 .case-study{grid-column:1/-1;
 border-top:1px solid var(--line)}
-/* "Explore the build" / "Development notes" are the only way into the case
-   studies, and they read as a line of caption text - 12px, muted, no border, no
-   hover, a small + floated to the right. Nothing says press me. Given a hinged
-   affordance sitting between two paragraphs, people simply do not try it.
-
-   Still a text row rather than a heavy button - this is a portfolio, not a
-   toolbar - but now with the things that make a control legible: a real label
-   weight, a bordered pill that lifts on hover, a + that turns into an x, and a
-   cursor and focus ring that agree with each other. */
 .case-study summary{cursor:pointer;
 list-style:none;
 padding:18px 18px;
@@ -335,8 +326,6 @@ transform:translateY(-1px)}
 .case-study[open] summary{border-color:var(--blue);
 background:rgba(169,198,255,.06)}
 .case-study summary::-webkit-details-marker{display:none}
-/* Still read as caption text at rest. A tinted bar, a "Show details" cue and a
-   filled + make it obvious there is more behind it before anyone hovers. */
 .case-study summary{background:rgba(169,198,255,.07);
 border-color:rgba(169,198,255,.42)}
 .case-cue{margin-left:auto;
@@ -394,7 +383,6 @@ z-index:1;
 transform:rotate(-4deg);
 transition:transform .4s}
 .dungeon-visual:hover img{transform:rotate(0) scale(1.02)}
-/* Dungeon Break slideshow: screenshots swipe past, then the App Store QR. */
 .dungeon-visual{padding:0;
 overflow:hidden;
 touch-action:pan-y;
@@ -458,7 +446,6 @@ background:#b1c27d}
 .dungeon-dots button:focus-visible{outline:2px solid #b1c27d;
 outline-offset:-2px;
 border-radius:6px}
-/* On a phone you can't scan your own screen: offer the link instead. */
 @media (hover:none) and (pointer:coarse){.app-qr-card{flex-direction:column;
 text-align:center;
 gap:14px}
@@ -712,7 +699,6 @@ transition:none!important}
 }
 
 
-/* Refracted water behind the project-led layout. */
 :root {
   background: #061521;
   --muted: #a8bdc8;
@@ -744,7 +730,6 @@ footer { padding-bottom: 65px; }
 }
 @media(prefers-reduced-motion:reduce) {  }
 
-/* A single editorial gesture: the word is revealed in reverse ink. */
 .curiosity-heading {
   font-size: clamp(48px, 7.8vw, 110px);
   line-height: 1.16;
@@ -813,14 +798,12 @@ footer { padding-bottom: 65px; }
 @media(max-width:900px){.studio-workstation { right:-100px; opacity:.45; }}
 @media(max-width:600px){.studio-workstation { right:-235px; top:16vh; opacity:.28; }.studio-backdrop::after {background:linear-gradient(90deg,#10151df5,#10151d30);}}
 
-/* Keep pointer feedback from competing with the gravity timeline. */
 .demo-grid button { transition:border-color .18s,background .18s; }
 .demo-grid button:hover { transform:none; }
 .studio-terminal { min-height:35px; white-space:nowrap; }
 .studio-board span { transition:background .5s,box-shadow .5s; }
 .studio-board .is-traced { background:#345665; box-shadow:inset 0 0 0 1px currentColor; }
 
-/* A connected workspace, with the highest contrast reserved for page content. */
 .studio-backdrop::after {background:linear-gradient(90deg,#10151d8c 0%,#10151dc4 35%,#10151d15 85%);}
 .studio-coordinate-field {position:absolute;inset:35% -15% -50%;background-image:linear-gradient(#81b9c512 1px,transparent 1px),linear-gradient(90deg,#81b9c512 1px,transparent 1px);background-size:90px 90px;transform:perspective(650px) rotateX(60deg) translateY(calc(var(--scene-depth,0)*-180px));mask-image:linear-gradient(transparent,#000 30%,transparent 90%);}
 .studio-connections {position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#80c5cb;stroke-width:1;opacity:.28;transform:translate3d(var(--scene-x,0px),calc(var(--scene-depth,0)*-90px),0);}
@@ -845,7 +828,6 @@ footer { padding-bottom: 65px; }
 @media(max-width:600px){.studio-routing-window {display:none;}.studio-connections {opacity:.18;}.studio-coordinate-field {background-size:60px 60px;}}
 @media(prefers-reduced-motion:reduce){.studio-backdrop * {animation:none!important;}}
 
-/* Small workstation details keep the scene grounded in the work on screen. */
 .studio-editor-tabs {display:flex;height:24px;background:#101b28;border-bottom:1px solid #365466;}
 .studio-editor-tabs span {padding:6px 12px;color:#7c9bad;font:8px monospace;border-right:1px solid #365466;transition:color .3s,background .3s;}
 .studio-backdrop:not([data-editor-phase]) .studio-editor-tabs span:first-child,
@@ -895,7 +877,6 @@ footer { padding-bottom: 65px; }
 @media(max-width:900px){.studio-native {left:-55px;width:145px;opacity:.25;}}
 @media(max-width:600px){.studio-native {display:none;}}
 
-/* One connected desk, with a clear foreground for reading. */
 .studio-workstation {top:22vh;right:2vw;opacity:var(--scene-opacity,.8);transform-origin:75% 50%;}
 .studio-workstation .studio-native {left:-100px;top:245px;width:125px;opacity:1;transform:translateZ(28px) rotateY(8deg) rotateZ(-5deg);}
 .studio-native-caption {font-size:9px;}.studio-native-caption span {font-size:7px;}
@@ -908,11 +889,9 @@ footer { padding-bottom: 65px; }
 @media(max-width:900px){.studio-workstation {right:-125px;opacity:calc(var(--scene-opacity,.8)*.6);}.studio-workstation .studio-native {display:none;}}
 @media(max-width:600px){.studio-workstation {right:-300px;top:22vh;opacity:calc(var(--scene-opacity,.8)*.4);}.studio-backdrop::after {background:linear-gradient(90deg,#10151df5,#10151d80);}}
 
-/* Soft screen spill ties the lighting to the workstation itself. */
 .studio-monitor::before {content:'';position:absolute;inset:-60px;z-index:-1;pointer-events:none;background:radial-gradient(ellipse,#5d9da91c,transparent 68%);}
 .studio-monitor {isolation:isolate;}
 
-/* The editor, preview, terminal and status strip each own their screen space. */
 .studio-display {display:grid;grid-template-rows:27px 24px minmax(0,1fr) 30px 20px;}
 .studio-screen-content {height:auto;min-height:0;grid-template-columns:minmax(0,1fr) 150px;align-items:center;padding:10px 12px;}
 .studio-editor {height:100%;align-self:stretch;}
@@ -926,7 +905,6 @@ footer { padding-bottom: 65px; }
 .studio-keyboard i {animation:none!important;display:grid;place-items:center;width:25px;height:16px;font:6px monospace;font-style:normal;color:#abc7d2;background:#243a49;}
 .studio-keyboard .key-wide {width:38px;}.studio-keyboard .key-space {width:164px;}
 
-/* Keep both sides visible while leaving foreground text in charge. */
 .studio-companion {position:absolute;left:clamp(110px,9vw,180px);top:36vh;width:335px;height:350px;opacity:var(--scene-opacity,.8);transform-style:preserve-3d;}
 .studio-companion .studio-native {display:block;left:0;top:0;width:120px;opacity:1;transform:rotateZ(-5deg);}
 .studio-companion .studio-native-caption {padding-left:4px;margin-bottom:18px;}
@@ -952,12 +930,10 @@ footer { padding-bottom: 65px; }
 .workspace-code-line::before {content:attr(data-line);position:absolute;left:0;top:0;width:17px;text-align:right;color:#668795;font-weight:400;}
 .workspace-code-cursor {display:inline-block;vertical-align:text-bottom;width:1px;height:10px;background:#c2e9df;}
 
-/* One connected task lamp, sharing the desk's perspective and material palette. */
 .studio-light {position:absolute;left:-116px;top:168px;width:150px;height:250px;overflow:visible;transform:translateZ(8px);}
 @media(min-width:1100px){.studio-workstation {right:4vw;top:19vh;transform-origin:85% 40%;}}
 @media(max-width:600px){.studio-light {display:none;}}
 
-/* Fit the complete desk, including its peripherals, inside the viewport. */
 .studio-workstation {left:0;right:auto;top:0;transform-origin:0 0;}
 .studio-monitor {background:linear-gradient(135deg,#354654,#15232f 55%,#22323f);box-shadow:9px 10px 0 #0a141e,10px 11px 0 1px #566975,0 22px 36px #0004;}
 .studio-display {position:relative;}
@@ -981,13 +957,11 @@ footer { padding-bottom: 65px; }
 .studio-dots {position:absolute;inset:0;transform:translate3d(var(--scene-x,0px),var(--scene-y,0px),0);opacity:.35;}
 .studio-dots i {position:absolute;width:2px;height:2px;border-radius:50%;background:#a6d5d6;animation:studioDrift 9s ease-in-out infinite alternate;}
 @keyframes studioDrift {from {transform:translateY(0);opacity:.3;}to {transform:translateY(-14px);opacity:.8;}}
-/* At the closing section the camera settles and the notes recede. */
 .studio-companion {opacity:calc(var(--scene-opacity,.8)*(1 - var(--scene-closing,0)*.45));}
 @media(max-width:1150px){.studio-companion {display:none;}}
 @media(max-width:600px){.studio-workstation {left:0;right:auto;top:0;opacity:.38;}.studio-tides {opacity:.18;}.studio-dots {opacity:.2;}}
 @media(prefers-reduced-motion:reduce){.studio-tides path,.studio-dots i {animation:none;}.notebook-pencil,.studio-screen-reflection,.studio-notebook {transition:none;}}
 
-/* Local reading surfaces leave the workstation visible between content blocks. */
 .project-info,.about-copy {position:relative;isolation:isolate;}
 .project-info::before,.about-copy::before {content:'';position:absolute;inset:-12px -14px;z-index:-1;pointer-events:none;border-radius:14px;background:#10151db8;box-shadow:0 0 18px 5px #10151d85;}
 .hero-bottom>p {background:#10151db3;box-shadow:0 0 16px 5px #10151d80;border-radius:8px;}
@@ -1002,7 +976,6 @@ footer {background:#10151db3;box-shadow:0 0 16px 5px #10151d85;}
 .project-info>p,.about-copy>p,.hero-bottom>p {color:#c5d5dc;}
 @media(max-width:600px){.project-info::before,.about-copy::before {inset:-10px;background:#10151dcc;box-shadow:0 0 10px 3px #10151d99;}.contact::before {background:#10151dcc;inset:0 -12px;}}
 
-/* Color belongs to the water, desk materials and light sources. */
 .studio-tides path:nth-child(3n+1) {stroke:#6fc7d0;}
 .studio-tides path:nth-child(3n+2) {stroke:#7d9ddc;}
 .studio-tides path:nth-child(3n) {stroke:#7cc4b0;}
@@ -1015,13 +988,11 @@ footer {background:#10151db3;box-shadow:0 0 16px 5px #10151d85;}
 .notebook-binding {filter:none;background:repeating-linear-gradient(transparent 0,transparent 10px,#b7a383 10px,#b7a383 12px,transparent 12px,transparent 20px);}
 .studio-screen-reflection {background:radial-gradient(ellipse,#71bfcf36,transparent 68%);}
 
-/* Keep the scene's 3D descendants inside a separate paint boundary. */
 .studio-backdrop {isolation:isolate;contain:layout paint;}
 .showcase {isolation:isolate;position:relative;background:#151e28;}
 .showcase-stage {position:relative;}
 .demo-grid button {transition:border-color .18s,background .18s;}
 
-/* Experiment copy needs the same protection as the longer project descriptions. */
 .experiment {padding:30px 14px;background:#10151de0;transition:background .2s ease;}
 .experiment:hover {padding-left:14px;padding-right:14px;background:#192530f0;}
 .experiment h3 {color:#f0f2ee;}
@@ -1029,16 +1000,13 @@ footer {background:#10151db3;box-shadow:0 0 16px 5px #10151d85;}
 .experiment small {color:#aed6df;}
 .experiment>span {color:#c3d4dc;}
 
-/* Keep the location label legible over the monitor, at every scroll position. */
 .intro-meta>span:last-child {color:#e2edf1;background:#10151df5;box-shadow:none;padding:6px 10px;border:1px solid #64828c55;border-radius:5px;line-height:1.5;}
 .intro-meta {align-items:center;gap:16px;}
 
-/* Keep identity metadata together, clear of the workstation screen. */
 .intro-meta {justify-content:flex-start;flex-wrap:wrap;column-gap:18px;row-gap:8px;}
 .intro-meta>span:last-child {padding:4px 8px;font-size:12px;}
 @media(max-width:600px){.intro-meta {column-gap:10px;}.intro-meta>span:last-child {font-size:10px;}}
 
-/* Keep reading surfaces within their own layout boxes. */
 .project-info::before,.about-copy::before {inset:0;border-radius:10px;box-shadow:none;background:linear-gradient(90deg,#10151db8 0%,#10151db8 86%,#10151d66 100%);}
 .section-heading::before {inset:0;box-shadow:none;}
 .hero-bottom>p,.intro-meta>span,.round-link,footer {box-shadow:none;}
@@ -1047,13 +1015,11 @@ footer {background:#10151db3;box-shadow:0 0 16px 5px #10151d85;}
 .contact h2 {width:fit-content;max-width:100%;background:linear-gradient(90deg,#10151db8,#10151d80 78%,transparent);}
 .studio-companion {opacity:var(--scene-opacity,.8);}
 .studio-notebook {transform:translate3d(calc(var(--scene-closing,0)*var(--notebook-dock-x,0px)),calc(var(--scene-closing,0)*var(--notebook-dock-y,0px)),0) rotateZ(calc(7deg*(1 - var(--scene-closing,0))));}
-/* A stationary pointer should not make the disclosure jump as the page scrolls. */
 .case-study summary {background:#10151ded;transition:border-color .18s,color .18s;}
 .case-study summary:hover,.case-study summary:active {transform:none;background:#17232df5;}
 .case-study summary:hover>span:last-child {transform:none;}
 .case-study[open] summary:hover>span:last-child {transform:rotate(45deg);}
 
-/* A phone-to-repository workflow, presented as an example visitors can step through. */
 .agent-flow-demo {align-self:start;border:1px solid #48606e;border-radius:14px;background:#101d28;overflow:hidden;}
 .agent-flow-header,.agent-flow-controls {display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 20px;font-size:12px;border-bottom:1px solid #354c59;}
 .agent-flow-header small {color:#9bb7c7;font-size:10px;}

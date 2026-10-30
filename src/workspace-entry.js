@@ -1,6 +1,5 @@
 import { initialBoard, INITIAL_SEED, findGroup, advance } from './demo.js';
 
-// Only the presentation varies. Every board still comes from legal demo moves.
 export function createWorkspaceEntry(random = Math.random, previous = -1) {
   const sample = () => Math.max(0, Math.min(.999999, random()));
   const count = 12;

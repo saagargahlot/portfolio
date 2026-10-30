@@ -1,6 +1,5 @@
 import React,{useEffect,useRef,useState} from 'react';
 
-// A projected contour globe. Canvas keeps this scene independent of a GPU library.
 export default function ContourBackdrop(){
   const canvas=useRef(null),time=useRef(0),pose=useRef({x:0,y:0,depth:0});
   const [paused,setPaused]=useState(false),[reduced,setReduced]=useState(false);
@@ -55,7 +54,6 @@ export default function ContourBackdrop(){
         const points=[];for(let i=0;i<=36;i++)points.push(project(-Math.PI/2+i/36*Math.PI,col/14*Math.PI*2));
         line(points,'100,159,183');
       }
-      // A few traveling lights follow actual latitude contours.
       for(let i=0;i<9;i++){
         const p=project(-.95+i*.23,t*(.11+i*.004)+i*2.4);
         if(p.z<0)continue;

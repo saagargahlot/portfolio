@@ -3,5 +3,3 @@ dist/
 .DS_Store
 *.local
 .vercel
-.superpowers/
-docs/superpowers/
